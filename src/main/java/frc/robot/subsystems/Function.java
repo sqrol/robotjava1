@@ -68,4 +68,20 @@ public class Function {
         }
     
       }
+
+      public static float[] ReImToPolar(float x, float y)
+    {
+        float[] arr = new float[2];
+        arr[0] = (float)Math.sqrt((x * x + y * y));  // r
+        arr[1] = (float)Math.atan2(y, x);  // theta
+        return arr;
+    }
+
+    public static float[] PolarToReIm(float r, float theta)
+    {
+        float[] arr = new float[2];
+        arr[0] = r * (float)Math.cos(theta);  // x
+        arr[1] = r * (float)Math.sin(theta);  // y
+        return arr;
+    }
 }

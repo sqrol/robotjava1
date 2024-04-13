@@ -11,10 +11,11 @@ import frc.robot.subsystems.Cases.StartPos;
 public class States {
     public static IState[][] mainStates = new IState[][] {{
         new StartPos(),
+        // new Odometry("absolute", 1000, 0, 90),
         // new Reset("/", 0, 0, 0),
         // new Reset("/", 0, 0, 0),
         // new Reset("/", 0, 0, 0),
-        // new Odometry("absolute", 0, 800, 0),
+        new Odometry("absolute", 500, 0, 90),
         // new Align("sonic", 0, 22, 0),
         // new Align("sharp", 15, 0, 0),
         // new Align("sonic", 0, -7, 0),
@@ -31,10 +32,12 @@ public class States {
 
         
 
-        new Odometry("absolute", 600, -600, 0),
-        new Odometry("absolute", 0, -600, 0),
-        // new Odometry("absolute", 0, -800, 0),
-        new Odometry("absolute", 0, 0, 0),
+        // new Odometry("absolute", 1000, 0, 0),
+        // new Odometry("absolute", 600, -600, 0),
+        // new Odometry("absolute", 0, -600, 0),
+        // new Odometry("absolute", 0, 0, 0),
+
+
         // new Odometry("relative", 0, 0, 180),
         // new Reset("/", 0, 0, 0),
         // new Sensors("sonic", 0, -10, 0),

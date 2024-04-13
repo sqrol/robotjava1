@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
 import frc.robot.subsystems.Training;
@@ -19,13 +12,12 @@ public class RobotContainer {
   public RobotContainer()
   {
       train = new Training();
-      javcam = new JavaCam();
 
-      Runnable camRunnable = new JavaCam();
-      Thread camThread = new Thread(camRunnable);
-      camThread.setDaemon(true);
-      camThread.start();
-
+      Runnable runnableJavaCam = new JavaCam();
+      Thread threadJavaCam = new Thread(runnableJavaCam);
+      threadJavaCam.setDaemon(true);
+      threadJavaCam.start();
+      
       train.setDefaultCommand(new Drive());
   }
 }

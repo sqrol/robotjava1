@@ -8,15 +8,16 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Main;
 
 
 public class JavaCam implements Runnable
 {
     private UsbCamera camera;
     private CvSink cvSink;
-    public CvSource ripeApple;
-    public CvSource ripePear;
+    private static CvSource outStream;
 
     public int nowTask = 0;
     public int nowResult = 0; 
@@ -25,7 +26,7 @@ public class JavaCam implements Runnable
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
+
         SmartDashboard.putNumber("RED1", 0.0);
         SmartDashboard.putNumber("RED2", 0.0);
         SmartDashboard.putNumber("GREEN1", 0.0);
@@ -38,26 +39,25 @@ public class JavaCam implements Runnable
         camera.setFPS(30); // Частота кадров
         cvSink = CameraServer.getInstance().getVideo(camera);
 
-        ripeApple = CameraServer.getInstance().putVideo("ripeApple", 640, 480);
-        ripePear = CameraServer.getInstance().putVideo("ripePear", 640, 480);
+        outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
 
-        while(true) {
+        while (true) {
             try {
                 final Mat source = new Mat();
-                if (nowTask == 1) {
-                    CheckApple(source);
+                if (cvSink.grabFrame(source) == 0) {
+                    continue;
                 }
-                if (nowTask == 2) {
-
-                }
+                CheckApple(source);
+                source.release(); 
             } catch (final Exception e) {
-                DriverStation.reportError("Cam problem!", false);
+                DriverStation.reportError("An error occurred in CameraController: " + e.getMessage(), false);	
                 e.printStackTrace();
             }
         }
     }
 
-    public int CheckApple(final Mat orig) // Распознавание яблока
+
+    public static int CheckApple(final Mat orig) // Распознавание яблока
     {
         // Нужно заменить массивом 
         final double red1 = SmartDashboard.getNumber("RED1", 0);
@@ -73,9 +73,11 @@ public class JavaCam implements Runnable
         final Point greenPoint = new Point(green1, green2);
         final Point bluePoint = new Point(blue1, blue2);
 
-        final Mat threshImage = Viscad2.colorThreshold(orig, redPoint, greenPoint, bluePoint); // Пороговая обработка кадра
-        final int imageArea = Viscad2.ImageTrueArea(threshImage); // Определение площади выделенной области на обработанном кадре
-        ripeApple.putFrame(threshImage); // Передача обработанного кадра на выходной поток
+        // final Mat threshImage = Viscad2.colorThreshold(orig, redPoint, greenPoint, bluePoint); // Пороговая обработка кадра
+        // final int imageArea = Viscad2.ImageTrueArea(threshImage); // Определение площади выделенной области на обработанном кадре
+        final Mat threshImage = Viscad2.Threshold(orig, redPoint, greenPoint, bluePoint); 
+        final int imageArea = Viscad2.ImageTrueArea(threshImage);
+        outStream.putFrame(threshImage); // Передача обработанного кадра на выходной поток
 
         threshImage.release();
 

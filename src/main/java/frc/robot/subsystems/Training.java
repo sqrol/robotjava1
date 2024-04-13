@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Encoder;
 
 //Vendor imports
 import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.Servo;
 import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
 
@@ -36,6 +37,7 @@ public class Training extends SubsystemBase
     private MedianFilter sonicRightFilter;
     private MedianFilter sonicLeftFilter, sonicLeftAdapFilter;
 
+    
     private Ultrasonic sonicRight, sonicLeft;
     private AnalogInput sharpRight, sharpLeft;
     private float confIk = 1.2f;
@@ -71,6 +73,7 @@ public class Training extends SubsystemBase
         sonicLeftAdapFilter = new MedianFilter(3);
         
 
+        
         gyro = new AHRS();
         
 
@@ -79,7 +82,7 @@ public class Training extends SubsystemBase
             {
                 try 
                 {
-
+                    
                     Thread.sleep(5);
                 } 
                 catch (Exception e) 
@@ -120,12 +123,13 @@ public class Training extends SubsystemBase
 
         float spX = -(((rightSpeed) - (leftSpeed)) / 2) / 0.963f;
         float spY = ((-(rightSpeed / 2) - (leftSpeed / 2) + backSpeed) / 3) / 0.554f;
+        spY = -spY;
 
-        float r = (float) Math.sqrt(spX * spX + spY * spY);
-        float theta = (float) (Math.atan2(spY, spX) + nowYaw);
+        posX +=  Math.cos(nowYaw) * spX - Math.sin(nowYaw) * spY;
+        posY += Math.cos(nowYaw) * spY + Math.sin(nowYaw) * spX; 
 
-        posX += r * Math.cos(theta);
-        posY += r * Math.sin(theta);
+        SmartDashboard.putNumber("spremX", spX);
+        SmartDashboard.putNumber("spremY", spY);
 
         rightLast = currentRight;
         leftLast = currentLeft;
@@ -181,6 +185,7 @@ public class Training extends SubsystemBase
     // }
 
     public void setAxisSpeed(float x, float y, float z) {
+        y = -y;
         double motorLF =  x - y / 2 + z;
         double motorRF = - (x + y / 2 - z);
         double motorB = (y + z);
@@ -198,11 +203,6 @@ public class Training extends SubsystemBase
         leftMotor.set(leftPID.getOutput()); 
         
     }
-
-
-
-
-
 
     public void OdometryReset(float x, float y){
         rightLast = 0;
