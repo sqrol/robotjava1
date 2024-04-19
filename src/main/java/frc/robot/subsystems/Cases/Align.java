@@ -16,46 +16,46 @@ public class Align implements IState {
     private boolean finishY = false;
     private boolean finishZ = false;
 
-    private float X = 0;
-    private float Y = 0;
-    private float Z = 0;
-    private float currSharp = 0;
-    private float speedX = 0;
-    private float diffX = 0;
-    private float speedY = 0;
-    private float diffY = 0;
-    private float diffZ = 0;
-    private float diffSharp = 0;
-    private float lastGyro = 0;
-    private float speedZ = 0;
+    private double X = 0;
+    private double Y = 0;
+    private double Z = 0;
+    private double currSharp = 0;
+    private double speedX = 0;
+    private double diffX = 0;
+    private double speedY = 0;
+    private double diffY = 0;
+    private double diffZ = 0;
+    private double diffSharp = 0;
+    private double lastGyro = 0;
+    private double speedZ = 0;
 
-    private static float[][] degreeSharpArray = { {0f, 0.1f, 0.5f, 1f, 1.5f, 2f, 5f, 10f, 15f, 20f, 30, 45},
-                                                  { 0f, 5f, 10f, 20f, 25f, 30f, 35f, 40f, 45f, 50f, 55f, 56f} };
+    private static double[][] degreeSharpArray = { {0, 0.1, 0.5, 1, 1.5, 2, 5, 10, 15, 20, 30, 45},
+                                                  { 0, 5, 10, 20, 25, 30, 35, 40, 45, 50, 55, 56} };
 
-    private static float[][] degreeSonicArray = { {0f, 0.1f, 0.5f, 1f, 1.5f, 2f, 5f, 10f, 15f, 20f, 30, 45},
-                                                  { 0f, 5f, 10f, 20f, 25f, 30f, 35f, 40f, 45f, 50f, 55f, 56f} };
+    private static double[][] degreeSonicArray = { {0, 0.1, 0.5, 1, 1.5, 2, 5, 10, 15, 20, 30, 45},
+                                                  { 0, 5, 10, 20, 25, 30, 35, 40, 45, 50, 55, 56} };
 
-    private static float[][] sharpXFunc = {{0f, 0.9f, 1.7f, 4, 9, 26, 87, 120, 180, 250, 570 },
-                                          { 0f, 4f, 10.5f, 17, 24, 30, 41, 56, 63, 71, 95 }}; 
+    private static double[][] sharpXFunc = {{0, 0.9, 1.7, 4, 9, 26, 87, 120, 180, 250, 570 },
+                                          { 0f, 4, 10.5, 17, 24, 30, 41, 56, 63, 71, 95 }}; 
 
 
     // private static float[][] sharpXArray = { {0f, 0.9f, 1.4f, 3, 7, 16, 50, 117, 180, 240, 390 },
     //                                          { 0f, 4f, 10.5f, 17, 24, 29, 33, 39, 47, 54, 60 } }; 
 
-    private static float[][] sharpXArray = { {0f, 0.9f, 1.4f, 3, 7, 16, 50, 117, 180, 240, 390 },
-                                             { 0f, 4f, 10.5f, 18, 30, 42, 50, 60, 69, 81, 90 } }; 
+    private static double[][] sharpXArray = { {0, 0.9, 1.4, 3, 7, 16, 50, 117, 180, 240, 390 },
+                                             { 0f, 4, 10.5, 18, 30, 42, 50, 60, 69, 81, 90 } }; 
 
     // private static float[][] sonicYArray = { { 0f, 0.5f, 4.5f, 21, 31, 47, 76, 93, 150},
     //                                        { 0f, 6.1f, 15.5f, 25, 38, 47, 60, 86, 90} };
 
-    private static float[][] sonicYArray = { { 0.7f, 2.6f, 5f, 12, 35, 41, 52, 64, 71, 80},
-                                            { 0f, 15f, 18, 26, 32, 38, 47, 60, 86, 90} };
+    private static double[][] sonicYArray = { { 0.7, 2.6, 5, 12, 35, 41, 52, 64, 71, 80},
+                                            { 0, 15, 18, 26, 32, 38, 47, 60, 86, 90} };
 
-    private static float[][] degFunction = {{0.3f, 2.4f, 10, 25, 38, 47, 60, 70, 80, 90, 100, 100, 120, 130}, 
+    private static double[][] degFunction = {{0.3, 2.4, 10, 25, 38, 47, 60, 70, 80, 90, 100, 100, 120, 130}, 
                                             {4, 9, 15, 26, 30, 37, 45, 51, 57, 70, 76, 85, 93, 100}};
 
 
-    public Align(String sensors, float X, float Y, float Z){
+    public Align(String sensors, double X, double Y, double Z){
         this.sensors = sensors;
         this.X = X;
         this.Y = Y;
@@ -78,14 +78,14 @@ public class Align implements IState {
         return exit;
     }
 
-    private boolean alignIR(float X) {
+    private boolean alignIR(double X) {
         if(isFirstIter) {
-            lastGyro = (float)RobotContainer.train.getYaw();
+            lastGyro = RobotContainer.train.getYaw();
             isFirstIter = false;
         }
 
-        float leftSharp = RobotContainer.train.getLeftSharpDistance() + 0.9f;  
-        float rightSharp = RobotContainer.train.getRightSharpDistance();
+        double leftSharp = RobotContainer.train.getLeftSharpDistance() + 0.9;  
+        double rightSharp = RobotContainer.train.getRightSharpDistance();
 
         // if (Math.min(leftSharp, rightSharp) < 15) {
     
@@ -102,9 +102,9 @@ public class Align implements IState {
         SmartDashboard.putNumber("diffX", diffX);
         speedX = Function.TransitionFunction(diffX, sharpXArray);
 
-        RobotContainer.train.setAxisSpeed(speedX, 0, 0);
+        RobotContainer.train.setAxisSpeed(speedX, 0);
         if(finishX) {
-            RobotContainer.train.setAxisSpeed(speedX, 0, speedZ);
+            RobotContainer.train.setAxisSpeed(speedX,  speedZ);
         }
 
         finishZ = Function.BooleanInRange(diffSharp, -0.5f, 0.5f);
@@ -112,7 +112,7 @@ public class Align implements IState {
 
         // return finishX && finishZ;
         if(finishZ && finishX) {
-            RobotContainer.train.setAxisSpeed(0, 0, 0);
+            RobotContainer.train.setAxisSpeed(0,  0);
             isFirstIter = true;
             lastGyro = 0;
             diffZ = 0;
@@ -121,9 +121,9 @@ public class Align implements IState {
         return false;
     }
     
-    private boolean travelSonic(float Y) {
+    private boolean travelSonic(double Y) {
         if(isFirstIter) {
-            lastGyro = (float) RobotContainer.train.getYaw();
+            lastGyro = RobotContainer.train.getYaw();
             isFirstIter = false;
         }
         if(Y > 0) {
@@ -134,19 +134,19 @@ public class Align implements IState {
             speedY = Function.TransitionFunction(diffY, sonicYArray);
         }
 
-        diffZ = lastGyro - (float)RobotContainer.train.getYaw();
+        diffZ = lastGyro - RobotContainer.train.getYaw();
         speedZ = Function.TransitionFunction(diffZ, degFunction);
 
-        RobotContainer.train.setAxisSpeed(0, speedY, speedZ);
+        RobotContainer.train.setAxisSpeed(0, speedZ);
 
         if(finishY) {
-            RobotContainer.train.setAxisSpeed(0, speedY, speedZ);
+            RobotContainer.train.setAxisSpeed(0,  speedZ);
         }
         finishY = Function.BooleanInRange(diffY, -0.5f, 0.5f);
         finishZ = Function.BooleanInRange(diffZ, -2f, 2f);
 
         if(finishZ && finishY) {
-            RobotContainer.train.setAxisSpeed(0, 0, 0);
+            RobotContainer.train.setAxisSpeed(0,  0);
             isFirstIter = true;
             lastGyro = 0;
             diffZ = 0;
@@ -155,16 +155,16 @@ public class Align implements IState {
         return false;
     }
 
-    private boolean rotateZ(float Z) {
+    private boolean rotateZ(double Z) {
         if(isFirstIter) {
-            lastGyro = (float)RobotContainer.train.getYaw();
+            lastGyro = RobotContainer.train.getYaw();
             isFirstIter = false;
         }
-        float currGyro = (float)RobotContainer.train.getYaw();
+        double currGyro = RobotContainer.train.getYaw();
         diffZ = currGyro - Z;
         SmartDashboard.putNumber("diffZ", diffZ); 
         speedZ = Function.TransitionFunction(diffZ, degFunction);
-        RobotContainer.train.setAxisSpeed(0, 0, -speedZ);
+        RobotContainer.train.setAxisSpeed(0, -speedZ);
         
         return Function.BooleanInRange(diffZ, -0.3f, 0.3f);       
     }

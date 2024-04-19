@@ -1,12 +1,12 @@
 package frc.robot.subsystems;
 
 public class Function {
-    public static float TransitionFunction(float value, float[][] values) {
-        float result = 0;
-        float max_o;
-        float max_i;
-        float min_o;
-        float min_i;
+    public static double TransitionFunction(double value, double[][] values) {
+        double result = 0;
+        double max_o;
+        double max_i;
+        double min_o;
+        double min_i;
         int minus = 1;
         if (value < 0) {
           minus = -1;
@@ -37,11 +37,11 @@ public class Function {
         return result;
       }
 
-      public static boolean BooleanInRange(float value, float min, float max) {
+      public static boolean BooleanInRange(double value, double min, double max) {
         return value >= min && value <= max;
       }
     
-      public static float InRange(float value, float min, float max) {
+      public static double InRange(double value, double min, double max) {
         if (value > max) {
           value = max;
         } else if (value < min) {
@@ -50,12 +50,12 @@ public class Function {
         return value;
       }
 
-      public static int axis(float x, float y, float curX, float curY) {
-        float xDist = 0;
+      public static int axis(double x, double y, double curX, double curY) {
+        double xDist = 0;
         if (Math.abs(x - curX) != 0) {
           xDist = Math.abs(x - curX);
         }
-        float yDist = Math.abs(y - curY);
+        double yDist = Math.abs(y - curY);
         if (Function.BooleanInRange(yDist / xDist, 0.75f, 1.38f) || (xDist < 150 && yDist < 150)) {
         // if (Function.BooleanInRange(yDist / xDist, 0.75f, 2.5f) || (xDist < 150 && yDist < 150)) {
     
@@ -69,19 +69,19 @@ public class Function {
     
       }
 
-      public static float[] ReImToPolar(float x, float y)
+      public static double[] ReImToPolar(double x, double y)
     {
-        float[] arr = new float[2];
-        arr[0] = (float)Math.sqrt((x * x + y * y));  // r
-        arr[1] = (float)Math.atan2(y, x);  // theta
+        double[] arr = new double[2];
+        arr[0] = Math.sqrt((x * x + y * y));  // r
+        arr[1] = Math.atan2(y, x);  // theta
         return arr;
     }
 
-    public static float[] PolarToReIm(float r, float theta)
+    public static double[] PolarToReIm(double r, double theta)
     {
-        float[] arr = new float[2];
-        arr[0] = r * (float)Math.cos(theta);  // x
-        arr[1] = r * (float)Math.sin(theta);  // y
+      double[] arr = new double[2];
+        arr[0] = r * Math.cos(theta);  // x
+        arr[1] = r * Math.sin(theta);  // y
         return arr;
     }
 }

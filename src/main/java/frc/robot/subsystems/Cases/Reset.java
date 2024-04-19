@@ -20,7 +20,7 @@ public class Reset implements IState{
     public boolean execute(){
         switch (this.resetName){
             case "Gyro":
-            RobotContainer.train.setAxisSpeed(0, 0, 0);
+            RobotContainer.train.setAxisSpeed(0, 0);
             RobotContainer.train.resetGyro();
             break;
 
