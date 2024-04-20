@@ -19,9 +19,8 @@ import frc.robot.subsystems.JavaCam;
  */
 public class Robot extends TimedRobot {
 
-  private RobotContainer m_robotContainer;
   public static JavaCam javcam;
-
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -29,7 +28,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer. 
-    m_robotContainer = new RobotContainer();
+    RobotContainer m_robotContainer = RobotContainer.getRobotContainer();
   }
 
   /**

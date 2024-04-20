@@ -29,7 +29,7 @@ public class PID {
             errorI += errorP*kI;
             errorD += -errorI*kD;
         }
-        output = Function.InRange((float)(errorP + errorI + errorD),(float) lowerLimit, (float)upperLimit) / 100;
+        output = Function.InRange((errorP + errorI + errorD),lowerLimit, upperLimit) / 100;
     }
 
     public double getOutput() {

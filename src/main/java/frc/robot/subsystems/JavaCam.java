@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -11,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Main;
+import frc.robot.RobotContainer;
 
 
 public class JavaCam implements Runnable
@@ -18,9 +22,12 @@ public class JavaCam implements Runnable
     private UsbCamera camera;
     private CvSink cvSink;
     private static CvSource outStream;
+    private static CvSource outStream2;
+    private static CvSource outStream3;
 
     public int nowTask = 0;
     public int nowResult = 0; 
+
     public String colorCube, colorStand;
     public boolean alignCamera = false;
 
@@ -40,6 +47,8 @@ public class JavaCam implements Runnable
         cvSink = CameraServer.getInstance().getVideo(camera);
 
         outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
+        outStream2 = CameraServer.getInstance().putVideo("outBlur", 640, 480);
+        outStream3 = CameraServer.getInstance().putVideo("outHSV", 640, 480);
 
         while (true) {
             try {
@@ -47,22 +56,22 @@ public class JavaCam implements Runnable
                 if (cvSink.grabFrame(source) == 0) {
                     continue;
                 }
-                CheckApple(source);
-                source.release(); 
+                RobotContainer.train.checkAppleResult = CheckApple(source);
+                SmartDashboard.putNumber("checkAppleResult", RobotContainer.train.checkAppleResult);
+                source.release();
             } catch (final Exception e) {
-                DriverStation.reportError("An error occurred in CameraController: " + e.getMessage(), false);	
+                DriverStation.reportError("An error occurred in JavaCam: " + e.getMessage(), false);
                 e.printStackTrace();
             }
         }
     }
 
-
     public static int CheckApple(final Mat orig) // Распознавание яблока
     {
-        // Нужно заменить массивом 
+        // Нужно заменить массивом
         final double red1 = SmartDashboard.getNumber("RED1", 0);
         final double red2 = SmartDashboard.getNumber("RED2", 0);
- 
+
         final double green1 = SmartDashboard.getNumber("GREEN1", 0);
         final double green2 = SmartDashboard.getNumber("GREEN2", 0);
 
@@ -73,19 +82,69 @@ public class JavaCam implements Runnable
         final Point greenPoint = new Point(green1, green2);
         final Point bluePoint = new Point(blue1, blue2);
 
-        // final Mat threshImage = Viscad2.colorThreshold(orig, redPoint, greenPoint, bluePoint); // Пороговая обработка кадра
-        // final int imageArea = Viscad2.ImageTrueArea(threshImage); // Определение площади выделенной области на обработанном кадре
-        final Mat threshImage = Viscad2.Threshold(orig, redPoint, greenPoint, bluePoint); 
-        final int imageArea = Viscad2.ImageTrueArea(threshImage);
-        outStream.putFrame(threshImage); // Передача обработанного кадра на выходной поток
+        // final Point redPoint = new Point(0, 9);
+        // final Point greenPoint = new Point(86, 255); // красное яблоко
+        // final Point bluePoint = new Point(0, 255);
 
-        threshImage.release();
+        // final Point redPoint = new Point(17, 245);
+        // final Point greenPoint = new Point(200, 240); // желтая груша
+        // final Point bluePoint = new Point(170, 250);
 
-        if (imageArea > 6000) {
+        // final Point redPoint = new Point(31, 190);
+        // final Point greenPoint = new Point(90, 200); // зеленая груша
+        // final Point bluePoint = new Point(70, 170);
+
+        Mat hsvImage = new Mat();
+        Mat blurMat = Viscad2.Blur(orig, 10);
+        Imgproc.cvtColor(blurMat, hsvImage, Imgproc.COLOR_BGR2HSV);
+
+        final Mat redApple = Viscad2.Threshold(orig, new Point(0, 9), new Point(86, 255), new Point(0, 255));
+        final Mat greenPear = Viscad2.Threshold(orig, new Point(31, 190), new Point(90, 200), new Point(70, 170));
+        final Mat yellowPear = Viscad2.Threshold(orig, new Point(17, 245), new Point(200, 240), new Point(170, 250));
+
+        final Mat filledYellowPear = Viscad2.FillHolesCAD(yellowPear);
+        final Mat filledRedApple = Viscad2.FillHolesCAD(redApple);
+        final Mat filledGreenPear = Viscad2.FillHolesCAD(greenPear);
+
+        final int imageAreaYellowPear = Viscad2.ImageTrueArea(filledYellowPear);
+        final int imageAreaGreenPear = Viscad2.ImageTrueArea(filledGreenPear);
+        final int imageAreaRedApple = Viscad2.ImageTrueArea(filledRedApple); // filledRedApple - 9500 // filledGreenPear
+                                                                             // - 8100 // filledYellowPear - 7400
+
+        SmartDashboard.putNumber("ImageAreaYellowPear", imageAreaYellowPear);
+        SmartDashboard.putNumber("ImageAreaGreenPear", imageAreaGreenPear);
+        SmartDashboard.putNumber("ImageAreaRedApple", imageAreaRedApple);
+
+        // final Mat threshImage = Viscad2.Threshold(blurMat, redPoint, greenPoint,
+        // bluePoint);
+
+        // Mat threshImage = new Mat();
+
+        // Core.inRange(hsvImage, new Scalar(redPoint.x, greenPoint.x, bluePoint.x), new
+        // Scalar(redPoint.y, greenPoint.y, bluePoint.y), threshImage);
+
+        // final int imageArea = Viscad2.ImageTrueArea(threshImage);
+
+        outStream.putFrame(filledYellowPear);
+        outStream2.putFrame(filledRedApple); // Передача обработанного кадра на выходной поток
+        outStream3.putFrame(filledGreenPear); // Передача обработанного кадра на выходной поток
+
+        blurMat.release();
+        filledRedApple.release();
+        hsvImage.release();
+        filledYellowPear.release();
+        filledGreenPear.release();
+
+        if (imageAreaYellowPear > 7400) {
             return 1;
+        } else if(imageAreaGreenPear > 8100){
+            return 2;
+        } else if(imageAreaRedApple > 9500) {
+            return 3;
         } else {
-            return 0;
+            return 0; 
         }
+        
     }
 
 }

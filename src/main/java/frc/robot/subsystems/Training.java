@@ -24,13 +24,13 @@ public class Training extends SubsystemBase
     private PID rightPID = new PID(0.35, 0.065, 0.0001, -100, 100); 
     private PID leftPID = new PID(0.35, 0.065, 0.0001, -100, 100);
     private PID backPID = new PID(0.35, 0.065, 0.0001, -100, 100);
+    private PID liftPID = new PID(0.35, 0.065, 0.0001, -100, 100);
+    private double speedRpid, speedLpid, speedBpid;
 
-    private float speedRpid, speedLpid, speedBpid;
+    private double rightLast, leftLast, backLast = 0;
 
-    private float rightLast, leftLast, backLast = 0;
-
-    public static float posX;
-    public static float posY;
+    public static double posX;
+    public static double posY;
 
     private MedianFilter sharpRightFilter;
     private MedianFilter sharpLeftFilter;
@@ -40,24 +40,37 @@ public class Training extends SubsystemBase
     
     private Ultrasonic sonicRight, sonicLeft;
     private AnalogInput sharpRight, sharpLeft;
-    private float confIk = 1.2f;
+    private double confIk = 1.2f;
     private AHRS gyro;
 
-    public boolean finish = false;
+    private Servo glide;
+    private Servo grip;
+    private Servo gripRotate;
+    private Servo mainRotate;
+    private Encoder limitSwitch;
 
+    public boolean initLift = false;
+    public boolean finish = false;
+    
+    public int checkAppleResult = 0;
+
+    public boolean liftStop = false;
+    private double liftSpeed = 0;
+    private double[][] speedForLift = {{0, 20, 90, 150, 250, 350, 400, 500, 600}, {0, 0.4, 0.10, 0.16, 0.27, 0.39, 0.46, 0.53, 0.60}}; 
+    public int positions = 0; 
+    private boolean flag = true;
     public Training()
     {
-        rightMotor = new TitanQuad(42, 1);
-        leftMotor = new TitanQuad(42, 2);
-        backMotor = new TitanQuad(42, 0);
+        rightMotor = new TitanQuad(42, 0);
+        leftMotor = new TitanQuad(42, 1);
+        backMotor = new TitanQuad(42, 2);
         
         liftMotor = new TitanQuad(42, 3);
 
-
-        rightEnc = new TitanQuadEncoder(rightMotor, 1, 0.2399827721492203);
-        leftEnc = new TitanQuadEncoder(leftMotor, 2, 0.2399827721492203);
+        rightEnc = new TitanQuadEncoder(rightMotor, 0, 0.2399827721492203);
+        leftEnc = new TitanQuadEncoder(leftMotor, 1, 0.2399827721492203);
         backEnc = new TitanQuadEncoder(backMotor, 0, 0.2399827721492203);
-        
+
         liftEnc = new TitanQuadEncoder(liftMotor, 3, 0.2399827721492203);
 
         sharpRight = new AnalogInput(0);
@@ -71,71 +84,84 @@ public class Training extends SubsystemBase
         sonicRightFilter = new MedianFilter(6);
         sonicLeftFilter = new MedianFilter(6);
         sonicLeftAdapFilter = new MedianFilter(3);
-        
 
+        glide = new Servo(0);
+        grip = new Servo(1);
+        gripRotate = new Servo(2);
+        mainRotate = new Servo(9);
+        
+        limitSwitch = new Encoder(6, 7);
         
         gyro = new AHRS();
         
-
+        
         new Thread( () -> {
             while(!Thread.interrupted())
             {
                 try 
                 {
+                    if(getLimitSwitch()){
+                        initLift = false;
+                        liftEnc.reset();
+                    }
+                    setLiftPositions();
+                    if(flag) {
+                        setMainRotateServoValue(0);
+                        setGlideServoValue(0);
+                        flag = false;
+                    }
                     
                     Thread.sleep(5);
                 } 
                 catch (Exception e) 
                 {
-                    // e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }).start();
 
     }
 
-    public float getRightEncoder(){
-        return (float)rightEnc.getEncoderDistance();
+    public double getRightEncoder(){
+        return rightEnc.getEncoderDistance();
     }
 
-    public float getLeftEncoder(){
-        return (float)leftEnc.getEncoderDistance();
+    public double getLeftEncoder(){
+        return leftEnc.getEncoderDistance();
     }
 
-    public float getBackEncoder(){
-        return (float)backEnc.getEncoderDistance();
+    public double getBackEncoder(){
+        return backEnc.getEncoderDistance();
     }
 
-    public float getLiftEncoder() {
-        return (float)liftEnc.getEncoderDistance();
+    public double getLiftEncoder() {
+        return liftEnc.getEncoderDistance();
+    }
+
+    public boolean getLimitSwitch(){
+        return limitSwitch.getDistance() == -1 || limitSwitch.getDistance() == 2;
     }
 
     public void travelXYZ(){
-        float currentRight = getRightEncoder();
-        float currentLeft = getLeftEncoder();
-        float currentBack = getBackEncoder();
+        double currentRight = getRightEncoder();
+        double currentLeft = getLeftEncoder();
 
-        float rightSpeed = currentRight - rightLast;
-        float leftSpeed = currentLeft - leftLast;
-        float backSpeed = currentBack - backLast;
+        double rightSpeed = currentRight - rightLast;
+        double leftSpeed = currentLeft - leftLast;
 
         double nowYaw = Math.toRadians(getYaw());
 
-        float spX = -(((rightSpeed) - (leftSpeed)) / 2) / 0.963f;
-        float spY = ((-(rightSpeed / 2) - (leftSpeed / 2) + backSpeed) / 3) / 0.554f;
-        spY = -spY;
+        double spX = (-rightSpeed + leftSpeed) / 0.963f;
 
-        posX +=  Math.cos(nowYaw) * spX - Math.sin(nowYaw) * spY;
-        posY += Math.cos(nowYaw) * spY + Math.sin(nowYaw) * spX; 
+        posX +=  Math.cos(nowYaw) * spX - Math.sin(nowYaw);
+        
 
         SmartDashboard.putNumber("spremX", spX);
-        SmartDashboard.putNumber("spremY", spY);
 
         rightLast = currentRight;
         leftLast = currentLeft;
-        backLast = currentBack;
     }
-
+    
     // public void setAxisSpeed(float x, float y, float z){
     //     float right = - (x + y / 2 - z);
     //     float left =  x - y / 2 + z;
@@ -184,27 +210,45 @@ public class Training extends SubsystemBase
     //     }
     // }
 
-    public void setAxisSpeed(float x, float y, float z) {
-        y = -y;
-        double motorLF =  x - y / 2 + z;
-        double motorRF = - (x + y / 2 - z);
-        double motorB = (y + z);
+    // public void setAxisSpeed(float x, float y, float z) {
+    //     y = -y;
+    //     double motorLF =  x - y / 2 + z;
+    //     double motorRF = - (x + y / 2 - z);
+    //     double motorB = (y + z);
 
-        backPID.calculate(-backEnc.getSpeed(), motorB); // revert
-        rightPID.calculate(-rightEnc.getSpeed(), motorRF); 
-        leftPID.calculate(-leftEnc.getSpeed(), motorLF);
+    //     backPID.calculate(-backEnc.getSpeed(), motorB); // revert
+    //     rightPID.calculate(-rightEnc.getSpeed(), motorRF); 
+    //     leftPID.calculate(-leftEnc.getSpeed(), motorLF);
 
-        SmartDashboard.putNumber("rightPID", rightPID.getOutput());
-        SmartDashboard.putNumber("leftPID", leftPID.getOutput());
-        SmartDashboard.putNumber("backPID", backPID.getOutput());
+    //     SmartDashboard.putNumber("rightPID", rightPID.getOutput());
+    //     SmartDashboard.putNumber("leftPID", leftPID.getOutput());
+    //     SmartDashboard.putNumber("backPID", backPID.getOutput());
 
-        backMotor.set(backPID.getOutput()); // revert
-        rightMotor.set(rightPID.getOutput()); // revert
-        leftMotor.set(leftPID.getOutput()); 
+    //     backMotor.set(backPID.getOutput()); // revert
+    //     rightMotor.set(rightPID.getOutput()); // revert
+    //     leftMotor.set(leftPID.getOutput()); 
         
+    // }
+
+    public void setAxisSpeed(double x, double z) {
+
+        // double motorL = x + z + x / 2;
+        // double motorR = -x - z;
+
+        double motorL = x + z + x / 2; 
+        double motorR = -x - z;
+    
+        leftPID.calculate(-leftEnc.getSpeed(), motorL);
+        rightPID.calculate(-rightEnc.getSpeed(), motorR);
+    
+        SmartDashboard.putNumber("leftPID", leftPID.getOutput());
+        SmartDashboard.putNumber("rightPID", rightPID.getOutput());
+    
+        leftMotor.set(leftPID.getOutput());
+        rightMotor.set(rightPID.getOutput());
     }
 
-    public void OdometryReset(float x, float y){
+    public void OdometryReset(double x, double y){
         rightLast = 0;
         leftLast = 0;
         backLast = 0;
@@ -235,22 +279,22 @@ public class Training extends SubsystemBase
 
 
     // SENSORS ---------------------------------------------------------------------------------------------
-    public float getRightSharpDistance(){
+    public double getRightSharpDistance(){
         // return (sharpRightFilter.Filter((float)(Math.pow(sharpRight.getAverageVoltage(), -1.2045) * 27.726)) + confIk)-5;
-        return (sharpRightFilter.Filter((float)(Math.pow(sharpRight.getAverageVoltage(), -1.2045) * 27.726)));
+        return (sharpRightFilter.Filter((Math.pow(sharpRight.getAverageVoltage(), -1.2045) * 27.726)));
     }
 
-    public float getLeftSharpDistance(){
+    public double getLeftSharpDistance(){
         // return (sharpLeftFilter.Filter((float)(Math.pow(sharpLeft.getAverageVoltage(), -1.2045) * 27.726)))-5;
-        return (sharpLeftFilter.Filter((float)(Math.pow(sharpLeft.getAverageVoltage(), -1.2045) * 27.726)));
+        return (sharpLeftFilter.Filter((Math.pow(sharpLeft.getAverageVoltage(), -1.2045) * 27.726)));
     }
 
-    public float getRightSonicDistance(){
+    public double getRightSonicDistance(){
         try{
             sonicRight.ping();
             Timer.delay(0.005);
 
-            return (float) sonicRightFilter.Filter((float)sonicRight.getRangeMM() / 10);
+            return sonicRightFilter.Filter(sonicRight.getRangeMM() / 10);
             // return (float) sonicRightFilter.midFilter((float)sonicRight.getRangeMM() / 10);
             // return (float)sonicRight.getRangeMM()/10;
         }catch (Exception e){
@@ -258,13 +302,13 @@ public class Training extends SubsystemBase
         }
     }
 
-    public float getLeftSonicDistance(){
+    public double getLeftSonicDistance(){
         try{
             sonicLeft.ping();
             Timer.delay(0.005);
 
             // return sonicLeftFilter.midFilter((float)sonicLeft.getRangeMM() / 10);
-            return sonicLeftFilter.Filter((float)sonicLeft.getRangeMM() / 10);
+            return sonicLeftFilter.Filter(sonicLeft.getRangeMM() / 10);
             // return ((float) sonicLeftAdapFilter.adapFilter((float)sonicLeft.getRangeMM() / 10));
 
             // return (float)sonicLeft.getRangeMM()/10;
@@ -272,6 +316,22 @@ public class Training extends SubsystemBase
         }catch (Exception e){
             return 0;
         }
+    }
+
+    public void setGripServoValue(int value) {
+        grip.setAngle(value);
+    }
+
+    public void setGripRotateServoValue(int value) {
+        gripRotate.setAngle(value);
+    }
+
+    public void setMainRotateServoValue(int value) {
+        mainRotate.setAngle(value);
+    }
+
+    public void setGlideServoValue(int value) {
+        glide.setAngle(value);
     }
 
     public double getYaw()
@@ -289,17 +349,104 @@ public class Training extends SubsystemBase
         gyro.zeroYaw();
     }
 
+    // public void setLiftPositions() {
+    //     SmartDashboard.putBoolean("InitLift", initLift);
+    //     SmartDashboard.putBoolean("Swith", getLimitSwitch());
+    //     SmartDashboard.putNumber("Hello World", 0);
+    //     SmartDashboard.putNumber("positions", positions);
+        
+    //     if (initLift) {
+    //         liftSpeed = -20;
+    //         liftStop = getLimitSwitch();
+    //     } else {
+    //         liftSpeed = Function.TransitionFunction(positions - liftEnc.getEncoderDistance(), speedForLift);
+    //         liftStop = Function.BooleanInRange(positions - liftEnc.getEncoderDistance(), -5, 5);
+    //         SmartDashboard.putNumber("razniza", positions - liftEnc.getEncoderDistance());
+    //     }
+    //     SmartDashboard.putNumber("liftSpeed", liftSpeed);
+
+    //     if (liftStop && !getLimitSwitch()) {
+    //         SmartDashboard.putNumber("Hello World", 1);
+    //         liftPID.reset(); 
+    //         liftMotor.set(0);
+    //     } else if (liftSpeed < 0 && getLimitSwitch()){
+    //         liftPID.reset();
+    //         liftMotor.set(0);
+    //         liftEnc.reset();
+    //         SmartDashboard.putNumber("Hello World", 2);
+    //     } else if (liftSpeed < 0 && liftEnc.getEncoderDistance() > 400 && !initLift) {
+    //         liftPID.reset();
+    //         liftMotor.set(0);
+    //         SmartDashboard.putNumber("Hello World", 3);
+    //     } else 
+    //     {
+    //         SmartDashboard.putNumber("Hello World", 4);
+            
+        
+    //         liftPID.calculate(liftEnc.getSpeed(), liftSpeed);
+    //         liftMotor.set(liftPID.getOutput());
+    //     }
+    // }
+
+    public void setLiftPositions() {
+        SmartDashboard.putBoolean("InitLift", initLift);
+        
+
+        // -liftSpeed Движение вверх
+        // liftSpeed Движение вниз
+
+        if (initLift) {
+            liftSpeed = -0.5;
+            liftStop = getLimitSwitch();
+            SmartDashboard.putNumber("Hello World", 0);
+            if (liftStop) {
+                liftPID.reset(); 
+                
+            }
+        } else {
+            liftSpeed = Function.TransitionFunction(positions - liftEnc.getEncoderDistance(), speedForLift);
+            liftStop = Function.BooleanInRange(positions - liftEnc.getEncoderDistance(), -10, 10);
+        }
+
+        if (liftStop && !getLimitSwitch()) {
+            SmartDashboard.putNumber("Hello World", 1);
+            liftPID.reset(); 
+            liftMotor.set(0);
+        } else if (liftSpeed < 0 && getLimitSwitch()){
+            liftPID.reset();
+            liftMotor.set(0);
+            liftEnc.reset();
+            SmartDashboard.putNumber("Hello World", 2);
+        } else if (liftSpeed > 0 && liftEnc.getEncoderDistance() > 500 && !initLift) {
+            liftPID.reset();
+            liftMotor.set(0);
+            SmartDashboard.putNumber("Hello World", 3);
+        } else 
+        {
+            SmartDashboard.putNumber("Hello World", 4);
+            liftPID.calculate(liftEnc.getSpeed(), liftSpeed);
+            liftMotor.set(liftPID.getOutput());
+        }
+
+        SmartDashboard.putBoolean("Swith", getLimitSwitch());
+        SmartDashboard.putNumber("positions", positions);
+        SmartDashboard.putNumber("razniza", liftEnc.getEncoderDistance() - positions);
+        SmartDashboard.putNumber("liftSpeed", liftSpeed);
+        SmartDashboard.putBoolean("liftStop", liftStop);
+
+    }
+
     @Override
     public void periodic()
     {
         // ENCODERS ------------------------------------------------------
         SmartDashboard.putNumber("rightEnc", getRightEncoder());
         SmartDashboard.putNumber("leftEnc", getLeftEncoder());
-        SmartDashboard.putNumber("backEnc", (float)backEnc.getEncoderDistance());
+        SmartDashboard.putNumber("liftEnc", getLiftEncoder());
 
         SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
         SmartDashboard.putNumber("speedLeftMotor", leftEnc.getSpeed());
-        SmartDashboard.putNumber("speedBackMotor", backEnc.getSpeed());
+        SmartDashboard.putNumber("speedLiftotor", liftEnc.getSpeed());
 
         SmartDashboard.putNumber("posX", posX);
         SmartDashboard.putNumber("posY", posY);
@@ -316,6 +463,7 @@ public class Training extends SubsystemBase
         // BUTTONS -------------------------------------------------------
  
         // SmartDashboard.putNumber("EMS_number", ems.getDistance());
+        SmartDashboard.putBoolean("initlift", initLift);
 
         // test
         SmartDashboard.putBoolean("end", finish);
