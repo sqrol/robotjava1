@@ -19,11 +19,11 @@ public class Drivefor2Motors implements IState {
     private double currentRight, currentLeft; 
     private double lastGyro, nowYaw;
 
-    private double[][] speedXArray = { { 0, 0.3, 2, 5, 15, 40, 70, 150, 170, 300 },
-                                       { 0, 0.3, 1, 3, 7, 16, 28, 35, 44, 51 } };  
+    private double[][] speedXArray = { { 0, 0.3, 2, 5, 15, 40, 70, 150, 170, 300, 360, 430, 570, 700, 770 },
+                                       { 0, 0.3, 1, 3, 7, 16, 28, 35, 44, 51, 59, 65, 70, 78, 86 } };
 
     private double[][] speedZArray = { { 0, 1.2, 2, 3, 7, 20, 32, 50, 65, 79, 90 },
-                                       { 0, 1.5, 3, 5, 7, 20, 30, 40, 63, 80, 90 } };  
+                                       { 0, 1.5, 3, 5, 7, 20, 30, 40, 63, 80, 90 } };
 
     public Drivefor2Motors(double x, double z) {
         this.x = x; 
@@ -72,7 +72,7 @@ public class Drivefor2Motors implements IState {
 
         train.setAxisSpeed(speedX, speedZ);
 
-        return Function.BooleanInRange(x - posX, -5, 5) && Function.BooleanInRange(0 - nowYaw, -0.2, 0.2); 
+        return Function.BooleanInRange(x - posX, -5, 5) && Function.BooleanInRange(0 - nowYaw, -0.5, 0.5); 
     }
 
     private boolean DriveForZ() {
@@ -86,7 +86,7 @@ public class Drivefor2Motors implements IState {
         speedZ = Function.TransitionFunction(z - nowYaw, speedZArray);
         train.setAxisSpeed(0, speedZ);
 
-        return Function.BooleanInRange(z - nowYaw, -0.2, 0.2); 
+        return Function.BooleanInRange(z - nowYaw, -0.5, 0.5); 
     }
 
     
