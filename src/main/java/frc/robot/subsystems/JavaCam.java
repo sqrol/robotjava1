@@ -21,12 +21,9 @@ public class JavaCam implements Runnable
 {
     private UsbCamera camera;
     private CvSink cvSink;
-    private static CvSource outStream;
-    private static CvSource outStream2;
-    private static CvSource outStream3;
+    private static CvSource outStream, outStream2, outStream3;
 
-    public int nowTask = 0;
-    public int nowResult = 0; 
+    public int nowTask, nowResult = 0;
 
     public String colorCube, colorStand;
     public boolean alignCamera = false;

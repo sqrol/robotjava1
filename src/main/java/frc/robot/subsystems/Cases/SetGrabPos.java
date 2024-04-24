@@ -37,19 +37,19 @@ public class SetGrabPos implements IState {
     private boolean grab(String fruit) {
         switch(fruit){
             case "BIG APPLE":
-                RobotContainer.train.setGripServoValue(137);
+                RobotContainer.train.setGripServoValue(19);
                 break;
             case "SMALL APPLE":
-                RobotContainer.train.setGripServoValue(245);
+                RobotContainer.train.setGripServoValue(0);
                 break;
             case "PEAR":
-                RobotContainer.train.setGripServoValue(161);
+                RobotContainer.train.setGripServoValue(25);
                 break;
             case "OPEN":
-                RobotContainer.train.setGripServoValue(100);
+                RobotContainer.train.setGripServoValue(70);
                 break;
         }
-        return Timer.getFPGATimestamp() - StateMachine.startTime > 1.5;
+        return Timer.getFPGATimestamp() - StateMachine.startTime > 0.6;
     }
 
     @Override

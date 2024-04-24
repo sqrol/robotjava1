@@ -17,8 +17,8 @@ public class SetLiftPosition implements IState {
 
     @Override
     public boolean execute() {
-        train.positions = pos;
-        return train.liftStop || Timer.getFPGATimestamp() - StateMachine.startTime > 6; 
+        train.setLiftPositions(pos);
+        return train.liftStop || Timer.getFPGATimestamp() - StateMachine.startTime > 10; 
         // return false;
         // return Timer.getFPGATimestamp() - StateMachine.startTime > 2;
     }

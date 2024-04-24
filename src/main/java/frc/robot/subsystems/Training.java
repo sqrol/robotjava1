@@ -21,76 +21,68 @@ public class Training extends SubsystemBase
     private TitanQuad rightMotor, leftMotor, backMotor, liftMotor;
     private TitanQuadEncoder rightEnc, leftEnc, backEnc, liftEnc;
 
-    private PID rightPID = new PID(0.35, 0.065, 0.0001, -100, 100); 
-    private PID leftPID = new PID(0.35, 0.065, 0.0001, -100, 100);
-    private PID backPID = new PID(0.35, 0.065, 0.0001, -100, 100);
-    private PID liftPID = new PID(0.35, 0.065, 0.0001, -100, 100);
+    private PID rightPID = new PID(0.3, 0.094, 0.001, -100, 100); 
+    private PID leftPID =  new PID(0.3, 0.094, 0.001, -100, 100);
+    // private PID backPID = new PID(0.35, 0.065, 0.0001, -100, 100); // изначальный PID
+    private PID liftPID =  new PID(0.3, 0.094, 0.001, -100, 100);
+
     private double speedRpid, speedLpid, speedBpid;
+    private double rightLast, leftLast = 0;
+ 
+    public static double posX, posY;
 
-    private double rightLast, leftLast, backLast = 0;
+    private MedianFilter sharpRightFilter, sharpLeftFilter, sonicRightFilter, sonicLeftFilter;
 
-    public static double posX;
-    public static double posY;
-
-    private MedianFilter sharpRightFilter;
-    private MedianFilter sharpLeftFilter;
-    private MedianFilter sonicRightFilter;
-    private MedianFilter sonicLeftFilter, sonicLeftAdapFilter;
-
-    
     private Ultrasonic sonicRight, sonicLeft;
     private AnalogInput sharpRight, sharpLeft;
     private double confIk = 1.2f;
     private AHRS gyro;
 
-    private Servo glide;
-    private Servo grip;
-    private Servo gripRotate;
-    private Servo mainRotate;
+    private Servo glide, grip, gripRotate, mainRotate;
+
     private Encoder limitSwitch;
 
-    public boolean initLift = false;
-    public boolean finish = false;
-    
+    public boolean initLift, liftStop, finish = false;
+    private boolean flag = true;
+
     public int checkAppleResult = 0;
 
-    public boolean liftStop = false;
     private double liftSpeed = 0;
-    private double[][] speedForLift = {{0, 20, 90, 150, 250, 350, 400, 500, 600}, {0, 0.4, 0.10, 0.16, 0.27, 0.39, 0.46, 0.53, 0.60}}; 
-    public int positions = 0; 
-    private boolean flag = true;
+    private double[][] speedForLift = {{0, 20, 90, 150, 250, 350, 400, 500, 600},
+                                         {0, 4, 10, 16, 27, 39, 46, 53, 60}}; 
+    
+    
+
     public Training()
     {
         rightMotor = new TitanQuad(42, 0);
-        leftMotor = new TitanQuad(42, 1);
-        backMotor = new TitanQuad(42, 2);
+        leftMotor = new TitanQuad(42, 1); 
+        backMotor = new TitanQuad(42, 2); 
+        liftMotor = new TitanQuad(42, 3); 
         
-        liftMotor = new TitanQuad(42, 3);
-
         rightEnc = new TitanQuadEncoder(rightMotor, 0, 0.2399827721492203);
         leftEnc = new TitanQuadEncoder(leftMotor, 1, 0.2399827721492203);
-        backEnc = new TitanQuadEncoder(backMotor, 0, 0.2399827721492203);
+        backEnc = new TitanQuadEncoder(backMotor, 2, 0.2399827721492203);
 
         liftEnc = new TitanQuadEncoder(liftMotor, 3, 0.2399827721492203);
 
-        sharpRight = new AnalogInput(0);
-        sharpLeft = new AnalogInput(1);
-        sonicLeft = new Ultrasonic(11, 10);
-        sonicRight = new Ultrasonic(9, 8);
+        sharpRight = new AnalogInput(3);
+        sharpLeft = new AnalogInput(2);
+        sonicLeft = new Ultrasonic(10, 11);
+        sonicRight = new Ultrasonic(8, 9);
 
         sharpRightFilter = new MedianFilter(4);
         sharpLeftFilter = new MedianFilter(4);
 
         sonicRightFilter = new MedianFilter(6);
         sonicLeftFilter = new MedianFilter(6);
-        sonicLeftAdapFilter = new MedianFilter(3);
 
         glide = new Servo(0);
         grip = new Servo(1);
         gripRotate = new Servo(2);
-        mainRotate = new Servo(9);
+        mainRotate = new Servo(3);
         
-        limitSwitch = new Encoder(6, 7);
+        limitSwitch = new Encoder(2, 3);
         
         gyro = new AHRS();
         
@@ -100,16 +92,17 @@ public class Training extends SubsystemBase
             {
                 try 
                 {
-                    if(getLimitSwitch()){
-                        initLift = false;
-                        liftEnc.reset();
-                    }
-                    setLiftPositions();
-                    if(flag) {
-                        setMainRotateServoValue(0);
-                        setGlideServoValue(0);
-                        flag = false;
-                    }
+                    // if(getLimitSwitch()){
+                    //     initLift = false;
+                    //     liftEnc.reset();
+                    //     liftMotor.set(0);
+                    // }
+                    
+                    // if(flag) {
+                    //     // setMainRotateServoValue(0);
+                    //     setGlideServoValue(0);
+                    //     flag = false;
+                    // }
                     
                     Thread.sleep(5);
                 } 
@@ -231,19 +224,34 @@ public class Training extends SubsystemBase
     // }
 
     public void setAxisSpeed(double x, double z) {
+        if(x == 0 && z == 0) {
+            leftPID.reset();
+            rightPID.reset();
 
+            leftMotor.set(0);
+            rightMotor.set(0);
+
+            rightEnc.reset();
+            leftEnc.reset();
+        }
         // double motorL = x + z + x / 2;
         // double motorR = -x - z;
 
-        double motorL = x + z + x / 2; 
-        double motorR = -x - z;
+        double motorL = -x - z ; 
+        double motorR = x - z;
+
+        SmartDashboard.putNumber("leftPIDIn", motorL);
+        SmartDashboard.putNumber("rightPIDIn", motorR);
     
         leftPID.calculate(-leftEnc.getSpeed(), motorL);
         rightPID.calculate(-rightEnc.getSpeed(), motorR);
     
-        SmartDashboard.putNumber("leftPID", leftPID.getOutput());
-        SmartDashboard.putNumber("rightPID", rightPID.getOutput());
+        SmartDashboard.putNumber("leftPIDOut", leftPID.getOutput());
+        SmartDashboard.putNumber("rightPIDOut", rightPID.getOutput());
     
+        // leftMotor.set(leftPID.getOutput());
+        // rightMotor.set(rightPID.getOutput());
+
         leftMotor.set(leftPID.getOutput());
         rightMotor.set(rightPID.getOutput());
     }
@@ -251,7 +259,6 @@ public class Training extends SubsystemBase
     public void OdometryReset(double x, double y){
         rightLast = 0;
         leftLast = 0;
-        backLast = 0;
 
         rightEnc.reset();
         leftEnc.reset();
@@ -259,6 +266,11 @@ public class Training extends SubsystemBase
 
         posX = x;
         posY = y;
+    }
+
+    public void reset2Motors() {
+        rightEnc.reset();
+        leftEnc.reset();
     }
 
     public void checkMotors(String name, double speed){
@@ -339,6 +351,11 @@ public class Training extends SubsystemBase
         return gyro.getYaw();
     }
 
+    public double getLongYaw()
+    {
+        return gyro.getAngle();
+    }
+
     // -----------------------------------------------------------------------------------------------------
 
     // BUTTONS ---------------------------------------------------------------------------------------------
@@ -388,20 +405,19 @@ public class Training extends SubsystemBase
     //     }
     // }
 
-    public void setLiftPositions() {
+    public void setLiftPositions(int positions) {
+
         SmartDashboard.putBoolean("InitLift", initLift);
         
-
         // -liftSpeed Движение вверх
         // liftSpeed Движение вниз
 
         if (initLift) {
-            liftSpeed = -0.5;
+            liftSpeed = -17;
             liftStop = getLimitSwitch();
             SmartDashboard.putNumber("Hello World", 0);
             if (liftStop) {
                 liftPID.reset(); 
-                
             }
         } else {
             liftSpeed = Function.TransitionFunction(positions - liftEnc.getEncoderDistance(), speedForLift);
@@ -417,7 +433,7 @@ public class Training extends SubsystemBase
             liftMotor.set(0);
             liftEnc.reset();
             SmartDashboard.putNumber("Hello World", 2);
-        } else if (liftSpeed > 0 && liftEnc.getEncoderDistance() > 500 && !initLift) {
+        } else if (liftSpeed > 0 && liftEnc.getEncoderDistance() > 600 && !initLift) {
             liftPID.reset();
             liftMotor.set(0);
             SmartDashboard.putNumber("Hello World", 3);
@@ -442,14 +458,15 @@ public class Training extends SubsystemBase
         // ENCODERS ------------------------------------------------------
         SmartDashboard.putNumber("rightEnc", getRightEncoder());
         SmartDashboard.putNumber("leftEnc", getLeftEncoder());
+        SmartDashboard.putNumber("backEnc", getBackEncoder());
         SmartDashboard.putNumber("liftEnc", getLiftEncoder());
 
         SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
         SmartDashboard.putNumber("speedLeftMotor", leftEnc.getSpeed());
         SmartDashboard.putNumber("speedLiftotor", liftEnc.getSpeed());
 
-        SmartDashboard.putNumber("posX", posX);
-        SmartDashboard.putNumber("posY", posY);
+        // SmartDashboard.putNumber("posX", posX);
+        // SmartDashboard.putNumber("posY", posY);
         SmartDashboard.putNumber("posZ", getYaw());
 
         // SENSORS -------------------------------------------------------
@@ -464,7 +481,7 @@ public class Training extends SubsystemBase
  
         // SmartDashboard.putNumber("EMS_number", ems.getDistance());
         SmartDashboard.putBoolean("initlift", initLift);
-
+        SmartDashboard.putBoolean("limit", getLimitSwitch());
         // test
         SmartDashboard.putBoolean("end", finish);
     }

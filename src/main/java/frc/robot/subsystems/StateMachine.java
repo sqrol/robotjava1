@@ -10,12 +10,14 @@ public class StateMachine {
     public static boolean first = false;
 
     static void update(){
+        first = false;
         if(States.mainStates[currentArray][currentIndex].execute()){
             startTime = (float) Timer.getFPGATimestamp();
             first = true;
             currentIndex++;
             SmartDashboard.putNumber("Index", currentIndex);
             SmartDashboard.putNumber("Array", currentArray);
+            SmartDashboard.putBoolean("Frist", first); 
         }
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
     }

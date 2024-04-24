@@ -13,9 +13,9 @@ public class ObjectFinder implements IState {
     @Override
     public boolean execute() {
         if(RobotContainer.train.checkAppleResult == 1) {
-            RobotContainer.train.setAxisSpeed(50,  0);
+            RobotContainer.train.setAxisSpeed(50, 0);
         } else if(RobotContainer.train.checkAppleResult == 2){ 
-            RobotContainer.train.setAxisSpeed(0,  0);
+            RobotContainer.train.setAxisSpeed(0, 0);
         } else if(RobotContainer.train.checkAppleResult == 3){
             RobotContainer.train.setAxisSpeed(0, 0);
         } else {

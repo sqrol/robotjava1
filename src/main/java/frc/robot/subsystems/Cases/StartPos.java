@@ -15,10 +15,14 @@ public class StartPos implements IState{
         } else {
             train.initLift = false;
         }
-        
-        train.OdometryReset(0, 0);
+        train.reset2Motors();
+        // train.OdometryReset(0, 0);
         train.resetGyro();
+        // train.setAxisSpeed(30, 0);
         train.finish = false;
-        return train.getLimitSwitch() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
+        // train.setAxisSpeed(20, 0);
+
+        // return train.getLimitSwitch() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
+        return true;
     }
 }
