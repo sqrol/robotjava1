@@ -64,7 +64,7 @@ public class Odometry implements IState {
             break;
 
         case "check":
-            exit = checkMotors(X, Y);
+            // exit = checkMotors(X, Y);
             break;
         }
 
@@ -174,6 +174,7 @@ public class Odometry implements IState {
         return end;
     }
     
+    
     // private boolean absOdometry(float x, float y, float z) {
     //     float time = Function.TransitionFunction((float) (Timer.getFPGATimestamp() - StateMachine.startTime), speedTime);
     //     float newX = x - Training.posX;
@@ -242,21 +243,21 @@ public class Odometry implements IState {
     
     
 
-    private boolean checkMotors(double nameMotor, double speed){
-        switch((int)nameMotor){
-            case 1:
-                RobotContainer.train.checkMotors("left", speed);
-                break;
+    // private boolean checkMotors(double nameMotor, double speed){
+    //     switch((int)nameMotor){
+    //         case 1:
+    //             RobotContainer.train.checkMotors("left", speed);
+    //             break;
 
-            case 2:
-                RobotContainer.train.checkMotors("right", speed);
-                break;
+    //         case 2:
+    //             RobotContainer.train.checkMotors("right", speed);
+    //             break;
 
-            case 3:
-                RobotContainer.train.checkMotors("back", speed);
-                break;
-        }
+    //         case 3:
+    //             RobotContainer.train.checkMotors("back", speed);
+    //             break;
+    //     }
         
-        return (Timer.getFPGATimestamp() - StateMachine.startTime) > 5;
-    }
+    //     return (Timer.getFPGATimestamp() - StateMachine.startTime) > 5;
+    // }
 }

@@ -6,18 +6,19 @@ import frc.robot.subsystems.IState;
 import frc.robot.subsystems.StateMachine;
 import frc.robot.subsystems.Training;
 
-public class SetGlidePos implements IState {
+public class SetGlidePosition implements IState {
 
-    private int pos = 0;
+    private int pos;
     private Training train = RobotContainer.train; 
-    
-    public SetGlidePos(int pos) {
+
+    public SetGlidePosition(int pos) {
         this.pos = pos;
     }
+
     @Override
     public boolean execute() {
-        train.setGlideServoValue(pos);
-        return Timer.getFPGATimestamp() - StateMachine.startTime > 3;
+        // train.setGlidePositions(pos);
+        // return train.glideStop || Timer.getFPGATimestamp() - StateMachine.startTime > 5;
+        return false;
     }
-    
 }

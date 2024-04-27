@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IState;
 import frc.robot.subsystems.StateMachine;
@@ -17,9 +18,15 @@ public class SetLiftPosition implements IState {
 
     @Override
     public boolean execute() {
-        train.setLiftPositions(pos);
-        return train.liftStop || Timer.getFPGATimestamp() - StateMachine.startTime > 10; 
-        // return false;
-        // return Timer.getFPGATimestamp() - StateMachine.startTime > 2;
+
+        if (!train.getLimitSwitchLift()) {
+            train.initLift = true;
+        } else {
+            train.initLift = false;
+        }
+
+        // train.setLiftPositions(pos);
+        SmartDashboard.putBoolean("liftStop", train.liftStop);
+        return train.liftStop;
     }
 }
