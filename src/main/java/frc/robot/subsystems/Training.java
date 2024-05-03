@@ -45,7 +45,7 @@ public class Training extends SubsystemBase
     private AHRS gyro;
 
     private Servo grip, gripRotate, mainRotate;
-
+    
     private Encoder limitSwitchLift, limitSwitchGlide, startButton, EMS;
 
     public boolean initLift, initGlide, glideReachedPos, glideStop, finish = false;
@@ -113,8 +113,8 @@ public class Training extends SubsystemBase
         sharpRight = new AnalogInput(1);
         sharpLeft = new AnalogInput(0);
 
-        // sonicBack = new Ultrasonic(9, 8);
-        // sonicRight = new Ultrasonic(11, 10);
+        sonicBack = new Ultrasonic(9, 8);
+        sonicRight = new Ultrasonic(11, 10);
 
         sharpRightFilter = new MedianFilter(4);
         sharpLeftFilter = new MedianFilter(4);
@@ -136,7 +136,7 @@ public class Training extends SubsystemBase
 
         gyro = new AHRS();
 
-                // Поток для c anal
+        // Поток для anal
         new Thread( () -> {
             while(!Thread.interrupted())
             {
@@ -146,25 +146,24 @@ public class Training extends SubsystemBase
                     if (firstInitForGlide && !firstInitForGlideDone) {
                         firstInitForGlideDone = initForGlide();
                         if(firstInitForGlideDone) {
-                            setGripRotateServoValue(32);
-                            setGripServoValue(15);
-                            setMainRotateServoValue(225);
-                            
+                            // setGripRotateServoValue(32); 
+                            // setGripServoValue(60);
+                            // setMainRotateServoValue(230);
                         }
-                        } else {
-                            if (firstInitForGlideDone) {
-                                if (firstInitForLift && !firstInitForLiftDone) {
-                                    firstInitForLiftDone = initForLift();
-                                } else {
-                                    if(firstInitForGlideDone && firstInitForLiftDone) {
-                                        glideReachedPos = true; //glideToMovePos(50)
-                                        if(glideReachedPos) {
-                                            successInit = true;
-                                        }
-                                    }  
-                                }   
-                            }
+                    } else {
+                        if (firstInitForGlideDone) {
+                            if (firstInitForLift && !firstInitForLiftDone) {
+                                firstInitForLiftDone = initForLift();
+                            } else {
+                                if(firstInitForGlideDone && firstInitForLiftDone) {
+                                    glideReachedPos = true; //glideToMovePos(50)
+                                    if(glideReachedPos) {
+                                        successInit = true;
+                                    }
+                                }  
+                            }   
                         }
+                    }
                     
                     Thread.sleep(5);
                 } 
@@ -216,7 +215,7 @@ public class Training extends SubsystemBase
     /**
      * Метод для инициализации выдвижного механизма
      */
-    private boolean initForGlide() {
+    public boolean initForGlide() {
         try {
             if (getLimitSwitchGlide()) {
                 resetGlideEncoder();
@@ -236,7 +235,7 @@ public class Training extends SubsystemBase
     /**
      * Метод для инициализации лифта
      */
-    private boolean initForLift() {
+    public boolean initForLift() {
         try {
             if (getLimitSwitchLift()) {
                 resetLiftEncoder();
@@ -600,6 +599,19 @@ public class Training extends SubsystemBase
         }
     }
 
+    //с этой строчки кринж для EMSThread до 613
+    public Servo getMainRotate() {
+        return mainRotate;
+    } 
+
+    public Servo getGripRotate() {
+        return gripRotate;
+    }
+
+    public Servo getGrip() {
+        return grip;
+    } 
+
     /**
     * @return Значение с гироскопа в диапазоне от -180 до 180 
     */
@@ -640,6 +652,8 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("sonicBack", getBackSonicDistance());
         SmartDashboard.putNumber("yaw", getYaw());
 
+        // SERVO ANGLES!!!!!
+        SmartDashboard.putNumber("MainRotateServoAngle", mainRotate.getAngle());
         // BUTTONS -------------------------------------------------------
         SmartDashboard.putBoolean("startButton", getStartButton());
         SmartDashboard.putBoolean("EMS", getEMSButton());

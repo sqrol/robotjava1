@@ -1,0 +1,421 @@
+package frc.robot.Logic;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class LogicCore {
+
+    private boolean fristCall = true;
+    private boolean fristCallForInit = true;
+
+    // Выходной массив с командами
+    public final ArrayList<String> arrayWithLogic = new ArrayList<String>();
+
+    private String lastCheckpoint = "";
+
+    private String lastCurrentZoneArea = "";
+
+    private boolean fristCallForSubPath = false;
+
+
+    // Зона 1
+    private static final String[] firstTree = { "null", "null", "null"};
+    private static final String[][] firstTreeZone =
+            {
+                    //  1  | 2  |                      | 3  |  4
+                    { "1", "2", "null", "null", "null", "3", "4" },
+                    //   5  |   6   |   7   |   8   |   9   |   10  |   11
+                    { "5", "6", "7", "8", "AppleBigRipe", "10", "11" },
+                    //  12  |   13   |   14   |   15   |   16   |   17  |   18
+                    { "1", "13", "14", "1", "16", "17", "18" },
+                    //  19  |   20   |   21   |   22   |   23   |   24  |   25
+                    { "19", "20", "21", "22", "23", "24", "25" } };
+
+    // Зона 2
+    private static final String[] secondTree = { "null", "null", "null"};
+    private static final String[][] secondTreeZone =
+            {
+                    //  1  | 2  |                      | 3  |  4
+                    { "1", "2", "null", "null", "null", "3", "1" },
+                    //   5  |   6   |   7   |   8   |   9   |   10  |   11
+                    { "5", "1", "7", "8", "1", "10", "11" },
+                    //  12  |   13   |   14   |   15   |   16   |   17  |   18
+                    { "1", "13", "14", "15", "16", "1", "18" },
+                    //  19  |   20   |   21   |   22   |   23   |   24  |   25
+                    { "19", "1", "21", "1", "23", "24", "25" } };
+
+    // Зона 3
+    private static final String[] thitdTree = { "null", "null", "1"};
+    private static final String[][] thitdTreeZone =
+            {
+                    //  1  | 2  |                      | 3  |  4
+                    { "1", "2", "null", "null", "null", "3", "4" },
+                    //   5  |   6   |   7   |   8   |   9   |   10  |   11
+                    { "5", "6", "7", "8", "9", "10", "11" },
+                    //  12  |   13   |   14   |   15   |   16   |   17  |   18
+                    { "1", "13", "14", "15", "16", "17", "18" },
+                    //  19  |   20   |   21   |   22   |   23   |   24  |   25
+                    { "19", "1", "21", "22", "23", "24", "25" } };
+
+
+    // Шаблон зоны с номерами
+    private static final String[][] zoneWithNumber = {{ "1", "2", "null", "null", "null", "3", "4" }, { "5", "6", "7", "8", "9", "10", "11" },
+                    { "12", "13", "14", "15", "16", "17", "18" }, { "19", "20", "21", "22", "23", "24", "25" } };
+
+    // Назначаем фрукты которые возим
+    private static final String[] allFullFruitsName = { "AppleBigRipe", "AppleSmallRipe", "PeerRipe", "RottenBigApple", "RottenSmallApple", "RottenPeer"};
+
+    // Назначаем контейнеры для определенного типа фруктов
+    HashMap<String, String> containersForFruits = new HashMap<String, String>() {
+        {
+            put("RottenSmallApple", "CON1");
+            put("RottenBigApple", "CON1");
+            put("RottenPeer", "CON1");
+            put("AppleSmallRipe", "CON2");
+            put("AppleBigRipe", "CON3");
+            put("PeerRipe", "CON4");
+        }
+    };
+
+    void logicInit() {
+        if (fristCallForInit) {
+            for (int zoneNum = 1; zoneNum <= 3; zoneNum++) {
+                arrayWithLogic.addAll(getFruitsForExport(zoneNum));
+            }
+            if (!arrayWithLogic.isEmpty()) {
+                arrayWithLogic.add("MOVE_IN_" + getLastCheckpoint() + "_TO_FINISH");
+            }
+            fristCallForInit = false;
+        }
+    }
+
+    /**
+     * Получение текущего массива зон для дерева
+     */
+    String[][] getZoneArray(Integer zoneNum) {
+        if (zoneNum == 1) {
+            return firstTreeZone;
+        }
+        if (zoneNum == 2) {
+            return secondTreeZone;
+        }
+        if (zoneNum == 3) {
+            return thitdTreeZone;
+        }
+        return new String[0][0];
+    }
+
+    /**
+     * Основная функция где мы формируем пути ко всем зонам
+     */
+    public ArrayList<String> getFruitsForExport(Integer zoneNum)
+    {
+        ArrayList<String> outArray = new ArrayList<String>();
+        String[][] currentZone = getZoneArray(zoneNum);
+        String[] currentTree = getTreeArray(zoneNum);
+        String zoneName = getZoneName(zoneNum);
+
+        outArray.addAll(grabFromLeftZone(currentZone, zoneName));
+        outArray.addAll(grabFromLowerZone(currentZone, zoneName));
+        outArray.addAll(grabFromUpperZone(currentZone, zoneName));
+        outArray.addAll(grabFromRightZone(currentZone, zoneName));
+        outArray.addAll(grabFromTreeZone(currentTree, zoneName));
+
+        return outArray;
+    }
+
+    /**
+     * Заменяем захваченный фрукт на null
+     */
+    void changeToNull(int[] index, int zoneNum){
+        String replacement = "null";
+        if (zoneNum == 1) {
+            firstTreeZone[index[0]][index[1]] = replacement;
+        }
+    }
+
+    /**
+     * Захват фруктов с дерева
+     */
+    ArrayList<String> grabFromTreeZone(String[] currentTree, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "TZ";
+
+        for (int i = 0; i < currentTree.length; i++) { // Собираем все фрукты из дерева
+            String elemInArray = currentTree[i];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт на ветке тот который нам нужен
+                allFindFruits.add(getPosForTree(i) + "/" + elemInArray);
+            }
+        }
+
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    String getPosForTree(int numIndex) {
+        if (numIndex == 0) {
+            return "GRAB_POS_DOWN";
+        }
+        if (numIndex == 1) {
+            return "GRAB_POS_MID";
+        }
+        if (numIndex == 2) {
+            return "GRAB_POS_UP";
+        }
+        return "null";
+    }
+
+    /**
+     * Захват фруктов с зоны с позицей 1, 2, 5, 6, 12, 13, 19, 20
+     */
+    ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "LZ";
+        int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 1}, {2, 0}, {2, 1}, {3, 0}, {3, 1} }; // Тут указываем индексы для 1, 2, 5, 6, 12, 13, 19, 20
+
+        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
+            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
+                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+            }
+        }
+
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    /**
+     * Захват фруктов с позицей 3, 4, 10, 11, 17, 18, 24, 25 для указанного дерева
+     */
+    ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "RZ";
+        int[][] indexes = { {0, 3}, {0, 4}, {1, 5}, {1, 6}, {2, 5}, {2, 6}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 10, 11, 17, 18, 24, 25
+
+        // Проход по каждому индексу в массиве и вывод соответствующего значения
+        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
+            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
+                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+            }
+        }
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    /**
+     * Захват фруктов с позицей 21, 22, 23, 14, 15, 16 для указанного дерева
+     */
+    ArrayList<String> grabFromLowerZone(String[][] currentZone, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "LOZ";
+        int[][] indexes = { {3, 2}, {3, 3}, {3, 4}, {2, 2}, {2, 3}, {2, 4} }; // Тут указываем индексы для 21, 22, 23, 14, 15, 16
+
+        // Проход по каждому индексу в массиве и вывод соответствующего значения
+        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
+            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
+                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+            }
+        }
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    /**
+     * Захват фруктов с позицей 7, 8, 9 для указанного дерева
+     */
+    ArrayList<String> grabFromUpperZone(String[][] currentZone, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "UZ";
+        int[][] indexes = { {1, 2}, {1, 3}, {1, 4} }; // Тут указываем индексы для 7, 8, 9
+
+        // Проход по каждому индексу в массиве и вывод соответствующего значения
+        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
+            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
+                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+            }
+        }
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    /**
+     * Собираем путь из зоны до контейнера
+     */
+    ArrayList<String> subPathForDelivery(ArrayList<String> allFindFruits, String currentZoneName, String zoneName) {
+        ArrayList<String> outSubPathForDelivery = new ArrayList<String>();
+        if (!allFindFruits.isEmpty()) {
+            String currentZoneArea = zoneName + "_" + currentZoneName;
+
+            for (int i = 0; i < allFindFruits.size(); i++) {
+                String currentGrabPos = allFindFruits.get(i).split("/")[0]; // Получение позиции GRAB_POS
+                String currentFruit = allFindFruits.get(i).split("/")[1]; // Получение фрукта который в GRAB_POS
+                String bestWayForCheck = choosingBestZoneForCheck(currentZoneName, zoneName);
+
+                if (fristCall) { // Первый запуск перемещение с зоны страта в превую назначенную зону
+                    outSubPathForDelivery.add("MOV_IN_START_TO_" + choosingBestZoneForCheck("START", zoneName));
+                    outSubPathForDelivery.add("MOV_IN_" + choosingBestZoneForCheck("START", zoneName) +"_TO_" + currentZoneArea);
+                    fristCall = false;
+                }
+
+                if (!currentZoneArea.equals(lastCurrentZoneArea)) {
+                    if (fristCallForSubPath) {
+                        outSubPathForDelivery.add("MOV_IN_" + getLastCheckpoint() + "_TO_" + currentZoneArea);
+                    }
+                }
+
+                outSubPathForDelivery.add(currentGrabPos);
+                outSubPathForDelivery.add("MOV_IN_" + currentZoneArea + "_TO_" + bestWayForCheck);
+                outSubPathForDelivery.add("MOV_IN_" + bestWayForCheck + "_TO_" + containersForFruits.get(currentFruit));
+                outSubPathForDelivery.add("RESET_FRUIT");
+
+                if (CheckingLastElement(allFindFruits, i)) { // Смотрим это последний фрукт для этой зоны или нет
+                    outSubPathForDelivery.add("MOV_IN_" + containersForFruits.get(currentFruit) + "_TO_" + bestWayForCheck);
+                    setLastCheckpoint(bestWayForCheck);
+                }
+
+            }
+            fristCallForSubPath = true;
+            lastCurrentZoneArea = currentZoneArea;
+        }
+
+        return outSubPathForDelivery;
+    }
+
+    /**
+     * Выбираем где лучше выровниться для каждого из зон
+     */
+    String choosingBestZoneForCheck(String currentZoneName, String zoneName) {
+        String out = "";
+        if (zoneName.equals("FRIST")) {
+            switch (currentZoneName) {
+                case "LZ":
+                    out = "CH3";
+                    break;
+                case "RZ":
+                    out = "CH3";
+                    break;
+                case "LOZ":
+                    out = "CH3";
+                    break;
+                case "UZ":
+                    out = "CH3";
+                    break;
+                case "TZ":
+                    out = "CH3";
+                    break;
+                case "START":
+                    out = "CH3";
+                    break;
+                default:
+                    out = "null";
+                    break;
+            }
+        }
+        if (zoneName.equals("SECOND")) {
+            switch (currentZoneName) {
+                case "LZ":
+                    out = "CH2";
+                    break;
+                case "RZ":
+                    out = "CH2";
+                    break;
+                case "LOZ":
+                    out = "CH2";
+                    break;
+                case "UZ":
+                    out = "CH2";
+                    break;
+                case "TZ":
+                    out = "CH2";
+                    break;
+                case "START":
+                    out = "CH2";
+                    break;
+                default:
+                    out = "null";
+                    break;
+            }
+        }
+        if (zoneName.equals("THIRD")) {
+            switch (currentZoneName) {
+                case "LZ":
+                    out = "CH2";
+                    break;
+                case "RZ":
+                    out = "CH1";
+                    break;
+                case "LOZ":
+                    out = "CH2";
+                    break;
+                case "UZ":
+                    out = "CH2";
+                    break;
+                case "TZ":
+                    out = "CH2";
+                    break;
+                case "START":
+                    out = "CH1";
+                    break;
+                default:
+                    out = "null";
+                    break;
+            }
+        }
+
+        return out;
+    }
+
+    /**
+     * Проверяем является ли элемент последним в массиве
+     */
+    boolean CheckingLastElement(ArrayList<String> allFindFruits, int currentIndex) {
+        int lastIndex = allFindFruits.size() - 1;
+        return currentIndex == lastIndex;
+    }
+
+    /**
+     * Узнаем есть ли такой фрукт который на пришел через name
+     */
+    boolean weNeedThisFruit(String name) {
+        for (String elem : allFullFruitsName) {
+            if (elem.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Получение название зоны по номеру
+     */
+    String getZoneName(Integer zoneNum) {
+        return zoneNum == 1 ? "FRIST" : zoneNum == 2 ? "SECOND" : zoneNum== 3 ? "THIRD" : "none";
+    }
+
+    /**
+     * Получение текущего массива элементов на дереве
+     */
+    String[] getTreeArray(Integer zoneNum) {
+        if (zoneNum == 1) {
+            return firstTree;
+        }
+        if (zoneNum == 2) {
+            return secondTree;
+        }
+        if (zoneNum == 3) {
+            return thitdTree;
+        }
+        return new String[0];
+    }
+
+    /**
+     * Получение последней точки робота
+     */
+    public String getLastCheckpoint() {
+        return lastCheckpoint;
+    }
+
+    /**
+     * Установка последней точки робота
+     */
+    public void setLastCheckpoint(String lastCheckpoint) {
+        this.lastCheckpoint = lastCheckpoint;
+    }
+}

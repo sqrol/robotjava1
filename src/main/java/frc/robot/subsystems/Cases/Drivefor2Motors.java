@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Cases;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.functions.Function;
@@ -14,7 +15,7 @@ public class Drivefor2Motors implements IState {
     private boolean exit = false;
     private boolean isFirstX, isFirstZ = true;
 
-    private double x, posX, spX, speedX; 
+    private double x, posX, spX, speedX, startKoef; 
     private double z, speedZ;  
     private double currentRight, currentLeft; 
     private double nowYaw;
@@ -25,11 +26,17 @@ public class Drivefor2Motors implements IState {
     // private double[][] speedXArray = { { 0, 5, 15, 40, 70, 150, 170, 220, 300 },
     //                                     { 0, 6, 12, 16, 30, 35, 40, 60, 90} };
 
+    // private double[][] speedXArray = { { 5, 15, 42, 75, 90, 120, 180, 250, 300 }, 
+    //                                     { 11, 18, 21, 28, 38, 41, 54, 80, 95 } }; 
+
     private double[][] speedXArray = { { 5, 15, 42, 75, 90, 120, 180, 250, 300 }, 
-                                        { 11, 18, 21, 28, 38, 41, 54, 80, 95 } }; 
+                                        { 30, 35, 45, 50, 55, 60, 65, 80, 95 } }; 
 
     private double[][] speedZArray = { { 0, 1.2, 2, 3, 7, 50, 65, 79, 90 },
-                                       { 0, 7, 10, 18, 25, 40, 63, 80, 90 } };
+                                       { 0, 7, 10, 18, 25, 40, 63, 70, 80 } };
+
+    private double[][] startMoveForXArray = { {0, 0.5}, 
+                                       {0, 1} };
 
     public Drivefor2Motors(double x, double z) {
         this.x = x; 
@@ -56,6 +63,10 @@ public class Drivefor2Motors implements IState {
             train.resetGyro();
             isFirstX = false;
         }
+
+        
+
+        startKoef = Function.TransitionFunction(Timer.getFPGATimestamp() - StateMachine.startTime, startMoveForXArray);
         
         SmartDashboard.putNumber("first", 1);
         currentRight = train.getRightEncoder();
@@ -74,7 +85,7 @@ public class Drivefor2Motors implements IState {
         SmartDashboard.putNumber("posX", posX);
         SmartDashboard.putNumber("nowYaw", nowYaw);
 
-        train.setAxisSpeed(speedX, speedZ);
+        train.setAxisSpeed(speedX * startKoef, speedZ);
 
         return Function.BooleanInRange(x - posX, -5, 5) && Function.BooleanInRange(0 - nowYaw, -0.2, 0.2); 
     }

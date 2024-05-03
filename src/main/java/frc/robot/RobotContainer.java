@@ -1,19 +1,17 @@
 package frc.robot;
 
 import frc.robot.subsystems.Training;
-import frc.robot.Logic.Change;
-import frc.robot.Logic.LogicInit;
+
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.EMSThread;
+import frc.robot.subsystems.InitThread;
 import frc.robot.subsystems.JavaCam;
 
 public class RobotContainer {
 
   public static RobotContainer m_robotContainer;
-
   public static Training train;
   public static JavaCam javcam;
-  public static LogicInit logic;
-  public static Change change;
   public static int checkAppleResult;
 
   private RobotContainer()
@@ -25,8 +23,18 @@ public class RobotContainer {
       // threadJavaCam.setDaemon(true);
       // threadJavaCam.start();
 
-      logic = new LogicInit();
-      change = new Change();
+      // Runnable initRunnable = new InitThread();
+      // Thread initThread = new Thread(initRunnable);
+      // initThread.setDaemon(true);
+      // initThread.start();
+
+      // Runnable EMSRunnable = new EMSThread();
+      // Thread EMSThread = new Thread(EMSRunnable);
+      // EMSThread.setDaemon(true);
+      // EMSThread.start();
+
+      // logic = new LogicInit();
+      // change = new Change();
 
       train.setDefaultCommand(new Drive());
   }

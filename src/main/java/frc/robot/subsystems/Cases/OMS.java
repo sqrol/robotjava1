@@ -2,6 +2,7 @@ package frc.robot.subsystems.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
+import frc.robot.functions.Function;
 import frc.robot.subsystems.IState;
 import frc.robot.subsystems.StateMachine;
 import frc.robot.subsystems.Training;
@@ -11,6 +12,8 @@ public class OMS implements IState {
     private String pos;
 
     private boolean liftPosReached = false;
+
+    private double liftFloorPos = 66;
 
     Training train = RobotContainer.train;
 
@@ -25,11 +28,16 @@ public class OMS implements IState {
                 train.setGripServoValue(50);
                 return true;
 
-            case "FLOOR BIG APPLE":
-                train.setGripServoValue(50);
-                train.setGripRotateServoValue(120);
-                liftPosReached = train.liftToMovePos(62);
-                if(Timer.getFPGATimestamp() - StateMachine.startTime > 1.5 && liftPosReached) {
+            case "FLOOR BIG APPLE ZONE 1":
+                int servoAngle = 0;
+                boolean mainRotatePosReached = Function.BooleanInRange(servoAngle - train.getMainRotate().getAngle(), -0.1, 0.1);
+                train.setMainRotateServoValue(servoAngle);
+                if(mainRotatePosReached) {
+                    train.setGripServoValue(50);
+                    train.setGripRotateServoValue(120);
+                }
+                liftPosReached = train.liftToMovePos(liftFloorPos);
+                if(Timer.getFPGATimestamp() - StateMachine.startTime > 3 && liftPosReached) {
                     train.setGripServoValue(27);
                     liftPosReached = false;
                     return true;
@@ -39,8 +47,8 @@ public class OMS implements IState {
             case "FLOOR SMALL APPLE":
                 train.setGripServoValue(50);
                 train.setGripRotateServoValue(120);
-                liftPosReached = train.liftToMovePos(50);
-                if(Timer.getFPGATimestamp() - StateMachine.startTime > 1.5 && liftPosReached) {
+                liftPosReached = train.liftToMovePos(liftFloorPos);
+                if(Timer.getFPGATimestamp() - StateMachine.startTime > 3 && liftPosReached) {
                     train.setGripServoValue(0);
                     liftPosReached = false;
                     return true;
@@ -50,8 +58,8 @@ public class OMS implements IState {
             case "FLOOR PEAR":
                 train.setGripServoValue(50);
                 train.setGripRotateServoValue(120);
-                liftPosReached = train.liftToMovePos(40);
-                if(Timer.getFPGATimestamp() - StateMachine.startTime > 1.5 && liftPosReached) {
+                liftPosReached = train.liftToMovePos(liftFloorPos);
+                if(Timer.getFPGATimestamp() - StateMachine.startTime > 3 && liftPosReached) {
                     train.setGripServoValue(25);
                     liftPosReached = false;
                     return true;
