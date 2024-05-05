@@ -19,39 +19,52 @@ import frc.robot.subsystems.Cases.StartPos;
 import frc.robot.subsystems.Cases.Transition;
 
 public class States {
-    public static IState[][] mainStates = new IState[][] {{
-        new StartPos(),
-        // от старта к дереву 1 справа и к сбросу 1 
-        new Align("sharp", 7.5, 0),
-        new Drivefor2Motors(0, -91),
-        new Drivefor2Motors(260, 0),
-        new Drivefor2Motors(-1300, 0),
-        new Align("sonic", 20, 0),
-        new Drivefor2Motors(0, 91),
-        new Align("sharp", 7.5, 0),
-        new End()
-    },
-
-    {
-        new Align("sharp", 8, 0),
+    public static IState[][] mainStates = new IState[][] {
         
-        
-        
-        new Drivefor2Motors(-1100, 0),
-    },
-
-    {
-        
-    },
-
-    {
-        // // от старта к дереву 1 спереди справа и к сбросу 1
-        // new Drivefor2Motors(350, 0),
-        // new Drivefor2Motors(0, -90),
-        // new Drivefor2Motors(600, 0),
-        // new Drivefor2Motors(-1350, 0),
-        // new Drivefor2Motors(0, 90),
-        // new Align("sharp", 8, 0),
-    }
-};
+            // MOV_IN_START_TO_CH1
+        {
+            new StartPos(),
+            new Align("sharp", 15, 0),
+            new Transition(1)
+        },
+            // MOV_IN_CH1_TO_THIRD_RZ
+        {
+            new Drivefor2Motors(0, -91),   
+            new Drivefor2Motors(260, 0),
+            new Transition(2)
+        },
+            // GRAB_POS_17
+        {
+            
+        }, 
+            // MOV_IN_THIRD_RZ_TO_CH1
+        {
+            new Drivefor2Motors(-1300, 0),
+            new Align("sonic", 20, 0),    
+            new Drivefor2Motors(0, 93),   
+            new Align("sharp", 7, 0),     
+        }, 
+            // MOV_IN_CH1_TO_CON2
+        {
+            new Drivefor2Motors(0, -90),
+            new Drivefor2Motors(620, 0),
+            new Drivefor2Motors(0, -90),
+            new Align("sharp", 7, 0),   
+        }, 
+            // MOV_IN_CON2_TO_CH1
+        {
+            new Drivefor2Motors(-1000, 0),
+            new Align("sonic", 30, 0),    
+            new Drivefor2Motors(0, -90),  
+            new Align("sharp", 7, 0),     
+            new Drivefor2Motors(0, 180),  
+        },
+            // MOVE_IN_CH1_TO_FINISH
+        {
+            new Drivefor2Motors(1700, 0),
+            new Drivefor2Motors(0, -90), 
+            new Drivefor2Motors(600, 0), 
+            new End()
+        }
+    };
 }

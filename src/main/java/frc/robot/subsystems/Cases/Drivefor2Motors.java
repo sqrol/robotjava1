@@ -36,7 +36,7 @@ public class Drivefor2Motors implements IState {
                                        { 0, 7, 10, 18, 25, 40, 63, 70, 80 } };
 
     private double[][] startMoveForXArray = { {0, 0.5}, 
-                                       {0, 1} };
+                                               {0, 1} };
 
     public Drivefor2Motors(double x, double z) {
         this.x = x; 
@@ -63,8 +63,6 @@ public class Drivefor2Motors implements IState {
             train.resetGyro();
             isFirstX = false;
         }
-
-        
 
         startKoef = Function.TransitionFunction(Timer.getFPGATimestamp() - StateMachine.startTime, startMoveForXArray);
         
@@ -96,10 +94,9 @@ public class Drivefor2Motors implements IState {
             train.resetGyro();
         }
 
-        SmartDashboard.putNumber("diffZ", z - nowYaw);
         nowYaw = train.getLongYaw();
         speedZ = Function.TransitionFunction(z - nowYaw, speedZArray);
-        train.setAxisSpeed((float)0, (float)speedZ);
+        train.setAxisSpeed(0, speedZ);
 
         return Function.BooleanInRange(z - nowYaw, -0.2, 0.2); 
     }

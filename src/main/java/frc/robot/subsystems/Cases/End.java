@@ -7,7 +7,7 @@ import frc.robot.subsystems.IState;
 public class End implements IState{
     @Override
     public boolean execute() {
-        RobotContainer.train.setAxisSpeed(0.0f, 0.0f);
+        RobotContainer.train.setAxisSpeed(0.0, 0.0);
         RobotContainer.train.finish = true;
         return false;
     }

@@ -18,28 +18,22 @@ public class Align implements IState {
     private double speedX, diffX = 0;
     private double speedZ, diffZ = 0;
     private double diffSharp, diffSonic, lastGyro = 0;
+    private double coefForTime = 0;
 
     Training train = RobotContainer.train;
-
-    private static double[][] degreeSharpArray = { {0, 0.1, 0.5, 1, 1.5, 2, 5, 10, 15, 20, 30, 45},
-                                                  { 0, 5, 10, 20, 25, 30, 35, 40, 45, 50, 55, 56} };
-
-    private static double[][] degreeSonicArray = { {0, 0.1, 0.5, 1, 1.5, 2, 5, 10, 15, 20, 30, 45},
-                                                  { 0, 5, 10, 20, 25, 30, 35, 40, 45, 50, 55, 56} };
-
-    private static double[][] sharpXFunc = { {0, 0.9, 1.7, 4, 9, 26, 87, 120, 180, 250, 570 },
-                                          { 0f, 4, 10.5, 17, 24, 30, 41, 56, 63, 71, 95 } }; 
  
+    private static double[][] XArray = { { 0, 0.1, 0.5, 0.8, 1.5, 2.5, 5, 10, 15, 25, 30 },
+                                          { 0, 5, 10, 12, 15, 25, 30, 60, 70, 80, 90 } };
 
-    // private static double[][] XArray = { { 0, 0.9, 1.4, 3, 7, 9, 11, 14, 16, 18, 21 },
-    //                                      { 0, 4, 10.5, 20, 35, 42, 50, 60, 69, 81, 90 } }; 
-
-    // private static double[][] XArray = { { 0, 0.5, 1.5, 2.5, 5, 10, 15, 20, 25, 30, 35 },
-    //                                      { 0, 5, 10.5, 15, 20, 30, 40, 50, 60, 70, 80 } };
-    private static double[][] XArray = { { 0, 0.5, 1.5, 2.5, 30, 35 },
-                                          { 0, 5, 10.5, 15, 70, 90 } };
     private static double[][] sonicArray = { { 0.7, 4, 7, 15, 30 },
-                                              { 0, 5, 18, 38, 90 } };
+                                             { 12, 30, 40, 70, 95 } };
+
+    private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35}, 
+                                             { 25, 30, 35, 40, 45, 50, 55, 60, 65 } };
+
+
+    private static double[][] arrayForTime = { { 0, 1},
+                                             { 0, 1} };
 
 
     // private static double[][] degFunction = {{ 0.5, 4.4, 10, 25, 38, 47, 60, 70, 80, 90, 100, 100, 120, 130 }, 
@@ -51,12 +45,8 @@ public class Align implements IState {
     // private static double[][] degFunction = {{ 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35}, 
     //                                          { 15, 18, 20, 25, 30, 35, 40, 45, 50} };
 
-    private static double[][] degFunction = {{ 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35}, 
-                                             { 25, 30, 35, 40, 45, 50, 55, 60, 65} };
 
-
-    private static double[][] degFunctionSonic = {{ 0.3, 2.4, 10, 25, 38, 47, 60, 70, 80, 90, 100, 100, 120, 130 }, 
-                                                  { 4.1, 9.5, 15, 26, 30, 37, 45, 51, 57, 70, 76, 85, 93, 100 } };                                
+                              
 
     public Align(String sensors, double X, double Z){
         this.sensors = sensors;
@@ -86,47 +76,28 @@ public class Align implements IState {
             isFirstIter = false;
         }
 
-        double leftSharp = RobotContainer.train.getLeftSharpDistance();   
-        double rightSharp = RobotContainer.train.getRightSharpDistance() + 0.57;
+        coefForTime = Function.TransitionFunction(Timer.getFPGATimestamp() - StateMachine.startTime, arrayForTime); // Начало движения по времени
 
-        // if (Math.min(leftSharp, rightSharp) < 15) 
+        double leftSharp = RobotContainer.train.getLeftSharpDistance();   
+        double rightSharp = RobotContainer.train.getRightSharpDistance();
 
         diffX = X - Math.min(leftSharp, rightSharp);
-        SmartDashboard.putNumber("diffX", diffX);
         speedX = Function.TransitionFunction(diffX, XArray);
-        
 
-        if (Math.min(leftSharp, rightSharp) < 17) {
+        if (Math.min(leftSharp, rightSharp) < 20) {
             diffSharp = leftSharp - rightSharp;
-            SmartDashboard.putNumber("DiffForIr", diffSharp); 
             speedZ = -Function.TransitionFunction(diffSharp, degFunction);
-            SmartDashboard.putNumber("Hello World", 1); 
         } else {
-            SmartDashboard.putNumber("Hello World", 2); 
             speedZ = (float)(lastGyro - RobotContainer.train.getYaw());
         }
 
-        RobotContainer.train.setAxisSpeed(-speedX, speedZ);
-    
-        // diffSharp = leftSharp - rightSharp;
-        // SmartDashboard.putNumber("DiffSharp", diffSharp); 
-        // speedZ = -Function.TransitionFunction(diffSharp, degFunction);
-        // SmartDashboard.putNumber("sharp1", 1); 
+        RobotContainer.train.setAxisSpeed(-speedX * coefForTime, speedZ);
 
-        // else {
-        //     speedZ = (float)(lastGyro - RobotContainer.train.getYaw()); 
-        //     SmartDashboard.putNumber("sharp1", 2); 
-        // }
+        SmartDashboard.putNumber("OutSpeed", speedX);
 
-        
-        // if(finishX) {
-        //     RobotContainer.train.setAxisSpeed(speedX,  speedZ);
-        // }
+        finishZ = Function.BooleanInRange(speedZ, -0.2, 0.2);
+        finishX = Function.BooleanInRange(speedX, -0.5, 0.5);
 
-        finishZ = Function.BooleanInRange(diffSharp, -0.5, 0.5);
-        finishX = Function.BooleanInRange(diffX, -2, 2);
-
-        // 
         if(finishZ && finishX) {
             RobotContainer.train.setAxisSpeed(0, 0);
             isFirstIter = true;
@@ -155,7 +126,6 @@ public class Align implements IState {
 
         finishX = Function.BooleanInRange(X - backSonicDist, -1, 1);
         finishZ = Function.BooleanInRange(lastGyro - train.getLongYaw(), -0.5, 0.5);
-        SmartDashboard.putNumber("diffXSonic", diffX);
 
         if(finishX && finishZ) {
             train.setAxisSpeed(0, 0);
