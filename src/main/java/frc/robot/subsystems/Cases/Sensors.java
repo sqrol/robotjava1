@@ -81,7 +81,7 @@ public class Sensors implements IState{
         }
 
         if(Y > 0){
-            sonicY = Y - RobotContainer.train.getRightSonicDistance();
+            sonicY = Y - RobotContainer.train.getSideSonicDistance();
             speedY = Function.TransitionFunction(-sonicY, sonicYFunc);
         }else if(Y < 0){
             sonicY = RobotContainer.train.getBackSonicDistance() + Y;

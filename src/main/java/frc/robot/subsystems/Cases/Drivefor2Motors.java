@@ -7,15 +7,18 @@ import frc.robot.functions.Function;
 import frc.robot.subsystems.IState;
 import frc.robot.subsystems.StateMachine;
 import frc.robot.subsystems.Training;
-
+/**
+ * Данный класс используется для управления движением роботом.
+ */
 public class Drivefor2Motors implements IState {
 
     private Training train = RobotContainer.train; 
 
     private boolean exit = false;
     private boolean isFirstX, isFirstZ = true;
+    private boolean finishX, finishZ = false;
 
-    private double x, posX, spX, speedX, startKoef; 
+    private double x, posX, speedX, startKoef; 
     private double z, speedZ;  
     private double currentRight, currentLeft; 
     private double nowYaw;
@@ -35,8 +38,8 @@ public class Drivefor2Motors implements IState {
     private double[][] speedZArray = { { 0, 1.2, 2, 3, 7, 50, 65, 79, 90 },
                                        { 0, 7, 10, 18, 25, 40, 63, 70, 80 } };
 
-    private double[][] startMoveForXArray = { {0, 0.5}, 
-                                               {0, 1} };
+    private double[][] startMoveForXArray = { { 0, 1 }, 
+                                              { 0, 1 } };
 
     public Drivefor2Motors(double x, double z) {
         this.x = x; 
@@ -56,48 +59,75 @@ public class Drivefor2Motors implements IState {
         }
         return exit;
     }
-
+    /**
+     * Метод для движения робота вперед и назад по оси X.
+     * @return true, если робот доехал до указанной позиции.
+     */
     private boolean DriveForX() {
         if(isFirstX) {
             train.reset2Motors();
             train.resetGyro();
+            posX = 0;
             isFirstX = false;
         }
 
         startKoef = Function.TransitionFunction(Timer.getFPGATimestamp() - StateMachine.startTime, startMoveForXArray);
         
-        SmartDashboard.putNumber("first", 1);
         currentRight = train.getRightEncoder();
         currentLeft = train.getLeftEncoder();
 
-        nowYaw = train.getYaw();
+        nowYaw = train.getLongYaw();
 
         posX = (currentRight - currentLeft) / 10.05;
-        // posX +=  Math.cos(nowYaw) * spX - Math.sin(nowYaw);
 
         speedX = Function.TransitionFunction(x - posX, speedXArray);
-        speedZ = Function.TransitionFunction((0 - nowYaw) * 3.8, speedZArray);
+        speedZ = Function.TransitionFunction(-nowYaw * 3.8, speedZArray);
 
-        SmartDashboard.putNumber("spremX", spX);
         SmartDashboard.putNumber("diffX", x - posX);
         SmartDashboard.putNumber("posX", posX);
         SmartDashboard.putNumber("nowYaw", nowYaw);
 
         train.setAxisSpeed(speedX * startKoef, speedZ);
 
-        return Function.BooleanInRange(x - posX, -5, 5) && Function.BooleanInRange(0 - nowYaw, -0.2, 0.2); 
-    }
+        finishX = Function.BooleanInRange(x - posX, -5, 5);
+        finishZ = Function.BooleanInRange(-nowYaw, -0.2, 0.2); 
 
+        if(finishX && finishZ) {
+            finishX = false;
+            finishZ = false;
+            train.reset2Motors();
+            posX = 0;
+            return true;
+        }
+
+        return false;
+    }
+    /**
+     * Метод для поворота робота вокруг своей оси.
+     * @return true, если угол поворота робота равен заданному в конструкторе.
+     */
     private boolean DriveForZ() {
         if(isFirstZ) {
-            isFirstZ = false;
             train.resetGyro();
+            train.reset2Motors();
+            posX = 0;
+            isFirstZ = false;
         }
 
         nowYaw = train.getLongYaw();
+
         speedZ = Function.TransitionFunction(z - nowYaw, speedZArray);
+
         train.setAxisSpeed(0, speedZ);
 
-        return Function.BooleanInRange(z - nowYaw, -0.2, 0.2); 
+        finishZ = Function.BooleanInRange(z - nowYaw, -0.2, 0.2); 
+         
+        if(finishZ) {
+            finishZ = false;
+            train.reset2Motors();
+            posX = 0;
+            return true;
+        }
+        return false;
     }
 }

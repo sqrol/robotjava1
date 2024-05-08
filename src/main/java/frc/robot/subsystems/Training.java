@@ -30,7 +30,7 @@ public class Training extends SubsystemBase
 
     private double speedRpid, speedLpid, speedBpid;
     private double rightLast, leftLast = 0;
- 
+
     public static double posX, posY;
 
     private double liftSpeed, glideSpeed;
@@ -120,7 +120,7 @@ public class Training extends SubsystemBase
         sharpLeftFilter = new MedianFilter(4);
 
         sonicRightFilter = new MedianFilter(6);
-        sonicBackFilter = new MedianFilter(6);
+        sonicBackFilter = new MedianFilter(10);
 
         redLED = new DigitalOutput(13);
         greenLED = new DigitalOutput(12);
@@ -535,10 +535,10 @@ public class Training extends SubsystemBase
         }   
     }
      /**
-     * Возвращает значение с правого ультразвукового датчика
+     * Возвращает значение с бокового ультразвукового датчика
      * @return значение с правого ультразвукового датчика в миллиметрах
      */
-    public double getRightSonicDistance(){
+    public double getSideSonicDistance(){
         try{
             sonicRight.ping();
             Timer.delay(0.005);
@@ -548,7 +548,7 @@ public class Training extends SubsystemBase
         }
     }
     /**
-     * Возвращает значение с левого инфракрасного датчика
+     * Возвращает значение с заднего ультразвукового датчика
      * @return значение с заднего инфракрасного датчика в миллиметрах
      */
     public double getBackSonicDistance(){
@@ -599,7 +599,7 @@ public class Training extends SubsystemBase
         }
     }
 
-    //с этой строчки кринж для EMSThread до 613
+    //с этой строчки кринж для EMSThread 
     public Servo getMainRotate() {
         return mainRotate;
     } 
@@ -648,11 +648,11 @@ public class Training extends SubsystemBase
         // SENSORS -------------------------------------------------------
         SmartDashboard.putNumber("sharpRight", getRightSharpDistance());
         SmartDashboard.putNumber("sharpLeft", getLeftSharpDistance());
-        SmartDashboard.putNumber("sonicRight", getRightSonicDistance());
+        SmartDashboard.putNumber("sonicRight", getSideSonicDistance());
         SmartDashboard.putNumber("sonicBack", getBackSonicDistance());
         SmartDashboard.putNumber("yaw", getYaw());
 
-        // SERVO ANGLES!!!!!
+        // SERVO ANGLES
         SmartDashboard.putNumber("MainRotateServoAngle", mainRotate.getAngle());
         // BUTTONS -------------------------------------------------------
         SmartDashboard.putBoolean("startButton", getStartButton());

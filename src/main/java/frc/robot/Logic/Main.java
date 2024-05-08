@@ -13,6 +13,7 @@ public class Main {
 
         for (String elem : logic.arrayWithLogic) {
             System.out.println(elem);
+            
         }
 
     }

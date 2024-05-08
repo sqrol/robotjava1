@@ -16,7 +16,7 @@ public class FindTreeSonic implements IState{
     
     private boolean StopOnTree() {
         
-        double lastSonicDist = train.getRightSonicDistance();
+        double lastSonicDist = train.getSideSonicDistance();
         // double rightSonicDist = train.getRightSonicDistance();
         
         return false;

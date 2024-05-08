@@ -7,17 +7,20 @@ import frc.robot.functions.Function;
 import frc.robot.subsystems.IState;
 import frc.robot.subsystems.StateMachine;
 import frc.robot.subsystems.Training;
-
+/**
+ * Данный класс используется для выравнивания по инфракрасным и ультразвуковым датчикам, 
+ * а так же для поворота робота вокруг своей оси.
+ */
 public class Align implements IState {
     private String sensors;
 
     private boolean isFirstIter = true;
     private boolean finishX, finishZ, exit = false;
 
-    private double X, Z = 0;
+    private double X, Z, distToWall = 0;
     private double speedX, diffX = 0;
     private double speedZ, diffZ = 0;
-    private double diffSharp, diffSonic, lastGyro = 0;
+    private double diffSharp, lastGyro = 0;
     private double coefForTime = 0;
 
     Training train = RobotContainer.train;
@@ -28,30 +31,17 @@ public class Align implements IState {
     private static double[][] sonicArray = { { 0.7, 4, 7, 15, 30 },
                                              { 12, 30, 40, 70, 95 } };
 
-    private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35}, 
+    private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
                                              { 25, 30, 35, 40, 45, 50, 55, 60, 65 } };
 
+    private static double[][] arrayForTime = { { 0, 1 },
+                                               { 0, 1 } };
 
-    private static double[][] arrayForTime = { { 0, 1},
-                                             { 0, 1} };
-
-
-    // private static double[][] degFunction = {{ 0.5, 4.4, 10, 25, 38, 47, 60, 70, 80, 90, 100, 100, 120, 130 }, 
-    //                                          { 4.1, 9.5, 15, 26, 30, 37, 45, 51, 57, 70, 76, 85, 93, 97 } };
-
-    // private static double[][] degFunction = {{ 0.4, 1.5, 2.5, 5, 10, 15, 20, 25, 35}, 
-    //                                          { 8, 10, 12, 18, 20, 25, 30, 35, 45} };
-
-    // private static double[][] degFunction = {{ 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35}, 
-    //                                          { 15, 18, 20, 25, 30, 35, 40, 45, 50} };
-
-
-                              
-
-    public Align(String sensors, double X, double Z){
+    public Align(String sensors, double X, double Z, double distToWall) {
         this.sensors = sensors;
         this.X = X;
         this.Z = Z;
+        this.distToWall = distToWall;
     }
 
     @Override
@@ -59,20 +49,24 @@ public class Align implements IState {
         switch(sensors){
             case "sharp":
                 exit = alignIR(X);
-            break;
+                break;
             case "sonic":
                 exit = travelSonic(X);
-            break;
-            case "rotate":
-                exit = rotateZ(Z);
-            break;
-        }
+                break;
+            case "sharpSonic":
+                exit = travelSharpSonic(X, distToWall);
+                break;
+            }
         return exit;
     }
-
+    /**
+     * Метод для подъезда к стене и выравнивания по ИК датчикам.
+     * @param X - расстояния до стены в см, на которое робот подъедет и выровняется.
+     * @return true, если робот стоит ровно.
+     */
     private boolean alignIR(double X) {
         if(isFirstIter) {
-            lastGyro = RobotContainer.train.getYaw();
+            lastGyro = RobotContainer.train.getLongYaw();
             isFirstIter = false;
         }
 
@@ -88,7 +82,7 @@ public class Align implements IState {
             diffSharp = leftSharp - rightSharp;
             speedZ = -Function.TransitionFunction(diffSharp, degFunction);
         } else {
-            speedZ = (float)(lastGyro - RobotContainer.train.getYaw());
+            speedZ = lastGyro - RobotContainer.train.getLongYaw();
         }
 
         RobotContainer.train.setAxisSpeed(-speedX * coefForTime, speedZ);
@@ -103,11 +97,16 @@ public class Align implements IState {
             isFirstIter = true;
             lastGyro = 0;
             diffZ = 0;
+            train.reset2Motors();
             return true;
         }
         return finishX && finishZ;
     }
-    
+    /**
+     * Метод для подъезда к стене по ультразвуковому датчику, установленному сзади.
+     * @param X - расстояние до стены в см, на которое робот подъедет.
+     * @return true, если робот подъехал.
+     */
     private boolean travelSonic(double X) {
 
         if(isFirstIter) {
@@ -129,6 +128,7 @@ public class Align implements IState {
 
         if(finishX && finishZ) {
             train.setAxisSpeed(0, 0);
+            train.reset2Motors();
             isFirstIter = true;
             lastGyro = 0;
             diffX = 0;
@@ -137,19 +137,29 @@ public class Align implements IState {
         }
         return false;
     }
+    /**
+     * Метод для одновременного движения по инфракрасным и ультразвуковым датчикам.
+     * @param X - расстояние до передней стены в см.
+     * @param distToWall - расстояние до правой боковой стены в см, которое робот должен удерживать.
+     * @return true, если робот доехал и выровнялся по ИК и выровнялся по ультразвуковому датчику.
+     */
+    private boolean travelSharpSonic(double X, double distToWall) {
 
-    private boolean rotateZ(double Z) {
         if(isFirstIter) {
-            lastGyro = RobotContainer.train.getYaw();
+            lastGyro = train.getLongYaw();
             isFirstIter = false;
         }
-        double currGyro = RobotContainer.train.getYaw();
-        diffZ = currGyro - Z;
-        SmartDashboard.putNumber("diffZ", diffZ); 
-        speedZ = Function.TransitionFunction(diffZ, degFunction);
-        RobotContainer.train.setAxisSpeed((float)0, (float)-speedZ);
-        
-        return Function.BooleanInRange(diffZ, -0.3, 0.3);       
+
+        double leftSharp = train.getLeftSharpDistance();
+        double rightSharp = train.getRightSharpDistance();
+
+        diffX = X - Math.min(rightSharp, leftSharp);
+        speedX = Function.TransitionFunction(diffX, XArray);
+
+        double sideSonicDist = train.getSideSonicDistance();
+
+        double wallDiff = distToWall - sideSonicDist;
+
+        return false;
     }
-    
 }
