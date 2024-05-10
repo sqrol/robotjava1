@@ -7,13 +7,13 @@ import frc.robot.RobotContainer;
 public class StateMachine {
     public static int currentArray = 0;
     public static int currentIndex = 0;
-    public static float startTime = 0;
+    public static double startTime = 0;
     public static boolean first = false;
 
     static void update(){
         first = false;
         if(States.mainStates[currentArray][currentIndex].execute()){
-            startTime = (float) Timer.getFPGATimestamp();
+            startTime = Timer.getFPGATimestamp();
             first = true;
             currentIndex++;
             SmartDashboard.putNumber("Index", currentIndex);

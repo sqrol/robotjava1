@@ -15,10 +15,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 //Vendor imports
 import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.Cobra;
 import com.studica.frc.Servo;
 import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
@@ -28,6 +30,7 @@ public class Training extends SubsystemBase
     private TitanQuad rightMotor, leftMotor, glideMotor, liftMotor;
     private TitanQuadEncoder rightEnc, leftEnc, glideEnc, liftEnc;
 
+    private double rightEncResetValue, leftEncResetValue;
     private double speedRpid, speedLpid, speedBpid;
     private double rightLast, leftLast = 0;
 
@@ -41,7 +44,7 @@ public class Training extends SubsystemBase
     private AnalogInput sharpRight, sharpLeft;
 
     private DigitalOutput redLED, greenLED;
-    // private double confIk = 1.2f;
+    
     private AHRS gyro;
 
     private Servo grip, gripRotate, mainRotate;
@@ -50,6 +53,8 @@ public class Training extends SubsystemBase
 
     public boolean initLift, initGlide, glideReachedPos, glideStop, finish = false;
     private boolean flag = true;
+
+    public static ArrayList<Integer> indexList = new ArrayList<>();
 
     // Отключение ПИДов
     private boolean usePIDForMotors = true; 
@@ -98,23 +103,23 @@ public class Training extends SubsystemBase
 
     public Training()
     {
-        rightMotor = new TitanQuad(42, 2);
+        rightMotor = new TitanQuad(42, 1);
         leftMotor = new TitanQuad(42, 3); 
-        glideMotor = new TitanQuad(42, 0); 
+        glideMotor = new TitanQuad(42, 2); 
         glideMotor.setInverted(true);
-        liftMotor = new TitanQuad(42, 1); 
+        liftMotor = new TitanQuad(42, 0); 
 
-        rightEnc = new TitanQuadEncoder(rightMotor, 2, 1);
+        rightEnc = new TitanQuadEncoder(rightMotor, 1, 1);
         rightEnc.setReverseDirection();
         leftEnc = new TitanQuadEncoder(leftMotor, 3, 1);
-        glideEnc = new TitanQuadEncoder(glideMotor, 0, 1);
-        liftEnc = new TitanQuadEncoder(liftMotor, 1, 1);
+        glideEnc = new TitanQuadEncoder(glideMotor, 2, 1);
+        liftEnc = new TitanQuadEncoder(liftMotor, 0, 1);
 
         sharpRight = new AnalogInput(1);
         sharpLeft = new AnalogInput(0);
 
         sonicBack = new Ultrasonic(9, 8);
-        sonicRight = new Ultrasonic(11, 10);
+        // sonicRight = new Ultrasonic(11, 10);
 
         sharpRightFilter = new MedianFilter(4);
         sharpLeftFilter = new MedianFilter(4);
@@ -125,9 +130,9 @@ public class Training extends SubsystemBase
         redLED = new DigitalOutput(13);
         greenLED = new DigitalOutput(12);
 
-        grip = new Servo(9);
-        gripRotate = new Servo(8);
-        mainRotate = new Servo(7);
+        // grip = new Servo(9);
+        // gripRotate = new Servo(8);
+        // mainRotate = new Servo(7);
         
         limitSwitchLift = new Encoder(2, 3);
         limitSwitchGlide = new Encoder(6, 7);
@@ -135,7 +140,7 @@ public class Training extends SubsystemBase
         EMS = new Encoder(0, 1);
 
         gyro = new AHRS();
-
+        
         // Поток для anal
         new Thread( () -> {
             while(!Thread.interrupted())
@@ -187,9 +192,9 @@ public class Training extends SubsystemBase
                         setLiftMotorSpeed(0.0, true);
                         setGlideMotorSpeed(0.0, true);
                         try {
-                            mainRotate.setDisabled();
-                            gripRotate.setDisabled();
-                            grip.setDisabled();
+                            // mainRotate.setDisabled();
+                            // gripRotate.setDisabled();
+                            // grip.setDisabled();
                         } catch (Exception e) {
                             System.out.println("Pizdec Servakam");
                         }
@@ -342,6 +347,14 @@ public class Training extends SubsystemBase
         return liftEnc.getEncoderDistance();
     }
     
+    public void resetLeftEnc() {
+        leftEnc.reset();
+    }
+
+    public void resetRightEnc() {
+        rightEnc.reset();
+    }
+
     /**
      * Сброс энкодера мотора выдвижного механизма
      */
@@ -434,7 +447,7 @@ public class Training extends SubsystemBase
             rightPID.reset();
             rightMotor.set(0);
         } else {
-            rightPID.calculate(rightEnc.getSpeed(), speed);
+            rightPID.calculate(-rightEnc.getSpeed(), speed);
             if (withPID) {
                 rightMotor.set(rightPID.getOutput());
             } else {
@@ -653,7 +666,7 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("yaw", getYaw());
 
         // SERVO ANGLES
-        SmartDashboard.putNumber("MainRotateServoAngle", mainRotate.getAngle());
+        // SmartDashboard.putNumber("MainRotateServoAngle", mainRotate.getAngle());
         // BUTTONS -------------------------------------------------------
         SmartDashboard.putBoolean("startButton", getStartButton());
         SmartDashboard.putBoolean("EMS", getEMSButton());

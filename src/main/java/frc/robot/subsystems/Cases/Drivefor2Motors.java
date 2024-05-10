@@ -78,12 +78,11 @@ public class Drivefor2Motors implements IState {
 
         nowYaw = train.getLongYaw();
 
-        posX = (currentRight - currentLeft) / 10.05;
+        posX = (currentRight - currentLeft) / 0.07;
 
         speedX = Function.TransitionFunction(x - posX, speedXArray);
         speedZ = Function.TransitionFunction(-nowYaw * 3.8, speedZArray);
 
-        SmartDashboard.putNumber("diffX", x - posX);
         SmartDashboard.putNumber("posX", posX);
         SmartDashboard.putNumber("nowYaw", nowYaw);
 

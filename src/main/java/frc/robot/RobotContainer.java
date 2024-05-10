@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.Training;
-
+import frc.robot.Logic.LogicCore;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.EMSThread;
 import frc.robot.subsystems.InitThread;
@@ -13,10 +13,13 @@ public class RobotContainer {
   public static Training train;
   public static JavaCam javcam;
   public static int checkAppleResult;
+  public static LogicCore logic; 
 
   private RobotContainer()
   {
       train = new Training();
+
+      logic = new LogicCore();
 
       // Runnable runnableJavaCam = new JavaCam();
       // Thread threadJavaCam = new Thread(runnableJavaCam);

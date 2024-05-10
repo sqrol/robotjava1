@@ -61,7 +61,7 @@ public class Align implements IState {
     }
     /**
      * Метод для подъезда к стене и выравнивания по ИК датчикам.
-     * @param X - расстояния до стены в см, на которое робот подъедет и выровняется.
+     * @param X - расстояние до стены в см, на которое робот подъедет и выровняется.
      * @return true, если робот стоит ровно.
      */
     private boolean alignIR(double X) {
@@ -86,8 +86,6 @@ public class Align implements IState {
         }
 
         RobotContainer.train.setAxisSpeed(-speedX * coefForTime, speedZ);
-
-        SmartDashboard.putNumber("OutSpeed", speedX);
 
         finishZ = Function.BooleanInRange(speedZ, -0.2, 0.2);
         finishX = Function.BooleanInRange(speedX, -0.5, 0.5);

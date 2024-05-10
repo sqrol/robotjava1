@@ -39,7 +39,7 @@ public class StartPos implements IState{
         //     train.liftMotorSpeedThread = 50;
         // }
         // double speed = -35; 
-
+        // train.setAxisSpeed(50, 0);
         train.firstInitForLift = true; 
         train.firstInitForGlide = true; 
         // train.setGripRotateServoValue(200);

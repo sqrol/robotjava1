@@ -24,7 +24,7 @@ public class LogicCore {
                     //  1  | 2  |                      | 3  |  4
                     { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "5", "6", "7", "8", "AppleBigRipe", "10", "11" },
+                    { "5", "6", "7", "8", "RottenSmallApple", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "1", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
@@ -50,7 +50,7 @@ public class LogicCore {
                     //  1  | 2  |                      | 3  |  4
                     { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "5", "6", "7", "8", "9", "10", "11" },
+                    {   "5",   "6",    "7",    "8",    "9",    "10",   "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
@@ -76,7 +76,7 @@ public class LogicCore {
         }
     };
 
-    void logicInit() {
+    public void logicInit() {
         if (fristCallForInit) {
             for (int zoneNum = 1; zoneNum <= 3; zoneNum++) {
                 arrayWithLogic.addAll(getFruitsForExport(zoneNum));

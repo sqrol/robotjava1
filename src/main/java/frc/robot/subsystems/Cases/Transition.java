@@ -1,27 +1,27 @@
 package frc.robot.subsystems.Cases;
 
 import frc.robot.RobotContainer;
-
+import frc.robot.Logic.LogicMain;
 import frc.robot.subsystems.IState;
 import frc.robot.subsystems.StateMachine;
+import frc.robot.subsystems.Training;
 
 public class Transition implements IState {
-    private int indexArray = 0; 
+    private static int indexArray = 0; 
 
     // private static int index = 0;
     // public static Change change = RobotContainer.change;
-    public Transition(int arrayIndex) {
-        this.indexArray = arrayIndex;
+    public Transition() {
+        
     }
 
     // @Override
     public boolean execute() {
-        StateMachine.currentArray = indexArray;
+        // StateMachine.currentArray = indexArray;
+        // StateMachine.currentIndex = -1;
+        StateMachine.currentArray = Training.indexList.get(Transition.indexArray);
+        Transition.indexArray++;
         StateMachine.currentIndex = -1;
-    //     RobotContainer.train.setAxisSpeed(0.0f, 0.0f);
-    //     StateMachine.currentArray = change.indexList.get(Transition.index);
-    //     Transition.index++;
-    //     StateMachine.currentIndex = -1;
         return true;
     }
 }
