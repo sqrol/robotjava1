@@ -117,8 +117,9 @@ public class Training extends SubsystemBase
         rotateEnc = new TitanQuadEncoder(rotateMotor, 2, 1);
         liftEnc = new TitanQuadEncoder(liftMotor, 0, 1);
 
-        sharpRight = new AnalogInput(1);
-        sharpLeft = new AnalogInput(0);
+        sharpRight = new AnalogInput(0);
+        sharpLeft = new AnalogInput(1);
+
         cobraGlide = new AnalogInput(3);
 
         sonicBack = new Ultrasonic(9, 8);
@@ -210,7 +211,7 @@ public class Training extends SubsystemBase
                         setRightMotorSpeed(rightMotorSpeedThread, usePIDForMotors);
                         setLiftMotorSpeed(liftMotorSpeedThread, usePIDForMotors);
                         setRotateMotorSpeed(glideMotorSpeedThread, usePIDForMotors);
-                        glideServo.setDisabled();
+                        // glideServo.setDisabled();
                     }
                     
                     Thread.sleep(5);
@@ -673,9 +674,19 @@ public class Training extends SubsystemBase
         gyro.zeroYaw();
     }
 
-    public void servoGlidePosition(int position) { // position от 0 до 16 
-        boolean blackLineDetect = cobraGlide.getAverageVoltage() > 2.0;
-        double glideServoSpeed = Function.TransitionFunction(position - this.currentGlidePosition, speedForGlideServo); 
+    public double getCobraVoltage() {
+        return cobraGlide.getAverageVoltage();
+    }
+
+    /**
+     * Устанавливает выдвижной механизм на указанную позицию.
+     * @param position - от 0 до 16
+     */
+    public void servoGlidePosition(int position) { 
+        boolean blackLineDetect = getCobraVoltage() > 2.0;
+        double glideServoSpeed = Function.TransitionFunction(position - this.currentGlidePosition, speedForGlideServo);
+        
+        SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
 
         if (position != this.currentGlidePosition) {
             if (position > this.currentGlidePosition) {
@@ -725,8 +736,7 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("sharpLeft", getLeftSharpDistance());
         SmartDashboard.putNumber("sonicRight", getSideSonicDistance());
         SmartDashboard.putNumber("sonicBack", getBackSonicDistance());
-        SmartDashboard.putNumber("yaw", getYaw());
-        SmartDashboard.putNumber("GlideCobra", cobraGlide.getAverageVoltage()); 
+        SmartDashboard.putNumber("GlideCobra", getCobraVoltage()); 
 
         // SERVO ANGLES
         // SmartDashboard.putNumber("MainRotateServoAngle", mainRotate.getAngle());

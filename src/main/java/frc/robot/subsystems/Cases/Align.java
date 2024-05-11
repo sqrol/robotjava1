@@ -25,14 +25,14 @@ public class Align implements IState {
 
     Training train = RobotContainer.train;
  
-    private static double[][] XArray = { { 0, 0.1, 0.5, 0.8, 1.5, 2.5, 5, 10, 15, 25, 30 },
-                                          { 0, 5, 10, 12, 15, 25, 30, 60, 70, 80, 90 } };
+    private static double[][] XArray = { { 0, 0.1, 0.8, 1.5, 2.5, 5, 10, 15, 25, 30 },
+                                          { 0, 0.4, 2, 6, 13, 24, 30, 43, 56, 70 } };
 
     private static double[][] sonicArray = { { 0.7, 4, 7, 15, 30 },
                                              { 12, 30, 40, 70, 95 } };
 
     private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
-                                             { 25, 30, 35, 40, 45, 50, 55, 60, 65 } };
+                                               { 9, 14, 17, 22, 28, 33, 38, 43, 50 } };
 
     private static double[][] arrayForTime = { { 0, 1 },
                                                { 0, 1 } };
@@ -42,6 +42,7 @@ public class Align implements IState {
         this.X = X;
         this.Z = Z;
         this.distToWall = distToWall;
+        isFirstIter = true;
     }
 
     @Override
@@ -80,7 +81,7 @@ public class Align implements IState {
 
         if (Math.min(leftSharp, rightSharp) < 20) {
             diffSharp = leftSharp - rightSharp;
-            speedZ = -Function.TransitionFunction(diffSharp, degFunction);
+            speedZ = Function.TransitionFunction(diffSharp, degFunction);
         } else {
             speedZ = lastGyro - RobotContainer.train.getLongYaw();
         }
@@ -91,11 +92,13 @@ public class Align implements IState {
         finishX = Function.BooleanInRange(speedX, -0.5, 0.5);
 
         if(finishZ && finishX) {
-            RobotContainer.train.setAxisSpeed(0, 0);
+            train.setAxisSpeed(0, 0);
             isFirstIter = true;
             lastGyro = 0;
             diffZ = 0;
-            train.reset2Motors();
+            train.resetEncLeft();
+            train.resetEncRight();
+            train.resetGyro();
             return true;
         }
         return finishX && finishZ;
@@ -126,11 +129,12 @@ public class Align implements IState {
 
         if(finishX && finishZ) {
             train.setAxisSpeed(0, 0);
-            train.reset2Motors();
             isFirstIter = true;
             lastGyro = 0;
-            diffX = 0;
             diffZ = 0;
+            train.resetEncLeft();
+            train.resetEncRight();
+            train.resetGyro();
             return true;
         }
         return false;

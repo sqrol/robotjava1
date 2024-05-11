@@ -20,17 +20,19 @@ public class DriveXAxis implements IState {
 
     private boolean isFirst = true;
 
-    private double[][] speedXArray = { { 0, 5, 10, 12, 14, 18, 35, 50, 100}, 
-                                       { 0, 12, 15, 25, 35, 50, 75, 85, 95} };
+    // private double[][] speedXArray = { { 0, 5, 10, 12, 14, 18, 35, 50, 100}, 
+    //                                    { 0, 12, 15, 25, 35, 50, 75, 85, 95} };
+
+    private double[][] speedXArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
+                                        { 0, 3, 6, 12, 15, 25, 35, 50, 75, 85, 95} };
 
     private double[][] speedZArray = { { 0, 0.5, 1.2, 3, 6, 12, 26, 32, 50 }, 
-                                       { 0, 8, 10, 14, 18, 24, 32, 48, 70 } };
+                                       { 0, 12, 20, 23, 30, 40, 53, 60, 70 } };
 
-    private double[][] speedZArrayJustTurn = { { 0, 0.5, 1.2, 3, 6, 12, 20, 32, 90 }, 
-                                       { 0, 3, 8, 10, 15, 24, 32, 48, 70 } };
+    private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 15, 20, 32, 90 }, 
+                                                 { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };
 
     private double[][] startKoefSpeedForX = { { 0, 1 }, { 0, 1 } };
-
 
     public DriveXAxis(double XPosition, double ZPosition){
         this.XPosition = XPosition;
@@ -59,21 +61,26 @@ public class DriveXAxis implements IState {
             double[] polar = Function.ReImToPolar(currentAxisX, 0);
             double[] decard = Function.PolarToReIm(polar[0], (polar[1] + Math.toRadians(gyro))); 
     
-            double diff = XPosition - decard[0];
+            double diffX = XPosition - decard[0];
             
-            outSpeedForX = Function.TransitionFunction(diff, speedXArray);
-            outSpeedForZ = Function.TransitionFunction(0 - gyro, speedZArray);
+            outSpeedForX = Function.TransitionFunction(diffX, speedXArray);
+            outSpeedForZ = Function.TransitionFunction(-gyro, speedZArray);
+
+            finishX = Function.BooleanInRange(outSpeedForX, -2, 2); 
+            finishZ = Function.BooleanInRange(outSpeedForZ, -0.2, 0.2); 
     
         } else {
             outSpeedForX = 0;
+            SmartDashboard.putNumber("diffZ", ZPosition - gyro);
             outSpeedForZ = Function.TransitionFunction(ZPosition - gyro, speedZArrayJustTurn);
+            finishX = true;
+            finishZ = Function.BooleanInRange(outSpeedForZ, -0.3, 0.3); 
         }
 
         train.setAxisSpeed(outSpeedForX * startKoef, outSpeedForZ * startKoef);
 
-        finishX = Function.BooleanInRange(outSpeedForX, -1.5, 1.5);
-        finishZ = Function.BooleanInRange(outSpeedForZ, -0.2, 0.2); 
-        
+        SmartDashboard.putNumber("posX", currentAxisX);
+        SmartDashboard.putNumber("posZ", outSpeedForZ);
         return finishX && finishZ;
     }
 

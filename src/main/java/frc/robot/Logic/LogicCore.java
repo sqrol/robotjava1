@@ -187,7 +187,7 @@ public class LogicCore {
     ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
-        int[][] indexes = { {0, 3}, {0, 4}, {1, 5}, {1, 6}, {2, 5}, {2, 6}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 10, 11, 17, 18, 24, 25
+        int[][] indexes = { {0, 3}, {0, 4}, {0, 5}, {1, 5}, {1, 6}, {2, 5}, {2, 6}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 10, 11, 17, 18, 24, 25
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть

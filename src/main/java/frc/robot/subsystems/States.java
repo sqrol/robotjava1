@@ -25,10 +25,17 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
-            // new Drivefor2Motors(1000, 0),
+
+            new DriveXAxis(93, 0),
             new DriveXAxis(0, 90),
-            
-            // new SetGlidePosition(5),
+            new Align("sharp", 11, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 13, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(89, 0),
+            // new SetGlidePosition(21),
             // new SetGlidePosition(10),
             // new SetGlidePosition(15),
             // new SetGlidePosition(0),
