@@ -14,7 +14,7 @@ public class StartPos implements IState{
     public boolean execute() {
 
         if (fristCall) {
-            train.resetGlideEncoder(); 
+            train.resetRotateEncoder(); 
             fristCall = false; 
         }
         if (!train.getLimitSwitchGlide()) {
@@ -58,6 +58,6 @@ public class StartPos implements IState{
         // return train.getLimitSwitch() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
         // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
         // return train.successInit && Timer.getFPGATimestamp() - StateMachine.startTime > 5;
-        return train.successInit && Timer.getFPGATimestamp() - StateMachine.startTime > 5;
+        return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
     }
 }

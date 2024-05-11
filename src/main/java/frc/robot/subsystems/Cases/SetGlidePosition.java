@@ -17,7 +17,7 @@ public class SetGlidePosition implements IState {
 
     @Override
     public boolean execute() {
-        // return train.glideStop || Timer.getFPGATimestamp() - StateMachine.startTime > 5;
-        return train.glideToMovePos(pos);
+        train.servoGlidePosition(this.pos);
+        return train.glideExit && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
     }
 }

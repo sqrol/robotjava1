@@ -41,7 +41,7 @@ public class Function {
         return value >= min && value <= max;
       }
     
-      public static float InRange(Float value, Float min, Float max) {
+      public static int InRange(int value, int min, int max) {
         if (value > max) {
           value = max;
         } else if (value < min) {

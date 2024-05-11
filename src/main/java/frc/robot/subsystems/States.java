@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.Set;
 
 import frc.robot.subsystems.Cases.Align;
+import frc.robot.subsystems.Cases.DriveXAxis;
 import frc.robot.subsystems.Cases.Drivefor2Motors;
 import frc.robot.subsystems.Cases.End;
 import frc.robot.subsystems.Cases.InitLogicase;
@@ -24,7 +25,15 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
-            new Drivefor2Motors(1000, 0),
+            // new Drivefor2Motors(1000, 0),
+            new DriveXAxis(0, 90),
+            
+            // new SetGlidePosition(5),
+            // new SetGlidePosition(10),
+            // new SetGlidePosition(15),
+            // new SetGlidePosition(0),
+            // new SetGlidePosition(15),
+            // new SetGlidePosition(0),
             
             new End()
             // new InitLogicase(),

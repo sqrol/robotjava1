@@ -15,7 +15,7 @@ public class EMSThread implements Runnable {
 
                     train.setRightMotorSpeed(0.0, true);
                     train.setLeftMotorSpeed(0.0, true);
-                    train.setGlideMotorSpeed(0.0, true);
+                    train.setRotateMotorSpeed(0.0, true);
                     train.setLiftMotorSpeed(0.0, true);
 
                     train.getGrip().setDisabled();
