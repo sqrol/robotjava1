@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.Encoder.IndexingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.States;
+import frc.robot.StateMachine.StateMachine;
+import frc.robot.StateMachine.States;
 
 public class LogicMain {
     private static LogicCore logic;

@@ -1,11 +1,11 @@
 package frc.robot;
 
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 import frc.robot.Logic.LogicCore;
-import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.EMSThread;
-import frc.robot.subsystems.InitThread;
-import frc.robot.subsystems.JavaCam;
+import frc.robot.StateMachine.Drive;
+import frc.robot.Subsystems.EMSThread;
+import frc.robot.Subsystems.InitThread;
+import frc.robot.MachineVision.JavaCam;;
 
 public class RobotContainer {
 

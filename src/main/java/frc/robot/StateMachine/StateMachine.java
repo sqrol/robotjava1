@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.StateMachine;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
