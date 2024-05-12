@@ -22,9 +22,9 @@ public class LogicCore {
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "0", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "5", "6", "7", "8", "RottenSmallApple", "10", "11" },
+                    { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "1", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
@@ -35,7 +35,7 @@ public class LogicCore {
     private static final String[][] secondTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "1" },
+                    { "1", "2", "null", "null", "null", "0", "1" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "1", "7", "8", "1", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
@@ -48,9 +48,9 @@ public class LogicCore {
     private static final String[][] thitdTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "AppleBigRipe", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    {   "5",   "6",    "7",    "8",    "9",    "10",   "11" },
+                    { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
@@ -61,7 +61,7 @@ public class LogicCore {
     private static final String[][] zoneWithNumber = {{ "1", "2", "null", "null", "null", "3", "4" }, { "5", "6", "7", "8", "9", "10", "11" },
                     { "12", "13", "14", "15", "16", "17", "18" }, { "19", "20", "21", "22", "23", "24", "25" } };
 
-    // Назначаем фрукты которые возим
+    // Назначаем фрукты, которые возим
     private static final String[] allFullFruitsName = { "AppleBigRipe", "AppleSmallRipe", "PeerRipe", "RottenBigApple", "RottenSmallApple", "RottenPeer"};
 
     // Назначаем контейнеры для определенного типа фруктов
@@ -114,23 +114,18 @@ public class LogicCore {
         String[] currentTree = getTreeArray(zoneNum);
         String zoneName = getZoneName(zoneNum);
 
-        outArray.addAll(grabFromLeftZone(currentZone, zoneName));
+//        for (String[] elem : currentZone) {
+//            System.out.println(Arrays.toString(elem));
+//        }
+
         outArray.addAll(grabFromLowerZone(currentZone, zoneName));
-        outArray.addAll(grabFromLeftUpperZone(currentZone, zoneName));
+        outArray.addAll(grabFromLeftZone(currentZone, zoneName));
         outArray.addAll(grabFromRightZone(currentZone, zoneName));
         outArray.addAll(grabFromTreeZone(currentTree, zoneName));
+        outArray.addAll(grabFromUpperZoneLeft(currentZone, zoneName));
+        outArray.addAll(grabFromUpperZoneRight(currentZone, zoneName));
 
         return outArray;
-    }
-
-    /**
-     * Заменяем захваченный фрукт на null
-     */
-    void changeToNull(int[] index, int zoneNum){
-        String replacement = "null";
-        if (zoneNum == 1) {
-            firstTreeZone[index[0]][index[1]] = replacement;
-        }
     }
 
     /**
@@ -164,30 +159,66 @@ public class LogicCore {
     }
 
     /**
-     * Захват фруктов с зоны с позицей 1, 2, 5, 6, 12, 13, 19, 20
+     * Захват фруктов с позиций 1, 2 для указанного дерева
+     */
+    ArrayList<String> grabFromUpperZoneLeft(String[][] currentZone, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "UZL";
+        int[][] indexes = { {0, 0}, {0, 1} }; // Тут указываем индексы для 1, 2
+
+        // Проход по каждому индексу в массиве и вывод соответствующего значения
+        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
+            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
+                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+            }
+        }
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    /**
+     * Захват фруктов с позиций 3, 4 для указанного дерева
+     */
+    ArrayList<String> grabFromUpperZoneRight(String[][] currentZone, String zoneName) {
+        ArrayList<String> allFindFruits = new ArrayList<String>();
+        String currentZoneName = "UZR";
+        int[][] indexes = { {0, 5}, {0, 6} }; // Тут указываем индексы для 3, 4
+
+        // Проход по каждому индексу в массиве и вывод соответствующего значения
+        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
+            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
+            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
+                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+            }
+        }
+        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
+    }
+
+    /**
+     * Захват фруктов с позиций 19, 20, 12, 13, 5, 6 для указанного дерева
      */
     ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LZ";
-        int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 1}, {2, 0}, {2, 1}, {3, 0}, {3, 1} }; // Тут указываем индексы для 1, 2, 5, 6, 12, 13, 19, 20
+        int[][] indexes = { {3, 0}, {3, 1}, {2, 0}, {2, 1}, {1, 0}, {1, 1} }; // Тут указываем индексы для 19, 20, 12, 13, 5, 6
 
+        // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
                 allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
             }
         }
-
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
     }
 
     /**
-     * Захват фруктов с позицей 3, 4, 10, 11, 17, 18, 24, 25 для указанного дерева
+     * Захват фруктов с позиций 24, 25, 17, 18, 10, 11 для указанного дерева
      */
     ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
-        int[][] indexes = { {0, 3}, {0, 4}, {0, 5}, {1, 5}, {1, 6}, {2, 5}, {2, 6}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 10, 11, 17, 18, 24, 25
+        int[][] indexes = { {3, 5}, {3, 6}, {2, 5}, {2, 6}, {1, 5}, {1, 6} }; // Тут указываем индексы для 24, 25, 17, 18, 10, 11
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
@@ -200,30 +231,12 @@ public class LogicCore {
     }
 
     /**
-     * Захват фруктов с позицей 21, 22, 23, 14, 15, 16 для указанного дерева
+     * Захват фруктов с позиций 21, 22, 23, 14, 15, 16, 7, 8, 9 для указанного дерева
      */
     ArrayList<String> grabFromLowerZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LOZ";
-        int[][] indexes = { {3, 2}, {3, 3}, {3, 4}, {2, 2}, {2, 3}, {2, 4} }; // Тут указываем индексы для 21, 22, 23, 14, 15, 16
-
-        // Проход по каждому индексу в массиве и вывод соответствующего значения
-        for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
-            String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
-            if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
-            }
-        }
-        return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
-    }
-
-    /**
-     * Захват фруктов с позицей 7, 8, 9 для указанного дерева
-     */
-    ArrayList<String> grabFromLeftUpperZone(String[][] currentZone, String zoneName) {
-        ArrayList<String> allFindFruits = new ArrayList<String>();
-        String currentZoneName = "UZ";
-        int[][] indexes = { {0, 0}, {0, 1} }; // Тут указываем индексы для 7, 8, 9
+        int[][] indexes = { {3, 2}, {3, 3}, {3, 4}, {2, 2}, {2, 3}, {2, 4}, {1, 2}, {1, 3}, {1, 4}, }; // Тут указываем индексы для 21, 22, 23, 14, 15, 16, 7, 8, 9
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
@@ -294,7 +307,10 @@ public class LogicCore {
                 case "LOZ":
                     out = "CH3";
                     break;
-                case "UZ":
+                case "UZL":
+                    out = "CH3";
+                    break;
+                case "UZR":
                     out = "CH3";
                     break;
                 case "TZ":
@@ -319,7 +335,10 @@ public class LogicCore {
                 case "LOZ":
                     out = "CH2";
                     break;
-                case "UZ":
+                case "UZL":
+                    out = "CH2";
+                    break;
+                case "UZR":
                     out = "CH2";
                     break;
                 case "TZ":
@@ -339,26 +358,28 @@ public class LogicCore {
                     out = "CH2";
                     break;
                 case "RZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "LOZ":
                     out = "CH2";
                     break;
-                case "UZ":
+                case "UZL":
+                    out = "CH2";
+                    break;
+                case "UZR":
                     out = "CH2";
                     break;
                 case "TZ":
                     out = "CH2";
                     break;
                 case "START":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 default:
                     out = "null";
                     break;
             }
         }
-
         return out;
     }
 
