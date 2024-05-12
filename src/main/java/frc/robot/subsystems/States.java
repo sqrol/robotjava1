@@ -25,7 +25,7 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
-
+            
             new DriveXAxis(93, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 11, 0, 0),
@@ -33,8 +33,19 @@ public class States {
             new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 13, 0, 0),
+
             new DriveXAxis(0, 90),
-            new DriveXAxis(89, 0),
+            new DriveXAxis(83, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 180),
+            new DriveXAxis(30, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(22, 0), // Frist upper zone left
+            new DriveXAxis(0, -90),
+            new DriveXAxis(15, 0),
+
+
             // new SetGlidePosition(21),
             // new SetGlidePosition(10),
             // new SetGlidePosition(15),
@@ -231,14 +242,23 @@ public class States {
         },
             // MOV_IN_START_TO_CH3  // 24
         {
-            new Drivefor2Motors(850, 0),
-            new Drivefor2Motors(0, 90),
-            new Align("sharp", 8, 0, 0),
+            new DriveXAxis(93, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 11, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 13, 0, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_FRIST_LZ // 25
         {
-            new Align("sharp", 8, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(85, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 11, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(5, 0),
             new Transition()
         },   
             // MOV_IN_FRIST_LZ_TO_CH3 // 26

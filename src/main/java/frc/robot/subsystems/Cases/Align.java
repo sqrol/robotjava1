@@ -32,7 +32,7 @@ public class Align implements IState {
                                              { 12, 30, 40, 70, 95 } };
 
     private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
-                                               { 9, 14, 17, 22, 28, 33, 38, 43, 50 } };
+                                               { 6, 11, 17, 22, 28, 33, 38, 43, 50 } };
 
     private static double[][] arrayForTime = { { 0, 1 },
                                                { 0, 1 } };

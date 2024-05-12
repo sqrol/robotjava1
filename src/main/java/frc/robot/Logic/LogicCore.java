@@ -116,7 +116,7 @@ public class LogicCore {
 
         outArray.addAll(grabFromLeftZone(currentZone, zoneName));
         outArray.addAll(grabFromLowerZone(currentZone, zoneName));
-        outArray.addAll(grabFromUpperZone(currentZone, zoneName));
+        outArray.addAll(grabFromLeftUpperZone(currentZone, zoneName));
         outArray.addAll(grabFromRightZone(currentZone, zoneName));
         outArray.addAll(grabFromTreeZone(currentTree, zoneName));
 
@@ -220,10 +220,10 @@ public class LogicCore {
     /**
      * Захват фруктов с позицей 7, 8, 9 для указанного дерева
      */
-    ArrayList<String> grabFromUpperZone(String[][] currentZone, String zoneName) {
+    ArrayList<String> grabFromLeftUpperZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "UZ";
-        int[][] indexes = { {1, 2}, {1, 3}, {1, 4} }; // Тут указываем индексы для 7, 8, 9
+        int[][] indexes = { {0, 0}, {0, 1} }; // Тут указываем индексы для 7, 8, 9
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть

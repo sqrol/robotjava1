@@ -24,15 +24,15 @@ public class DriveXAxis implements IState {
     //                                    { 0, 12, 15, 25, 35, 50, 75, 85, 95} };
 
     private double[][] speedXArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
-                                        { 0, 3, 6, 12, 15, 25, 35, 50, 75, 85, 95} };
+                                        { 0, 7, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
 
     private double[][] speedZArray = { { 0, 0.5, 1.2, 3, 6, 12, 26, 32, 50 }, 
-                                       { 0, 12, 20, 23, 30, 40, 53, 60, 70 } };
+                                       { 0, 7, 20, 23, 30, 40, 53, 60, 70 } };
 
     private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 15, 20, 32, 90 }, 
                                                  { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };
 
-    private double[][] startKoefSpeedForX = { { 0, 1 }, { 0, 1 } };
+    private double[][] startKoefSpeedForX = { { 0, 0.66,  1 }, { 0, 0.66, 1 } };
 
     public DriveXAxis(double XPosition, double ZPosition){
         this.XPosition = XPosition;

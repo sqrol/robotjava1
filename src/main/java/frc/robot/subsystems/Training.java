@@ -62,11 +62,12 @@ public class Training extends SubsystemBase
     // Отключение ПИДов
     private boolean usePIDForMotors = true; 
 
-    private final PID rightPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
-    private final PID leftPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
+    private final PID rightPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
+    private final PID leftPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
     private final PID liftPID = new PID(0.35, 0.065, 0.0001, -100, 100); // Настройка ПИДа лифта
     private final PID rotatePID = new PID(0.35, 0.065, 0.0001, -100, 100); // Настройка ПИДа 
                                          // 0.15, 0.095, 0.0001, -100, 100
+                                         // 0.215, 0.095, 0.0001, -100, 100 норм но можно получше
     // private final PID rightPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     // private final PID leftPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
 
