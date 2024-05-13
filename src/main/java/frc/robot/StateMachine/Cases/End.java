@@ -1,8 +1,8 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.IState;
+import frc.robot.StateMachine.*;
 
 public class End implements IState{
     @Override

@@ -1,10 +1,9 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import frc.robot.RobotContainer;
 import frc.robot.Logic.LogicMain;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.Training;
+import frc.robot.StateMachine.*;
+import frc.robot.Subsystems.Training;
 
 public class Transition implements IState {
     private static int indexArray = 0; 

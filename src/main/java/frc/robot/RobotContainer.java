@@ -19,7 +19,7 @@ public class RobotContainer {
   {
       train = new Training();
 
-      logic = new LogicCore();
+      // logic = new LogicCore();
 
       // Runnable runnableJavaCam = new JavaCam();
       // Thread threadJavaCam = new Thread(runnableJavaCam);
@@ -36,7 +36,7 @@ public class RobotContainer {
       // EMSThread.setDaemon(true);
       // EMSThread.start();
 
-      // logic = new LogicInit();
+      logic = new LogicCore();
       // change = new Change();
 
       train.setDefaultCommand(new Drive());

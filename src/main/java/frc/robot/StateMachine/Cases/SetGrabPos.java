@@ -1,13 +1,13 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
+import frc.robot.Functions.Function;
 import frc.robot.RobotContainer.*;
-import frc.robot.functions.Function;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.JavaCam;
+import frc.robot.StateMachine.*;
+import frc.robot.MachineVision.JavaCam;
+
 
 public class SetGrabPos implements IState {
     private String fruit;

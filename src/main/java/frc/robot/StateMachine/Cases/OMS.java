@@ -1,11 +1,10 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
-import frc.robot.functions.Function;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.Training;
+import frc.robot.Functions.Function;
+import frc.robot.StateMachine.*;
+import frc.robot.Subsystems.Training;
 
 public class OMS implements IState {
 

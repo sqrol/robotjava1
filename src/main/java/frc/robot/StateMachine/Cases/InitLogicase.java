@@ -1,11 +1,11 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import java.util.ArrayList;
 
 import frc.robot.RobotContainer;
 import frc.robot.Logic.LogicCore;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.Training;
+import frc.robot.StateMachine.*;
+import frc.robot.Subsystems.Training;
 
 public class InitLogicase implements IState {
     private LogicCore logic; 
@@ -115,6 +115,12 @@ public class InitLogicase implements IState {
                     break;
                 case "MOV_IN_CON1_TO_CH2":
                     indexList.add(43);
+                    break;
+                case "MOV_IN_CH3_TO_FRIST_UZL":
+                    indexList.add(44);
+                    break;
+                case "MOV_IN_CH3_TO_FRIST_UZR":
+                    indexList.add(45);
                     break;
             }
         }

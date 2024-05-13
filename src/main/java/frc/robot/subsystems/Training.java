@@ -1,11 +1,11 @@
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 //WPI imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.functions.Function;
-import frc.robot.functions.MeanFilter;
-import frc.robot.functions.MedianFilter;
-import frc.robot.functions.PID;
+import frc.robot.Functions.Function;
+import frc.robot.Functions.MeanFilter;
+import frc.robot.Functions.MedianFilter;
+import frc.robot.Functions.PID;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -68,6 +68,7 @@ public class Training extends SubsystemBase
     private final PID rotatePID = new PID(0.35, 0.065, 0.0001, -100, 100); // Настройка ПИДа 
                                          // 0.15, 0.095, 0.0001, -100, 100
                                          // 0.215, 0.095, 0.0001, -100, 100 норм но можно получше
+                                         // 0.215, 0.0775, 0.0001, -100, 100 говно
     // private final PID rightPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     // private final PID leftPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
 
@@ -126,8 +127,8 @@ public class Training extends SubsystemBase
         sonicBack = new Ultrasonic(9, 8);
         // sonicRight = new Ultrasonic(11, 10);
 
-        sharpRightFilter = new MedianFilter(4);
-        sharpLeftFilter = new MedianFilter(4);
+        sharpRightFilter = new MedianFilter(5);
+        sharpLeftFilter = new MedianFilter(5);
 
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MedianFilter(10);

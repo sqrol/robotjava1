@@ -1,11 +1,10 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.Training;
+import frc.robot.StateMachine.*;
+import frc.robot.Subsystems.Training;
 
 public class StartPos implements IState{
     private Training train = RobotContainer.train; 
@@ -59,5 +58,7 @@ public class StartPos implements IState{
         // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
         // return train.successInit && Timer.getFPGATimestamp() - StateMachine.startTime > 5;
         return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
+        // return false;
+        
     }
 }

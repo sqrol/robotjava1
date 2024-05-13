@@ -28,8 +28,8 @@ public class Align implements IState {
     private static double[][] XArray = { { 0, 0.1, 0.8, 1.5, 2.5, 5, 10, 15, 25, 30 },
                                           { 0, 0.4, 2, 6, 13, 24, 30, 43, 56, 70 } };
 
-    private static double[][] sonicArray = { { 0.7, 4, 7, 15, 30 },
-                                             { 12, 30, 40, 70, 95 } };
+    private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
+                                          { 0, 3, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
 
     private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
                                                { 6, 11, 17, 22, 28, 33, 38, 43, 50 } };
@@ -54,6 +54,7 @@ public class Align implements IState {
             case "sonic":
                 exit = travelSonic(X);
                 break;
+            
             case "sharpSonic":
                 exit = travelSharpSonic(X, distToWall);
                 break;
@@ -68,6 +69,8 @@ public class Align implements IState {
     private boolean alignIR(double X) {
         if(isFirstIter) {
             lastGyro = RobotContainer.train.getLongYaw();
+            train.resetEncLeft();
+            train.resetEncRight();
             isFirstIter = false;
         }
 
@@ -114,8 +117,11 @@ public class Align implements IState {
             lastGyro = train.getLongYaw();
             isFirstIter = false;
         }
-        
+
+        double time = Timer.getFPGATimestamp();
+
         double backSonicDist = train.getBackSonicDistance();
+
         diffX = X - backSonicDist;
         diffZ = lastGyro - train.getLongYaw();
 
@@ -124,7 +130,7 @@ public class Align implements IState {
 
         train.setAxisSpeed(speedX, speedZ);
 
-        finishX = Function.BooleanInRange(X - backSonicDist, -1, 1);
+        finishX = Function.BooleanInRange(X - backSonicDist, -0.5, 0.5);
         finishZ = Function.BooleanInRange(lastGyro - train.getLongYaw(), -0.5, 0.5);
 
         if(finishX && finishZ) {
@@ -136,9 +142,11 @@ public class Align implements IState {
             train.resetEncRight();
             train.resetGyro();
             return true;
+            
         }
         return false;
     }
+
     /**
      * Метод для одновременного движения по инфракрасным и ультразвуковым датчикам.
      * @param X - расстояние до передней стены в см.

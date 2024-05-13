@@ -1,8 +1,8 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.Training;
+import frc.robot.StateMachine.*;
+import frc.robot.Subsystems.Training;
 
 public class FindTreeSonic implements IState{
 

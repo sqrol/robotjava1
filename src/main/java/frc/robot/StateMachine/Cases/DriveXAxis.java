@@ -1,12 +1,12 @@
-package frc.robot.subsystems.Cases;
+package frc.robot.StateMachine.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.functions.Function;
-import frc.robot.subsystems.IState;
-import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.Training;
+import frc.robot.Functions.Function;
+
+import frc.robot.StateMachine.*;
+import frc.robot.Subsystems.Training;
 
 // Новый Case для езды
 
@@ -29,7 +29,7 @@ public class DriveXAxis implements IState {
     private double[][] speedZArray = { { 0, 0.5, 1.2, 3, 6, 12, 26, 32, 50 }, 
                                        { 0, 7, 20, 23, 30, 40, 53, 60, 70 } };
 
-    private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 15, 20, 32, 90 }, 
+    private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 26, 41, 60, 90 }, 
                                                  { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };
 
     private double[][] startKoefSpeedForX = { { 0, 0.66,  1 }, { 0, 0.66, 1 } };
