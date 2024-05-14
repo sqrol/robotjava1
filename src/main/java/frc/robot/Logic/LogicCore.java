@@ -1,5 +1,7 @@
 package frc.robot.Logic;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class LogicCore {
@@ -24,7 +26,7 @@ public class LogicCore {
                     //  1  | 2  |                      | 3  |  4
                     { "1", "2", "null", "null", "null", "0", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "RottenBigApple", "6", "7", "8", "9", "10", "11" },
+                    { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "1", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
@@ -48,7 +50,7 @@ public class LogicCore {
     private static final String[][] thitdTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "4" },
+                    { "AppleSmallRipe", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
@@ -59,7 +61,7 @@ public class LogicCore {
 
     // Шаблон зоны с номерами
     private static final String[][] zoneWithNumber = {{ "1", "2", "null", "null", "null", "3", "4" }, { "5", "6", "7", "8", "9", "10", "11" },
-                    { "12", "13", "14", "15", "16", "17", "18" }, { "19", "20", "21", "22", "23", "24", "25" } };
+            { "12", "13", "14", "15", "16", "17", "18" }, { "19", "20", "21", "22", "23", "24", "25" } };
 
     // Назначаем фрукты, которые возим
     private static final String[] allFullFruitsName = { "AppleBigRipe", "AppleSmallRipe", "PeerRipe", "RottenBigApple", "RottenSmallApple", "RottenPeer"};
@@ -114,9 +116,9 @@ public class LogicCore {
         String[] currentTree = getTreeArray(zoneNum);
         String zoneName = getZoneName(zoneNum);
 
-//        for (String[] elem : currentZone) {
-//            System.out.println(Arrays.toString(elem));
-//        }
+        // for (String[] elem : currentZone) {
+        //     System.out.println(Arrays.toString(elem));
+        // }
 
         outArray.addAll(grabFromLowerZone(currentZone, zoneName));
         outArray.addAll(grabFromLeftZone(currentZone, zoneName));
@@ -355,25 +357,25 @@ public class LogicCore {
         if (zoneName.equals("THIRD")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "RZ":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "LOZ":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "UZL":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "UZR":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "TZ":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "START":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 default:
                     out = "null";

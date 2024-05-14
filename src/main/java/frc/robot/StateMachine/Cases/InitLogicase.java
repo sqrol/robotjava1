@@ -122,6 +122,54 @@ public class InitLogicase implements IState {
                 case "MOV_IN_CH3_TO_FRIST_UZR":
                     indexList.add(45);
                     break;
+                case "MOV_IN_FRIST_UZL_TO_CH3":
+                    indexList.add(47);
+                    break;
+                case "MOV_IN_CH1_TO_THIRD_UZR":
+                    indexList.add(48);
+                    break;
+                case "MOV_IN_THIRD_UZR_TO_CH1":
+                    indexList.add(49);
+                    break;
+                case "MOV_ON_CH1_TO_THIRD_UZL":
+                    indexList.add(50);
+                    break;
+                case "MOV_IN_THIRD_UZL_TO_CH1":
+                    indexList.add(51);
+                    break;
+                case "MOV_IN_CH1_TO_CON1":
+                    indexList.add(52);
+                    break;
+                case "MOV_IN_CON1_TO_CH1":
+                    indexList.add(53);
+                    break;
+                case "MOV_IN_CH1_TO_CON4":
+                    indexList.add(54);
+                    break;
+                case "MOV_IN_CON4_TO_CH1":
+                    indexList.add(55);
+                    break;
+                case "MOV_IN_CH1_TO_CON3":
+                    indexList.add(56);
+                    break;
+                case "MOV_IN_CON3_TO_CH1":
+                    indexList.add(57);
+                    break;
+                case "MOV_IN_CH2_TO_SECOND_UZR":
+                    indexList.add(58);
+                    break;
+                case "":
+                    indexList.add(59);
+                    break;
+                case "MOV_IN_CH2_TO_SECOND_UZL":
+                    indexList.add(60);
+                    break;
+                case "MOV_IN_SECOND_UZL_TO_CH2":
+                    indexList.add(61);
+                    break;
+                case "MOV_IN_CH2_TO_SECOND_TZ":
+                    indexList.add(62);
+                    break;
             }
         }
 

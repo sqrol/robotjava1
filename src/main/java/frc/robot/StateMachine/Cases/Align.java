@@ -26,7 +26,7 @@ public class Align implements IState {
     Training train = RobotContainer.train;
  
     private static double[][] XArray = { { 0, 0.1, 0.8, 1.5, 2.5, 5, 10, 15, 25, 30 },
-                                          { 0, 0.4, 2, 6, 13, 24, 30, 43, 56, 70 } };
+                                          { 0, 0.4, 2, 6, 13, 24, 30, 60, 85, 95 } };
 
     private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
                                           { 0, 3, 10, 12, 18, 25, 35, 50, 75, 85, 95} };

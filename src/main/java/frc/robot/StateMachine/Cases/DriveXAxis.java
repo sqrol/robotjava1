@@ -26,8 +26,8 @@ public class DriveXAxis implements IState {
     private double[][] speedXArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
                                         { 0, 7, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
 
-    private double[][] speedZArray = { { 0, 0.5, 1.2, 3, 6, 12, 26, 32, 50 }, 
-                                       { 0, 7, 20, 23, 30, 40, 53, 60, 70 } };
+    private double[][] speedZArray = { { 0.1, 0.5, 1.5, 2, 3, 6, 12, 26, 32, 50 }, 
+                                       { 6, 11, 17, 20, 25, 30, 40, 53, 60, 70 } };
 
     private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 26, 41, 60, 90 }, 
                                                  { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };

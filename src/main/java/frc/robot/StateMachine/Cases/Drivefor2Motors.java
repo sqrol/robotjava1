@@ -40,12 +40,12 @@ public class Drivefor2Motors implements IState {
     private double[][] startMoveForXArray = { { 0, 1 }, 
                                               { 0, 1 } };
 
-    public Drivefor2Motors(double x, double z) {
-        this.x = x; 
-        this.z = z;  
-        isFirstX = true;
-        isFirstZ = true;
-    }
+    // public Drivefor2Motors(double x, double z) {
+    //     this.x = x; 
+    //     this.z = z;  
+    //     isFirstX = true;
+    //     isFirstZ = true;
+    // }
 
     @Override
     public boolean execute() {

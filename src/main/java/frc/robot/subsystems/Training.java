@@ -136,7 +136,7 @@ public class Training extends SubsystemBase
         redLED = new DigitalOutput(13);
         greenLED = new DigitalOutput(12);
 
-        // grip = new Servo(9);
+        // grip = new Servo(0);
         // gripRotate = new Servo(8);
         // mainRotate = new Servo(7);
 
