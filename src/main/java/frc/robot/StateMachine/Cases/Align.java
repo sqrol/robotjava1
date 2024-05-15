@@ -3,10 +3,10 @@ package frc.robot.StateMachine.Cases;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.Functions.Function;
+import frc.robot.functions.Function;
 import frc.robot.StateMachine.IState;
 import frc.robot.StateMachine.StateMachine;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 /**
  * Данный класс используется для выравнивания по инфракрасным и ультразвуковым датчикам, 
  * а так же для поворота робота вокруг своей оси.

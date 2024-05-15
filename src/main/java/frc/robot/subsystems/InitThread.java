@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotContainer;
@@ -26,7 +26,6 @@ public class InitThread implements Runnable {
                     if(firstInitForGlideDone) {
                         train.setGripRotateServoValue(32);
                         train.setGripServoValue(15);
-                        train.setMainRotateServoValue(225);
                     }
                     } else {
                         if (firstInitForGlideDone) {

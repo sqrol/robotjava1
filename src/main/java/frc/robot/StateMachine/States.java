@@ -14,7 +14,6 @@ import frc.robot.StateMachine.Cases.SetGlidePosition;
 import frc.robot.StateMachine.Cases.SetGrabPos;
 import frc.robot.StateMachine.Cases.SetGripRotatePos;
 import frc.robot.StateMachine.Cases.SetLiftPosition;
-import frc.robot.StateMachine.Cases.SetMainRotatePos;
 import frc.robot.StateMachine.Cases.Align;
 import frc.robot.StateMachine.Cases.StartPos;
 import frc.robot.StateMachine.Cases.Transition;

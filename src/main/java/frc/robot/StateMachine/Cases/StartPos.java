@@ -4,23 +4,31 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.*;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 
 public class StartPos implements IState{
     private Training train = RobotContainer.train; 
     private boolean fristCall = true; 
+
+    public StartPos() {
+        this.fristCall = true;
+    }
+
     @Override
     public boolean execute() {
 
         if (fristCall) {
-            train.resetRotateEncoder(); 
-            fristCall = false; 
+            train.resetEncRotate(); 
         }
-        if (!train.getLimitSwitchGlide()) {
-            train.initGlide = true;
-        } else {
-            train.initGlide = false;
-        }
+
+        train.rotateMotorSpeedThread = 10;
+        // if (!train.getLimitSwitchGlide()) {
+        //     train.initGlide = true;
+        // } else {
+        //     train.initGlide = false;
+        // }
+
+        train.rotateToPos(90);
 
         train.setGreenLED(true);
         train.setRedLED(true);
@@ -39,8 +47,10 @@ public class StartPos implements IState{
         // }
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);
-        train.firstInitForLift = true; 
-        train.firstInitForGlide = true; 
+
+        // train.firstInitForLift = true; 
+        // train.firstInitForGlide = true;
+
         // train.setGripRotateServoValue(200);
         // train.glideMotorSpeedThread = -10; 
             // train.setGripServoValue(15);
@@ -57,8 +67,8 @@ public class StartPos implements IState{
         // return train.getLimitSwitch() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
         // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
         // return train.successInit && Timer.getFPGATimestamp() - StateMachine.startTime > 5;
-        return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
-        // return false;
+        // return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
+        return false;
         
     }
 }

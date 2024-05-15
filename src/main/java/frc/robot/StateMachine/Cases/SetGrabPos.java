@@ -3,7 +3,7 @@ package frc.robot.StateMachine.Cases;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.Functions.Function;
+import frc.robot.functions.Function;
 import frc.robot.RobotContainer.*;
 import frc.robot.StateMachine.*;
 import frc.robot.MachineVision.JavaCam;

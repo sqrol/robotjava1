@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotContainer;
@@ -20,7 +20,6 @@ public class EMSThread implements Runnable {
 
                     train.getGrip().setDisabled();
                     train.getGripRotate().setDisabled();
-                    train.getMainRotate().setDisabled();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
