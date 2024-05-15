@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.*;
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 
 public class SetLiftPosition implements IState {
 
@@ -27,7 +27,7 @@ public class SetLiftPosition implements IState {
 
         liftStop = train.liftToMovePos(pos);
         SmartDashboard.putBoolean("liftStop",  liftStop);
-        return false;
-        // return liftStop && Timer.getFPGATimestamp() - StateMachine.startTime > 1.5;
+        // return false;
+        return liftStop && Timer.getFPGATimestamp() - StateMachine.iterationTime > 1.5;
     }
 }

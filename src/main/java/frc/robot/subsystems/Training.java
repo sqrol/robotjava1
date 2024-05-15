@@ -1,11 +1,13 @@
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 //WPI imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.functions.Function;
-import frc.robot.functions.MeanFilter;
-import frc.robot.functions.MedianFilter;
-import frc.robot.functions.PID;
+import frc.robot.Constants;
+import frc.robot.Functions.Function;
+import frc.robot.Functions.MeanFilter;
+import frc.robot.Functions.MedianFilter;
+import frc.robot.Functions.PID;
+import frc.robot.StateMachine.StateMachine;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -55,8 +57,8 @@ public class Training extends SubsystemBase
     private Encoder limitSwitchGlide, startButton, EMS;
 
     public boolean initLift, initGlide, glideReachedPos, glideStop, finish = false;
-    private boolean flag = true;
-
+    private boolean flag, isFirstRotateCall = true;
+    
     public static ArrayList<Integer> indexList = new ArrayList<>();
 
     // Отключение ПИДов
@@ -99,39 +101,45 @@ public class Training extends SubsystemBase
     private double encRotateResetValue = 0; 
  
     private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, 2, 4, 6, 8, 10 } ,
-                                                           { -0.4, -0.4, -0.3, -0.25, -0.2, 0.2, 0.25, 0.3, 0.4, 0.4} };
+                                                 { -0.4, -0.4, -0.3, -0.25, -0.2, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
-    private static final double[][] arrOfPosForLift = { { -1, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }, 
-                                                        { 0, 10, 300, 600, 800, 1100, 1500, 1900, 2300, 2700, 3000, 3300 } };
-    private static final double[][] convertToDegrees = { {-1540, -500, 0, 500, 1540} ,
-                                                          {-90, -45, 0, 45, 90} };
-    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90} ,
-                                                        { 10, 25, 35, 45, 50, 55, 60} };
+    private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
+                                                         { 0, 10, 300, 450, 600, 800, 1100, 1500, 1900, 2300 } };
+
+    private static final double[][] convertToDegrees = { { -1540, -500, 0, 500, 1540 },
+                                                          { -90, -45, 0, 45, 90 } };
+
+    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90 },
+                                                        { 10, 25, 35, 45, 50, 55, 60 } };
+
+    // private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90 },
+    //                                                     { 0, 4, 13, 20, 30, 47, 60 } };
 
     private static final double[][] arrForLift = { { -350, -200, -100, -20, -8, 0, 8, 100, 200, 350 } ,
-                                                    { -72, -48, -24, -12, -8, 0, 13, 40, 70, 75 } };
+                                                    { -72, -48, -24, -12, -8, 0, 13, 20, 45, 60 } };
 
     public Training()
     {
-        rightMotor = new TitanQuad(42, 1);
-        leftMotor = new TitanQuad(42, 3); 
-        rotateMotor = new TitanQuad(42, 0); 
-        liftMotor = new TitanQuad(42, 2); 
+        rightMotor = new TitanQuad(Constants.TITAN_ID, Constants.RIGHT_MOTOR);
+        leftMotor = new TitanQuad(Constants.TITAN_ID, Constants.LEFT_MOTOR); 
+        rotateMotor = new TitanQuad(Constants.TITAN_ID, Constants.ROTATE_MOTOR); 
+        liftMotor = new TitanQuad(Constants.TITAN_ID, Constants.LIFT_MOTOR); 
 
-        rightEnc = new TitanQuadEncoder(rightMotor, 1, 1);
+        rightEnc = new TitanQuadEncoder(rightMotor, Constants.RIGHT_ENC, Constants.ENCODER_DIST_PER_TICK);
         rightEnc.setReverseDirection();
-        leftEnc = new TitanQuadEncoder(leftMotor, 3, 1);
-        rotateEnc = new TitanQuadEncoder(rotateMotor, 0, 1);
-        liftEnc = new TitanQuadEncoder(liftMotor, 2, 1);
+        leftEnc = new TitanQuadEncoder(leftMotor, Constants.LEFT_ENC, Constants.ENCODER_DIST_PER_TICK);
+        rotateEnc = new TitanQuadEncoder(rotateMotor, Constants.ROTATE_ENC, Constants.ENCODER_DIST_PER_TICK);
+        liftEnc = new TitanQuadEncoder(liftMotor, Constants.LIFT_ENC, Constants.ENCODER_DIST_PER_TICK);
+        liftEnc.setReverseDirection();
 
-        sharpRight = new AnalogInput(0);
-        sharpLeft = new AnalogInput(1);
+        sharpRight = new AnalogInput(Constants.RIGHT_SHARP);
+        sharpLeft = new AnalogInput(Constants.LEFT_SHARP);
 
         // Датчик черной линии для подсчета линий на Glide
-        cobraGlide = new AnalogInput(2);
+        cobraGlide = new AnalogInput(Constants.COBRA_CHANNEL);
 
-        sonicBack = new Ultrasonic(9, 8);
-        // sonicRight = new Ultrasonic(11, 10);
+        sonicBack = new Ultrasonic(Constants.BACK_SONIC_TRIGG, Constants.BACK_SONIC_ECHO);
+        // sonicRight = new Ultrasonic(Constants.SIDE_SONIC_TRIGG, Constants.SIDE_SONIC_ECHO);
 
         sharpRightFilter = new MedianFilter(5);
         sharpLeftFilter = new MedianFilter(5);
@@ -139,33 +147,42 @@ public class Training extends SubsystemBase
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MedianFilter(10);
 
-        redLED = new DigitalOutput(13);
-        greenLED = new DigitalOutput(12);
+        redLED = new DigitalOutput(20);
+        greenLED = new DigitalOutput(21);
 
         // Инициализация концевого выключателя 
         limitSwitchLift = new DigitalInput(0);
 
         // Инициализация сервоприводов
-        // servoGrab = new Servo(0);
+        servoGrab = new Servo(Constants.GRAB_SERVO);
         // 172 закрыть 
         // 130 открыть
-        // servoTurnGrab = new Servo(2);
+        // для фруктов:
+        // большое яблоко - 160
+        // маленькое яблоко - 171
+        // груша - 159
+        servoTurnGrab = new Servo(Constants.GRAB_ROTATE_SERVO);
         // 190 смотрит вперед
         // 283 смотрит вниз
         // 222 смотрит вперед и чуть ниже
         // servoGlide = new ServoContinuous(1);
         
+        // 
+        // 
+        // 
+        // 
+
         // startButton = new Encoder(4, 5);
         // EMS = new Encoder(0, 1);
 
         gyro = new AHRS();
         
     //     // Поток для anal
-    //     new Thread( () -> {
-    //         while(!Thread.interrupted())
-    //         {
-    //             try
-    //                 {
+        new Thread( () -> {
+            while(!Thread.interrupted())
+            {
+                    try
+                        {
     //                 // // Инициализируем СМО
     //                 // if (firstInitForGlide && !firstInitForGlideDone) {
     //                 //     firstInitForGlideDone = initForGlide();
@@ -188,16 +205,16 @@ public class Training extends SubsystemBase
     //                 //         }   
     //                 //     }
     //                 // }
-                    
-    //                 // Thread.sleep(5);
-    //             } 
-    //             catch (Exception e) 
-    //             {
-    //                 e.printStackTrace();
-    //                 DriverStation.reportError("INITIALIZATION THREAD ERROR", true);
-    //             }
-    //         }
-    //     }).start();
+                    successInit = getLimitSwitchLift();
+                    Thread.sleep(5);
+                } 
+                catch (Exception e) 
+                {
+                    e.printStackTrace();
+                    DriverStation.reportError("INITIALIZATION THREAD ERROR", true);
+                }
+            }
+        }).start();
 
         // Поток для работы с моторами
         new Thread( () -> {
@@ -280,33 +297,43 @@ public class Training extends SubsystemBase
     }
 
         /**
-     * Метод для управления позицией лифта
+     * Метод для управления позицией поворота стрелы
      * @param pos - позиция, на которую захват должен повернуться 
      */
     // Для данного механизма не предусмотрен сброс позиции поэтому придется каждый раз при запуске выравнивать его рукой
     // Данная функция не дописана!
-    public void rotateToPos(double degree) {
+    public boolean rotateToPos(double degree) {
+
+        
+
         double currentRotatePos = -getRotateEncoder();
+        
         double rotateDegree = Function.TransitionFunction(currentRotatePos, convertToDegrees); 
         double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
         boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -1, 1);
 
         if (degree < 0 && currentRotatePos < -1600) {
             rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("rotateCheck", 1);
+            return true;
         } else if (degree > 0 && currentRotatePos > 1600) {
             rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("rotateCheck", 2);
+            return true;
         } else if (rotateStop) {
             rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("rotateCheck", 3);
+            return true;
         } else {
-            // rotateMotorSpeedThread = rotateSpeedOut;
+            rotateMotorSpeedThread = rotateSpeedOut;
+            SmartDashboard.putNumber("rotateCheck", 4);
+            SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
+            SmartDashboard.putNumber("rotateDegree", rotateDegree); 
+            SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
+            SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
+             
         }
-        
-        SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
-        SmartDashboard.putNumber("rotateDegree", rotateDegree); 
-        SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
-        SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
-         
-        // return false;
+        return false;
     }
 
     /**
@@ -327,19 +354,15 @@ public class Training extends SubsystemBase
         if (getLimitSwitchLift() && speed > 0) {
             speed = 0;
             resetLiftEncoder();
-            SmartDashboard.putNumber("liftCheck", 1);
             return true; 
         } else if (speed < 0 && nowPos < -3000) {
             liftMotorSpeedThread = 0;
-            SmartDashboard.putNumber("liftCheck", 2);
-            return true; 
+            return true;
         } else if (liftStop && !getLimitSwitchLift()) {
             liftMotorSpeedThread = 0;
-            SmartDashboard.putNumber("liftCheck", 3);
             return true; 
         } else {
             liftMotorSpeedThread = speed;
-            SmartDashboard.putNumber("liftCheck", 5);
             return false;
         }  
     }
@@ -369,7 +392,7 @@ public class Training extends SubsystemBase
      * Сброс энкодера мотора выдвижного механизма
      */
     public void resetRotateEncoder(){
-        rotateEnc.reset();;
+        rotateEnc.reset();
     }
 
     /**
@@ -740,7 +763,7 @@ public class Training extends SubsystemBase
         // ENCODERS ------------------------------------------------------
         SmartDashboard.putNumber("rightEnc", getRightEncoder());
         SmartDashboard.putNumber("leftEnc", getLeftEncoder());
-        SmartDashboard.putNumber("rotateEnc", getEncRotateThread());
+        SmartDashboard.putNumber("rotateEnc", getRotateEncoder());
         SmartDashboard.putNumber("liftEnc", getLiftEncoder());
 
         SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
@@ -755,15 +778,15 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("sonicRight", getSideSonicDistance());
         SmartDashboard.putNumber("sonicBack", getBackSonicDistance());
         SmartDashboard.putNumber("GlideCobra", getCobraVoltage()); 
-
-        // SERVO ANGLES
-        // SmartDashboard.putNumber("MainRotateServoAngle", mainRotate.getAngle());
+    
         // BUTTONS -------------------------------------------------------
         SmartDashboard.putBoolean("startButton", getStartButton());
         SmartDashboard.putBoolean("EMS", getEMSButton());
         SmartDashboard.putBoolean("initlift", initLift);
         SmartDashboard.putBoolean("limitLift", getLimitSwitchLift());
+
         // test
         SmartDashboard.putBoolean("end", finish);
+        SmartDashboard.putNumber("iterationTime", StateMachine.iterationTime);
     }
 }

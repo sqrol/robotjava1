@@ -23,62 +23,8 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
-            
-            // new DriveXAxis(0, 180),
-            // new DriveXAxis(125, 0),
-            // new DriveXAxis(0, 90),
-            // new DriveXAxis(30, 0),
-            // new DriveXAxis(0, -90),
-            // new Align("sharp", 20, 0, 0),
-            // new DriveXAxis(0, 90),
-            // new Align("sharp", 18, 0, 0),
-
-            // new DriveXAxis(0, 180),
-            // new Align("sonic", 60, 0, 0),
-            // new DriveXAxis(0, -90),
-            // new Align("sonic", 70, 0, 0),
-            // new DriveXAxis(0, 90),
-            // new DriveXAxis(20, 0),
-            // new DriveXAxis(0, -90),
-            // new DriveXAxis(210, 0),
-            // new DriveXAxis(0, 90),
-            // new Align("sharp", 18, 0, 0),
-            // new DriveXAxis(0, -90),
-            // new Align("sharp", 20, 0, 0),
-            // new DriveXAxis(0, 180),
-            // new Align("sonic", 20, 0, 0),
-            // new DriveXAxis(0, -90),
-            // new Align("sharp", 18, 0, 0),
-
-            new DriveXAxis(0, 180),
-            new Align("sonic", 60, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sonic", 70, 0, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(20, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(105, 0),
-            // new DriveXAxis(0, 180),
-            // new Align("sonic", 70, 0, 0),
-            // new DriveXAxis(0, 90),
-            // new DriveXAxis(190, 0),
-            // new DriveXAxis(0, 90),
-            // new DriveXAxis(20, 0),
-            // new DriveXAxis(0, -90),
-            // new Align("sharp", 20, 0, 0),
-            // new DriveXAxis(0, 90),
-            // new Align("sharp", 18, 0, 0),
-
-            // new DriveXAxis(0, 180),
-            // new DriveXAxis(105, 0),
-            // new DriveXAxis(0, -90),
-            // new Align("sharp", 20, 0, 0),
-            // new DriveXAxis(0, 90),
-            // new Align("sharp", 18, 0, 0),
-
-            new End(),
-
             // new InitLogicase(),
+            new End(),
             new Transition(),
         },
         
@@ -846,6 +792,71 @@ public class States {
             new Align("sharp", 20, 0, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 18, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_TZ_TO_CH2 // 67
+        {
+            new DriveXAxis(-10, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(-72, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_CH3_TO_FRIST_TZ // 68
+        {   
+            new DriveXAxis(0, 90),
+            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(0, 180),
+            new Align("sonic", 45, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(65, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(7, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_TZ_TO_CH3 // 69
+        {   
+            new DriveXAxis(-10, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(75, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 15, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_CH1_TO_THIRD_TZ // 70
+        {
+            new DriveXAxis(0, -90),
+            new DriveXAxis(170, 0),  // можно сделать потом чтоб стенку держал
+            new DriveXAxis(0, 90),
+            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(0, 180),
+            new Align("sonic", 57, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(73, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(20, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_TZ_TO_CH1 // 71
+        {
+            new DriveXAxis(-25, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(78, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 15, 0, 0),
             new Transition()
         }
     };

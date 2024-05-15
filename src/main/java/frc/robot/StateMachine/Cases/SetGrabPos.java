@@ -3,7 +3,7 @@ package frc.robot.StateMachine.Cases;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.functions.Function;
+import frc.robot.Functions.Function;
 import frc.robot.RobotContainer.*;
 import frc.robot.StateMachine.*;
 import frc.robot.MachineVision.JavaCam;
@@ -37,19 +37,19 @@ public class SetGrabPos implements IState {
     private boolean grab(String fruit) {
         switch(fruit) {
             case "BIG APPLE":
-                RobotContainer.train.setGripServoValue(19);
+                RobotContainer.train.setGripServoValue(160);
                 break;
             case "SMALL APPLE":
-                RobotContainer.train.setGripServoValue(0);
+                RobotContainer.train.setGripServoValue(171);
                 break;
             case "PEAR":
-                RobotContainer.train.setGripServoValue(25);
+                RobotContainer.train.setGripServoValue(159);
                 break;
             case "OPEN":
-                RobotContainer.train.setGripServoValue(70);
+                RobotContainer.train.setGripServoValue(130);
                 break;
         }
-        return Timer.getFPGATimestamp() - StateMachine.startTime > 0.6;
+        return Timer.getFPGATimestamp() - StateMachine.startTime > 2;
     }
 
     @Override

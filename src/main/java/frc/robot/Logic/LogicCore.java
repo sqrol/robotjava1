@@ -39,18 +39,18 @@ public class LogicCore {
                     //  1  | 2  |                      | 3  |  4
                     { "1", "2", "null", "null", "null", "0", "1" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "5", "1", "7", "8", "1", "10", "11" },
+                    {   "5", "1", "7", "8", "1", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "1", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
                     { "19", "1", "21", "1", "23", "24", "25" } };
 
     // Зона 3
-    private static final String[] thitdTree = { "null", "null", "1"};
+    private static final String[] thitdTree = { "AppleBigRipe", "null", "null"};
     private static final String[][] thitdTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "AppleSmallRipe", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
@@ -115,10 +115,6 @@ public class LogicCore {
         String[][] currentZone = getZoneArray(zoneNum);
         String[] currentTree = getTreeArray(zoneNum);
         String zoneName = getZoneName(zoneNum);
-
-        // for (String[] elem : currentZone) {
-        //     System.out.println(Arrays.toString(elem));
-        // }
 
         outArray.addAll(grabFromLowerZone(currentZone, zoneName));
         outArray.addAll(grabFromLeftZone(currentZone, zoneName));

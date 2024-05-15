@@ -18,7 +18,7 @@ public class SetGripRotatePos implements IState {
                 RobotContainer.train.setGripRotateServoValue(0);
                 break;
             case "BRANCH":
-                RobotContainer.train.setGripRotateServoValue(42);
+                RobotContainer.train.setGripRotateServoValue(190);
         }
 
 

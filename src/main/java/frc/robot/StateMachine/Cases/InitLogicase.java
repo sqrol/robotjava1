@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import frc.robot.RobotContainer;
 import frc.robot.Logic.LogicCore;
 import frc.robot.StateMachine.*;
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 
 public class InitLogicase implements IState {
     private LogicCore logic; 
@@ -55,6 +55,30 @@ public class InitLogicase implements IState {
                     break;
                 case "MOV_IN_CH1_TO_THIRD_LZ":
                     indexList.add(13);
+                    break;
+                case "MOV_IN_THIRD_LZ_TO_CH2":
+                    indexList.add(16);
+                    break;
+                case "MOV_IN_START_TO_CH2":
+                    indexList.add(17);
+                    break;
+                case "MOV_IN_CH2_TO_SECOND_LOZ":
+                    indexList.add(18);
+                    break;
+                case "MOV_IN_SECOND_LOZ_TO_CH2":
+                    indexList.add(19);
+                    break;
+                case "MOV_IN_CH2_TO_SECOND_RZ": 
+                    indexList.add(20);
+                    break;
+                case "MOV_IN_SECOND_RZ_TO_CH2":
+                    indexList.add(21);
+                    break;
+                case "MOV_IN_CH2_TO_SECOND_LZ":
+                    indexList.add(22);
+                    break;
+                case "MOV_IN_SECOND_LZ_TO_CH2":
+                    indexList.add(23);
                     break;
                 case "MOV_IN_START_TO_CH3":
                     indexList.add(24);
@@ -158,7 +182,7 @@ public class InitLogicase implements IState {
                 case "MOV_IN_CH2_TO_SECOND_UZR":
                     indexList.add(58);
                     break;
-                case "":
+                case "MOV_IN_SECOND_UZR_TO_CH2":
                     indexList.add(59);
                     break;
                 case "MOV_IN_CH2_TO_SECOND_UZL":
@@ -170,6 +194,34 @@ public class InitLogicase implements IState {
                 case "MOV_IN_CH2_TO_SECOND_TZ":
                     indexList.add(62);
                     break;
+                case "MOV_IN_CH2_TO_CON3":
+                    indexList.add(63);
+                    break;
+                case "MOV_IN_CON3_TO_CH2":
+                    indexList.add(64);
+                    break;
+                case "MOV_IN_CH2_TO_CON2":
+                    indexList.add(65);
+                    break;
+                case "MOV_IN_CON2_TO_CH2":
+                    indexList.add(66);
+                    break;
+                case "MOV_IN_SECOND_TZ_TO_CH2":
+                    indexList.add(67);
+                    break;
+                case "MOV_IN_CH3_TO_FRIST_TZ":
+                    indexList.add(68);
+                    break;
+                case "MOV_IN_FRIST_TZ_TO_CH3":
+                    indexList.add(69);
+                    break;
+                case "MOV_IN_CH1_TO_THIRD_TZ":
+                    indexList.add(70);
+                    break;
+                case "MOV_IN_THIRD_TZ_TO_CH1":
+                    indexList.add(71);
+                    break;
+                
             }
         }
 

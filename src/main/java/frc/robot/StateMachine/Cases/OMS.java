@@ -2,9 +2,9 @@ package frc.robot.StateMachine.Cases;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
-import frc.robot.functions.Function;
+import frc.robot.Functions.Function;
 import frc.robot.StateMachine.*;
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 
 public class OMS implements IState {
 
@@ -42,8 +42,8 @@ public class OMS implements IState {
             case "FLOOR SMALL APPLE":
                 train.setGripServoValue(50);
                 train.setGripRotateServoValue(120);
-                liftPosReached = train.liftToMovePos(liftFloorPos);
-                if(Timer.getFPGATimestamp() - StateMachine.startTime > 3 && liftPosReached) {
+                // liftPosReached = train.liftToMovePos(liftFloorPos);
+                if(Timer.getFPGATimestamp() - StateMachine.startTime > 3 && true) {
                     train.setGripServoValue(0);
                     liftPosReached = false;
                     return true;

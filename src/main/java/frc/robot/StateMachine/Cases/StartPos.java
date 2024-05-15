@@ -4,31 +4,25 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.*;
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 
 public class StartPos implements IState{
     private Training train = RobotContainer.train; 
-    private boolean fristCall = true; 
+    private boolean firstCall = true; 
 
     public StartPos() {
-        this.fristCall = true;
+        this.firstCall = true;
     }
 
     @Override
     public boolean execute() {
 
-        if (fristCall) {
+        if (firstCall) {
             train.resetEncRotate(); 
+            firstCall = false;
         }
 
-        train.rotateMotorSpeedThread = 10;
-        // if (!train.getLimitSwitchGlide()) {
-        //     train.initGlide = true;
-        // } else {
-        //     train.initGlide = false;
-        // }
-
-        train.rotateToPos(90);
+        // train.rotateMotorSpeedThread = 0; 
 
         train.setGreenLED(true);
         train.setRedLED(true);
@@ -45,12 +39,16 @@ public class StartPos implements IState{
         // } else {
         //     train.liftMotorSpeedThread = 50;
         // }
+       boolean flag = train.rotateToPos(45);
+
+
+
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);
 
-        // train.firstInitForLift = true; 
+        train.firstInitForLift = true; 
         // train.firstInitForGlide = true;
-
+        // train.rotateToPos(45);
         // train.setGripRotateServoValue(200);
         // train.glideMotorSpeedThread = -10; 
             // train.setGripServoValue(15);
@@ -63,12 +61,11 @@ public class StartPos implements IState{
         //     }
         //     train.glideToMovePos(100); 
         // }
-            
-        // return train.getLimitSwitch() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
-        // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
-        // return train.successInit && Timer.getFPGATimestamp() - StateMachine.startTime > 5;
-        // return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
-        return false;
         
+        // return train.getLimitSwitchLift() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
+        return flag;
+        // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
+        // return train.successInit && Timer.getFPGATimestamp() - StateMachine.iterationTime > 5;
+        // return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
     }
 }

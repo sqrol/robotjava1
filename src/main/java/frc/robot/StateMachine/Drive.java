@@ -2,7 +2,7 @@ package frc.robot.StateMachine;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 
 public class Drive extends CommandBase {
     private static final Training train = RobotContainer.train;

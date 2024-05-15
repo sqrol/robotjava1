@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.*;
 
-import frc.robot.subsystems.Training;
+import frc.robot.Subsystems.Training;
 
 public class SetGlidePosition implements IState {
 

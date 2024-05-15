@@ -1,4 +1,4 @@
-package frc.robot.functions;
+package frc.robot.Functions;
 
 public class Function {
     public static double TransitionFunction(double value, double[][] values) {

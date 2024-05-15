@@ -7,7 +7,7 @@ import frc.robot.RobotContainer;
 public class StateMachine {
     public static int currentArray = 0;
     public static int currentIndex = 0;
-    public static double startTime = 0;
+    public static double startTime, iterationTime = 0;
     public static boolean first = false;
 
     static void update(){
@@ -20,6 +20,8 @@ public class StateMachine {
             SmartDashboard.putNumber("Array", currentArray);
             SmartDashboard.putBoolean("First", first); 
         }
+        iterationTime = Timer.getFPGATimestamp() - startTime;
+        startTime = 0;
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
     }
 
