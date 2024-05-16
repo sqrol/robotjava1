@@ -49,7 +49,7 @@ public class Training extends SubsystemBase
     private DigitalInput limitSwitchLift;
     
     private AHRS gyro;
-
+    double currentRotatePos;
     // SERVO
     private Servo servoGrab, servoTurnGrab;
     private ServoContinuous servoGlide; 
@@ -61,16 +61,15 @@ public class Training extends SubsystemBase
     
     public static ArrayList<Integer> indexList = new ArrayList<>();
 
-    // Отключение ПИДов
+    // Подключение ПИДов
     private boolean usePIDForMotors = true; 
 
     private final PID rightPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     private final PID leftPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
     private final PID liftPID = new PID(0.35, 0.065, 0.0001, -100, 100); // Настройка ПИДа лифта
-    private final PID rotatePID = new PID(0.35, 0.065, 0.0001, -100, 100); // Настройка ПИДа 
+    private final PID rotatePID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа 
                                          // 0.15, 0.095, 0.0001, -100, 100
-                                         // 0.215, 0.095, 0.0001, -100, 100 норм но можно получше
-                                         // 0.215, 0.0775, 0.0001, -100, 100 говно
+                                         
     // private final PID rightPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     // private final PID leftPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
 
@@ -106,11 +105,11 @@ public class Training extends SubsystemBase
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
                                                          { 0, 10, 300, 450, 600, 800, 1100, 1500, 1900, 2300 } };
 
-    private static final double[][] convertToDegrees = { { -1540, -500, 0, 500, 1540 },
-                                                          { -90, -45, 0, 45, 90 } };
+    private static final double[][] arrOfPosForRotate = { { -1000, -500, 0, 500, 1000 },
+                                                             { -90, -45, 0, 45, 90 } };
 
-    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90 },
-                                                        { 10, 25, 35, 45, 50, 55, 60 } };
+    private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
+                                                        { -20, -15, -10, -5, -3, -2, 0, 2, 3, 5, 10, 15, 20 } };
 
     // private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90 },
     //                                                     { 0, 4, 13, 20, 30, 47, 60 } };
@@ -302,39 +301,92 @@ public class Training extends SubsystemBase
      */
     // Для данного механизма не предусмотрен сброс позиции поэтому придется каждый раз при запуске выравнивать его рукой
     // Данная функция не дописана!
+
     public boolean rotateToPos(double degree) {
 
-        
-
         double currentRotatePos = -getRotateEncoder();
-        
-        double rotateDegree = Function.TransitionFunction(currentRotatePos, convertToDegrees); 
+        double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
         double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
-        boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -1, 1);
+        boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -5, 5);
 
-        if (degree < 0 && currentRotatePos < -1600) {
+        if (rotateSpeedOut > 0 && currentRotatePos < -1600) {
             rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("rotateCheck", 1);
+            SmartDashboard.putNumber("RotateCheck", 1);
             return true;
-        } else if (degree > 0 && currentRotatePos > 1600) {
+        } else if (rotateSpeedOut < 0 && currentRotatePos > 1600) {
             rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("rotateCheck", 2);
+            SmartDashboard.putNumber("RotateCheck", 2);
             return true;
         } else if (rotateStop) {
             rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("rotateCheck", 3);
+            SmartDashboard.putNumber("RotateCheck", 3);
             return true;
         } else {
-            rotateMotorSpeedThread = rotateSpeedOut;
-            SmartDashboard.putNumber("rotateCheck", 4);
-            SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
-            SmartDashboard.putNumber("rotateDegree", rotateDegree); 
-            SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
-            SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
-             
+            rotateMotorSpeedThread = -rotateSpeedOut;
+            if(rotateStop) {
+                SmartDashboard.putNumber("RotateCheck", 4);
+                return true;
+            }
         }
+
+        SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
+        SmartDashboard.putNumber("rotateDegree", rotateDegree); 
+        SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
+        SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
+
         return false;
     }
+
+
+
+    // public boolean rotateToPos(double degree) {
+
+    //     currentRotatePos = -getRotateEncoder();
+        
+    //     double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
+    //     double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
+    //     boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -5, 5);
+
+    //     if (rotateSpeedOut < 0 && -getRotateEncoder() < -1000) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("rotateCheck", 1);
+    //         return true;
+    //     } else if (rotateSpeedOut > 0 && -getRotateEncoder() > 1000) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("rotateCheck", 2);
+    //         return true;
+    //     } else if (rotateStop) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("rotateCheck", 3);
+    //         return true;
+    //     } else {
+    //         SmartDashboard.putNumber("rotateCheck", 4);
+    //         rotateMotorSpeedThread = -rotateSpeedOut;
+    //         if(rotateStop) {
+    //             rotateMotorSpeedThread = 0;
+    //             resetRotateEncoder();
+    //             return true;
+    //         }
+    //     }
+    //     SmartDashboard.putNumber("currentRotatePos", -getRotateEncoder()); 
+    //     SmartDashboard.putNumber("rotateDegree", rotateDegree); 
+    //     SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
+    //     SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
+    //     return false;
+    // }
+
+        // public boolean rotateToPos(double degree) {
+
+        //     double currEncValue = -getEncRotateThread();
+        //     double encDegree = Function.TransitionFunction(currEncValue, arrOfPosForRotate);
+        //     double speedRotate = Function.TransitionFunction(degree - encDegree, speedForRotate);
+        //     boolean stopRotate = Function.BooleanInRange(degree - encDegree, -1, 1);
+        //     rotateMotorSpeedThread = 30;
+        //     if(rotateMotorSpeedThread > 0 && currEncValue > 500) {
+        //         rotateMotorSpeedThread = 0;
+        //     }
+        //     return false;
+        // }
 
     /**
      * Метод для управления позицией лифта
@@ -389,7 +441,7 @@ public class Training extends SubsystemBase
     }
 
     /**
-     * Сброс энкодера мотора выдвижного механизма
+     * Сброс энкодера мотора поворотного механизма
      */
     public void resetRotateEncoder(){
         rotateEnc.reset();
@@ -578,7 +630,7 @@ public class Training extends SubsystemBase
         } else {
             rotatePID.calculate(-rotateEnc.getSpeed(), speed);
             if (withPID) {
-                rotateMotor.set(rotatePID.getOutput());
+                rotateMotor.set(-rotatePID.getOutput());
                 // glideMotor.set(Function.getLimitedValue(glidePID.getOutput(), -0.15, 0.15));
             } else {
                 rotateMotor.set(speed / 100);
@@ -763,12 +815,13 @@ public class Training extends SubsystemBase
         // ENCODERS ------------------------------------------------------
         SmartDashboard.putNumber("rightEnc", getRightEncoder());
         SmartDashboard.putNumber("leftEnc", getLeftEncoder());
-        SmartDashboard.putNumber("rotateEnc", getRotateEncoder());
+        SmartDashboard.putNumber("rotateEnc", -getRotateEncoder());
         SmartDashboard.putNumber("liftEnc", getLiftEncoder());
 
         SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
         SmartDashboard.putNumber("speedLeftMotor", leftEnc.getSpeed());
         SmartDashboard.putNumber("speedLiftotor", liftEnc.getSpeed());
+        SmartDashboard.putNumber("speedRotateMotor", -rotateEnc.getSpeed());
 
         SmartDashboard.putNumber("posZ", getLongYaw());
 

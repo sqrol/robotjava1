@@ -2,21 +2,7 @@ package frc.robot.StateMachine;
 
 import java.util.Set;
 
-import frc.robot.StateMachine.Cases.Align;
-import frc.robot.StateMachine.Cases.DriveXAxis;
-import frc.robot.StateMachine.Cases.Drivefor2Motors;
-import frc.robot.StateMachine.Cases.End;
-import frc.robot.StateMachine.Cases.InitLogicase;
-import frc.robot.StateMachine.Cases.OMS;
-import frc.robot.StateMachine.Cases.Reset;
-import frc.robot.StateMachine.Cases.Sensors;
-import frc.robot.StateMachine.Cases.SetGlidePosition;
-import frc.robot.StateMachine.Cases.SetGrabPos;
-import frc.robot.StateMachine.Cases.SetGripRotatePos;
-import frc.robot.StateMachine.Cases.SetLiftPosition;
-import frc.robot.StateMachine.Cases.Align;
-import frc.robot.StateMachine.Cases.StartPos;
-import frc.robot.StateMachine.Cases.Transition;
+import frc.robot.StateMachine.Cases.*;
 
 public class States {
     public static IState[][] mainStates = new IState[][] {
@@ -24,6 +10,11 @@ public class States {
         {
             new StartPos(), 
             // new InitLogicase(),
+            // new SetRotatePos(-90),
+            // new SetRotatePos(-45),
+            new SetRotatePos(45),
+            new SetRotatePos(-45),
+            
             new End(),
             new Transition(),
         },

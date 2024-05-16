@@ -16,14 +16,13 @@ public class StartPos implements IState{
 
     @Override
     public boolean execute() {
-
+        
         if (firstCall) {
-            train.resetEncRotate(); 
+            train.resetRotateEncoder(); 
             firstCall = false;
         }
 
         // train.rotateMotorSpeedThread = 0; 
-
         train.setGreenLED(true);
         train.setRedLED(true);
         train.reset2Motors();
@@ -39,10 +38,7 @@ public class StartPos implements IState{
         // } else {
         //     train.liftMotorSpeedThread = 50;
         // }
-       boolean flag = train.rotateToPos(45);
-
-
-
+        double currTime = Timer.getFPGATimestamp();
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);
 
@@ -63,7 +59,7 @@ public class StartPos implements IState{
         // }
         
         // return train.getLimitSwitchLift() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
-        return flag;
+        return true;
         // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
         // return train.successInit && Timer.getFPGATimestamp() - StateMachine.iterationTime > 5;
         // return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
