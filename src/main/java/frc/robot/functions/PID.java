@@ -1,4 +1,4 @@
-package frc.robot.Functions;
+package frc.robot.functions;
 
 public class PID {
     private boolean isFirstCall = true;

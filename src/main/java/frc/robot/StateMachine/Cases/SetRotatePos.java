@@ -3,7 +3,7 @@ package frc.robot.StateMachine.Cases;
 import frc.robot.RobotContainer;
 
 import frc.robot.StateMachine.*;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 
 public class SetRotatePos implements IState {
 

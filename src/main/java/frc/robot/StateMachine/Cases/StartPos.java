@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.*;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 
 public class StartPos implements IState{
     private Training train = RobotContainer.train; 
@@ -29,8 +29,10 @@ public class StartPos implements IState{
         train.OdometryReset(0, 0);
         train.resetGyro();
         // train.setAxisSpeed(0.0f, 30.0f);
-        train.finish = false;
-        train.firstInitForGlide = true; 
+
+        // train.finish = false;
+        // train.firstInitForGlide = true; 
+
         // // train.setAxisSpeed(20, 0);
 
         // if (train.getLimitSwitchLift()) {
@@ -42,7 +44,8 @@ public class StartPos implements IState{
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);
 
-        train.firstInitForLift = true; 
+        // train.firstInitForLift = true; 
+
         // train.firstInitForGlide = true;
         // train.rotateToPos(45);
         // train.setGripRotateServoValue(200);

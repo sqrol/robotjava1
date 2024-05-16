@@ -3,10 +3,10 @@ package frc.robot.StateMachine.Cases;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.Functions.Function;
+import frc.robot.functions.Function;
 
 import frc.robot.StateMachine.*;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 
 // Новый Case для езды
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import frc.robot.RobotContainer;
 import frc.robot.Logic.LogicCore;
 import frc.robot.StateMachine.*;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 
 public class InitLogicase implements IState {
     private LogicCore logic; 

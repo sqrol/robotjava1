@@ -1,12 +1,12 @@
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 //WPI imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Functions.Function;
-import frc.robot.Functions.MeanFilter;
-import frc.robot.Functions.MedianFilter;
-import frc.robot.Functions.PID;
+import frc.robot.functions.Function;
+import frc.robot.functions.MeanFilter;
+import frc.robot.functions.MedianFilter;
+import frc.robot.functions.PID;
 import frc.robot.StateMachine.StateMachine;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -105,11 +105,14 @@ public class Training extends SubsystemBase
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
                                                          { 0, 10, 300, 450, 600, 800, 1100, 1500, 1900, 2300 } };
 
-    private static final double[][] arrOfPosForRotate = { { -1000, -500, 0, 500, 1000 },
+    private static final double[][] arrOfPosForRotate = { { -1500, -800, 0, 700, 1440 },
                                                              { -90, -45, 0, 45, 90 } };
 
     private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
-                                                        { -20, -15, -10, -5, -3, -2, 0, 2, 3, 5, 10, 15, 20 } };
+                                                        { -50, -45, -40, -35, -30, -25, 0, 25, 30, 35, 40, 45, 50 } };
+
+    // private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
+    //                                                     { -15, -15, -15, -15, -15, -15, 0, 15, 15, 15, 15, 15, 15 } };
 
     // private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90 },
     //                                                     { 0, 4, 13, 20, 30, 47, 60 } };
@@ -119,25 +122,25 @@ public class Training extends SubsystemBase
 
     public Training()
     {
-        rightMotor = new TitanQuad(Constants.TITAN_ID, Constants.RIGHT_MOTOR);
-        leftMotor = new TitanQuad(Constants.TITAN_ID, Constants.LEFT_MOTOR); 
-        rotateMotor = new TitanQuad(Constants.TITAN_ID, Constants.ROTATE_MOTOR); 
-        liftMotor = new TitanQuad(Constants.TITAN_ID, Constants.LIFT_MOTOR); 
+        rightMotor = new TitanQuad(42, 1);
+        leftMotor = new TitanQuad(42, 3); 
+        rotateMotor = new TitanQuad(42, 0); 
+        liftMotor = new TitanQuad(42, 2); 
 
-        rightEnc = new TitanQuadEncoder(rightMotor, Constants.RIGHT_ENC, Constants.ENCODER_DIST_PER_TICK);
+        rightEnc = new TitanQuadEncoder(rightMotor, 1, 1);
         rightEnc.setReverseDirection();
-        leftEnc = new TitanQuadEncoder(leftMotor, Constants.LEFT_ENC, Constants.ENCODER_DIST_PER_TICK);
-        rotateEnc = new TitanQuadEncoder(rotateMotor, Constants.ROTATE_ENC, Constants.ENCODER_DIST_PER_TICK);
-        liftEnc = new TitanQuadEncoder(liftMotor, Constants.LIFT_ENC, Constants.ENCODER_DIST_PER_TICK);
+        leftEnc = new TitanQuadEncoder(leftMotor, 3, 1);
+        rotateEnc = new TitanQuadEncoder(rotateMotor, 0, 1);
+        liftEnc = new TitanQuadEncoder(liftMotor, 2, 1);
         liftEnc.setReverseDirection();
 
-        sharpRight = new AnalogInput(Constants.RIGHT_SHARP);
-        sharpLeft = new AnalogInput(Constants.LEFT_SHARP);
+        sharpRight = new AnalogInput(0);
+        sharpLeft = new AnalogInput(1);
 
         // Датчик черной линии для подсчета линий на Glide
-        cobraGlide = new AnalogInput(Constants.COBRA_CHANNEL);
+        cobraGlide = new AnalogInput(2);
 
-        sonicBack = new Ultrasonic(Constants.BACK_SONIC_TRIGG, Constants.BACK_SONIC_ECHO);
+        sonicBack = new Ultrasonic(9, 8);
         // sonicRight = new Ultrasonic(Constants.SIDE_SONIC_TRIGG, Constants.SIDE_SONIC_ECHO);
 
         sharpRightFilter = new MedianFilter(5);
@@ -295,7 +298,7 @@ public class Training extends SubsystemBase
         
     }
 
-        /**
+            /**
      * Метод для управления позицией поворота стрелы
      * @param pos - позиция, на которую захват должен повернуться 
      */
@@ -304,40 +307,80 @@ public class Training extends SubsystemBase
 
     public boolean rotateToPos(double degree) {
 
-        double currentRotatePos = -getRotateEncoder();
+        double currentRotatePos = getRotateEncoder();
         double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
-        double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
-        boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -5, 5);
-
-        if (rotateSpeedOut > 0 && currentRotatePos < -1600) {
-            rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("RotateCheck", 1);
-            return true;
-        } else if (rotateSpeedOut < 0 && currentRotatePos > 1600) {
-            rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("RotateCheck", 2);
-            return true;
-        } else if (rotateStop) {
-            rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("RotateCheck", 3);
-            return true;
-        } else {
-            rotateMotorSpeedThread = -rotateSpeedOut;
-            if(rotateStop) {
-                SmartDashboard.putNumber("RotateCheck", 4);
-                return true;
-            }
-        }
+        double rotateSpeedOut = -Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
+        boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -0.5, 0.5);
 
         SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
         SmartDashboard.putNumber("rotateDegree", rotateDegree); 
         SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
         SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
 
+        if (rotateSpeedOut > 0 && currentRotatePos < -1600) {
+            rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("RotateCheck", 1);
+            // return true;
+        } else if (rotateSpeedOut < 0 && currentRotatePos > 1600) {
+            rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("RotateCheck", 2);
+            // return true;
+        } else if (rotateStop) {
+            rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("RotateCheck", 3);
+            return true;
+        } else {
+            rotateMotorSpeedThread = rotateSpeedOut;
+            if(rotateStop) {
+                SmartDashboard.putNumber("RotateCheck", 4);
+                // return true;
+            }
+        }
+
         return false;
     }
 
+    // /**
+    //  * Метод для управления позицией поворота стрелы
+    //  * @param pos - позиция, на которую захват должен повернуться 
+    //  */
+    // // Для данного механизма не предусмотрен сброс позиции поэтому придется каждый раз при запуске выравнивать его рукой
+    // // Данная функция не дописана!
 
+    // public boolean rotateToPos(double degree) {
+
+    //     double currentRotatePos = -getRotateEncoder();
+    //     double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
+    //     double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
+    //     boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -5, 5);
+
+    //     if (rotateSpeedOut > 0 && currentRotatePos < -1600) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("RotateCheck", 1);
+    //         return true;
+    //     } else if (rotateSpeedOut < 0 && currentRotatePos > 1600) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("RotateCheck", 2);
+    //         return true;
+    //     } else if (rotateStop) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("RotateCheck", 3);
+    //         return true;
+    //     } else {
+    //         rotateMotorSpeedThread = -rotateSpeedOut;
+    //         if(rotateStop) {
+    //             SmartDashboard.putNumber("RotateCheck", 4);
+    //             return true;
+    //         }
+    //     }
+
+    //     SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
+    //     SmartDashboard.putNumber("rotateDegree", rotateDegree); 
+    //     SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
+    //     SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
+
+    //     return false;
+    // }
 
     // public boolean rotateToPos(double degree) {
 

@@ -3,7 +3,7 @@ package frc.robot.StateMachine.Cases;
 import frc.robot.RobotContainer;
 import frc.robot.Logic.LogicMain;
 import frc.robot.StateMachine.*;
-import frc.robot.Subsystems.Training;
+import frc.robot.subsystems.Training;
 
 public class Transition implements IState {
     private static int indexArray = 0; 

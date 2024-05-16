@@ -12,8 +12,8 @@ public class States {
             // new InitLogicase(),
             // new SetRotatePos(-90),
             // new SetRotatePos(-45),
-            new SetRotatePos(45),
-            new SetRotatePos(-45),
+            new SetRotatePos(90),
+            new SetRotatePos(-90),
             
             new End(),
             new Transition(),
