@@ -23,6 +23,7 @@ public class StartPos implements IState{
         }
 
         // train.rotateMotorSpeedThread = 0; 
+
         train.setGreenLED(true);
         train.setRedLED(true);
         train.reset2Motors();
@@ -30,22 +31,18 @@ public class StartPos implements IState{
         train.resetGyro();
         // train.setAxisSpeed(0.0f, 30.0f);
 
-        // train.finish = false;
-        // train.firstInitForGlide = true; 
-
-        // // train.setAxisSpeed(20, 0);
-
-        // if (train.getLimitSwitchLift()) {
-        //     train.liftMotorSpeedThread = 0;
-        // } else {
-        //     train.liftMotorSpeedThread = 50;
-        // }
-        double currTime = Timer.getFPGATimestamp();
+        if (train.getLimitSwitchLift()) {
+            train.liftMotorSpeedThread = 0;
+            train.resetLiftEncoder();
+        } else {
+            train.liftMotorSpeedThread = 50;
+        }
+        
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);
 
         // train.firstInitForLift = true; 
-
+        
         // train.firstInitForGlide = true;
         // train.rotateToPos(45);
         // train.setGripRotateServoValue(200);
@@ -60,11 +57,16 @@ public class StartPos implements IState{
         //     }
         //     train.glideToMovePos(100); 
         // }
-        
-        // return train.getLimitSwitchLift() && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
-        return true;
-        // return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
-        // return train.successInit && Timer.getFPGATimestamp() - StateMachine.iterationTime > 5;
-        // return Timer.getFPGATimestamp() - StateMachine.startTime > 5;
+
+        if(train.successInit) {
+            train.resetLiftEncoder();
+            train.resetRotateEncoder();
+            train.setGripServoValue(177);
+            train.setGripRotateServoValue(279);
+            if(System.currentTimeMillis() - StateMachine.iterationTime > 8000){
+                return true;
+            }
+        }
+        return false;
     }
 }

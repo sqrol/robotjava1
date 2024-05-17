@@ -21,6 +21,7 @@ public class Transition implements IState {
         StateMachine.currentArray = Training.indexList.get(Transition.indexArray);
         Transition.indexArray++;
         StateMachine.currentIndex = -1;
+        RobotContainer.train.setAxisSpeed(0, 0);
         return true;
     }
 }

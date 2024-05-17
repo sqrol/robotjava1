@@ -103,9 +103,12 @@ public class Training extends SubsystemBase
                                                  { -0.4, -0.4, -0.3, -0.25, -0.2, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
-                                                         { 0, 10, 300, 450, 600, 800, 1100, 1500, 1900, 2300 } };
+                                                         { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2800, 3000 } };
 
-    private static final double[][] arrOfPosForRotate = { { -1500, -800, 0, 700, 1440 },
+    // private static final double[][] arrOfPosForRotate = { { -1500, -500, 0, 500, 1440 },
+    //                                                          { -90, -45, 0, 45, 90 } };
+
+    private static final double[][] arrOfPosForRotate = { { -1500, -500, 0, 500, 1440 },
                                                              { -90, -45, 0, 45, 90 } };
 
     private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
@@ -120,8 +123,8 @@ public class Training extends SubsystemBase
     private static final double[][] arrForLift = { { -350, -200, -100, -20, -8, 0, 8, 100, 200, 350 } ,
                                                     { -72, -48, -24, -12, -8, 0, 13, 20, 45, 60 } };
 
-    public Training()
-    {
+    public Training()       
+    {                                   // почему не константы
         rightMotor = new TitanQuad(42, 1);
         leftMotor = new TitanQuad(42, 3); 
         rotateMotor = new TitanQuad(42, 0); 
@@ -131,6 +134,7 @@ public class Training extends SubsystemBase
         rightEnc.setReverseDirection();
         leftEnc = new TitanQuadEncoder(leftMotor, 3, 1);
         rotateEnc = new TitanQuadEncoder(rotateMotor, 0, 1);
+        rotateEnc.setReverseDirection();
         liftEnc = new TitanQuadEncoder(liftMotor, 2, 1);
         liftEnc.setReverseDirection();
 
@@ -157,17 +161,17 @@ public class Training extends SubsystemBase
 
         // Инициализация сервоприводов
         servoGrab = new Servo(Constants.GRAB_SERVO);
-        // 172 закрыть 
-        // 130 открыть
+        // 177 закрыть 
+        // 110 открыть
         // для фруктов:
         // большое яблоко - 160
-        // маленькое яблоко - 171
-        // груша - 159
+        // маленькое яблоко - 177
+        // груша - 164
         servoTurnGrab = new Servo(Constants.GRAB_ROTATE_SERVO);
         // 190 смотрит вперед
-        // 283 смотрит вниз
+        // 279 смотрит вниз
         // 222 смотрит вперед и чуть ниже
-        // servoGlide = new ServoContinuous(1);
+        servoGlide = new ServoContinuous(1);
         
         // 
         // 
@@ -183,33 +187,32 @@ public class Training extends SubsystemBase
         new Thread( () -> {
             while(!Thread.interrupted())
             {
-                    try
-                        {
-    //                 // // Инициализируем СМО
-    //                 // if (firstInitForGlide && !firstInitForGlideDone) {
-    //                 //     firstInitForGlideDone = initForGlide();
-    //                 //     if(firstInitForGlideDone) {
-    //                 //         // setGripRotateServoValue(32); 
-    //                 //         // setGripServoValue(60);
-    //                 //         // setMainRotateServoValue(230);
-    //                 //     }
-    //                 // } else {
-    //                 //     if (firstInitForGlideDone) {
-    //                 //         if (firstInitForLift && !firstInitForLiftDone) {
-    //                 //             firstInitForLiftDone = initForLift();
-    //                 //         } else {
-    //                 //             if(firstInitForGlideDone && firstInitForLiftDone) {
-    //                 //                 glideReachedPos = true; //glideToMovePos(50)
-    //                 //                 if(glideReachedPos) {
-    //                 //                     successInit = true;
-    //                 //                 }
-    //                 //             }  
-    //                 //         }   
-    //                 //     }
-    //                 // }
+                try {
+                // // Инициализируем СМО
+                // if (firstInitForGlide && !firstInitForGlideDone) {
+                //     firstInitForGlideDone = initForGlide();
+                //     if(firstInitForGlideDone) {
+                //         // setGripRotateServoValue(32); 
+                //         // setGripServoValue(60);
+                //         // setMainRotateServoValue(230);
+                //     }
+                // } else {
+                //     if (firstInitForGlideDone) {
+                //         if (firstInitForLift && !firstInitForLiftDone) {
+                //             firstInitForLiftDone = initForLift();
+                //         } else {
+                //             if(firstInitForGlideDone && firstInitForLiftDone) {
+                //                 glideReachedPos = true; //glideToMovePos(50)
+                //                 if(glideReachedPos) {
+                //                     successInit = true;
+                //                 }
+                //             }  
+                //         }   
+                //     }
+                // }
                     successInit = getLimitSwitchLift();
                     Thread.sleep(5);
-                } 
+                }
                 catch (Exception e) 
                 {
                     e.printStackTrace();
@@ -243,7 +246,7 @@ public class Training extends SubsystemBase
                         setRightMotorSpeed(rightMotorSpeedThread, usePIDForMotors);
                         setLiftMotorSpeed(liftMotorSpeedThread, usePIDForMotors);
                         setRotateMotorSpeed(rotateMotorSpeedThread, usePIDForMotors);
-                        // glideServo.setDisabled();
+                        // servoGrab.setDisabled();
                     }
                     
                     Thread.sleep(5);
@@ -288,7 +291,7 @@ public class Training extends SubsystemBase
                 liftMotorSpeedThread = 0;
                 return true;
             } else {
-                liftMotorSpeedThread = 60;
+                liftMotorSpeedThread = 10;
             }
             return false;
         } catch (Exception e) {
@@ -306,7 +309,7 @@ public class Training extends SubsystemBase
     // Данная функция не дописана!
 
     public boolean rotateToPos(double degree) {
-
+        
         double currentRotatePos = getRotateEncoder();
         double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
         double rotateSpeedOut = -Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
@@ -320,11 +323,11 @@ public class Training extends SubsystemBase
         if (rotateSpeedOut > 0 && currentRotatePos < -1600) {
             rotateMotorSpeedThread = 0;
             SmartDashboard.putNumber("RotateCheck", 1);
-            // return true;
+            return true;
         } else if (rotateSpeedOut < 0 && currentRotatePos > 1600) {
             rotateMotorSpeedThread = 0;
             SmartDashboard.putNumber("RotateCheck", 2);
-            // return true;
+            return true;
         } else if (rotateStop) {
             rotateMotorSpeedThread = 0;
             SmartDashboard.putNumber("RotateCheck", 3);
@@ -333,10 +336,11 @@ public class Training extends SubsystemBase
             rotateMotorSpeedThread = rotateSpeedOut;
             if(rotateStop) {
                 SmartDashboard.putNumber("RotateCheck", 4);
-                // return true;
+                isFirstRotateCall = false;
+                return true;
             }
         }
-
+        
         return false;
     }
 
@@ -445,9 +449,8 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("LiftSpeed", speed); 
         SmartDashboard.putNumber("DiffForLift", encPos - nowPos); 
         
-
         if (getLimitSwitchLift() && speed > 0) {
-            speed = 0;
+            liftMotorSpeedThread = 0;
             resetLiftEncoder();
             return true; 
         } else if (speed < 0 && nowPos < -3000) {

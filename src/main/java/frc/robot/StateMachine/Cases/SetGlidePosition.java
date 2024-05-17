@@ -18,6 +18,7 @@ public class SetGlidePosition implements IState {
     @Override
     public boolean execute() {
         train.servoGlidePosition(this.pos);
-        return train.glideExit && Timer.getFPGATimestamp() - StateMachine.startTime > 1;
+        RobotContainer.train.setAxisSpeed(0, 0);
+        return train.glideExit && System.currentTimeMillis() - StateMachine.startTime > 4000;
     }
 }

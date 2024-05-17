@@ -221,10 +221,23 @@ public class InitLogicase implements IState {
                 case "MOV_IN_THIRD_TZ_TO_CH1":
                     indexList.add(71);
                     break;
-                
+                case "GRAB_POS_20":
+                    indexList.add(72);
+                    break;
+                case "RESET_FRUIT":
+                    indexList.add(73);
+                    break;
+                case "GRAB_POS_13":
+                    indexList.add(74);
+                    break;
+                case "GRAB_POS_6":
+                    indexList.add(75);
+                    break;
+                case "GRAB_POS_24":
+                    indexList.add(76);
+                    break;
             }
         }
-
         return true;
     }
     

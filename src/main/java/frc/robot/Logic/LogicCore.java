@@ -28,9 +28,9 @@ public class LogicCore {
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
-                    { "1", "13", "14", "1", "16", "17", "18" },
+                    { "12", "13", "14", "1", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "24", "25" } };
+                    { "19", "20", "21", "22", "23", "AppleBigRipe", "25" } };
 
     // Зона 2
     private static final String[] secondTree = { "null", "null", "null"};
@@ -46,7 +46,7 @@ public class LogicCore {
                     { "19", "1", "21", "1", "23", "24", "25" } };
 
     // Зона 3
-    private static final String[] thitdTree = { "AppleBigRipe", "null", "null"};
+    private static final String[] thitdTree = { "null", "null", "null"};
     private static final String[][] thitdTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4

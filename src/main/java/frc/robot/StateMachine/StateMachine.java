@@ -23,8 +23,6 @@ public class StateMachine {
             SmartDashboard.putBoolean("First", first); 
             iterationTime = System.currentTimeMillis() - startTime;
         }
-        
-        
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
     }
 
