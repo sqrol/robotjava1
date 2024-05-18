@@ -33,14 +33,14 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("GREEN2", 0.0);
         SmartDashboard.putNumber("BLUE1", 0.0);
         SmartDashboard.putNumber("BLUE2", 0.0);
-
+        
         camera = CameraServer.getInstance().startAutomaticCapture(); // Находим доступные камеры и подсасывам его
         camera.setResolution(640, 480); // Разрешение
         camera.setFPS(30); // Частота кадров
         cvSink = CameraServer.getInstance().getVideo(camera);
-
+        settingCameraParameters(false);
         // camera.getProperty("name").setString("value");
-
+        
         outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
         outStream2 = CameraServer.getInstance().putVideo("outBlur", 640, 480);
         outStream3 = CameraServer.getInstance().putVideo("outHSV", 640, 480);
@@ -145,28 +145,25 @@ public class JavaCam implements Runnable
     // С этим нужно поиграться не могу сказать что 100% работает!
     public static void settingCameraParameters(final boolean mode) {
         if (mode) {
-
+            camera.getProperty("white_balance_temperature_auto").set(0);
+            // camera.getProperty("white_balance_temperature").set(4500);
+            // camera.getProperty("focus_auto").set(1);
+            camera.getProperty("focus_auto").set(0);
+            camera.getProperty("exposure_auto").set(0);
+            camera.getProperty("brightness").set(0);
+            camera.getProperty("contrast").set(9);
+            camera.getProperty("sharpness").set(30);
+            camera.getProperty("exposure_absolute").set(3000);
+            // camera.getProperty("backlight_compensation").set(10);
+            camera.getProperty("focus_absolute").set(0); // 0-40
+            camera.getProperty("saturation").set(100);
+            camera.getProperty("power_line_frequency").set(2);
+            camera.getProperty("pan_absolute").set(7200);
+            camera.getProperty("tilt_absolute").set(-7200);
+        } else {
             camera.getProperty("exposure_auto").set(1);
             camera.getProperty("white_balance_temperature_auto").set(1);
-            camera.getProperty("focus_auto").set(1);
-            camera.getProperty("focus_auto").set(0);
-            camera.getProperty("focus_absolute").set(15); // 0-40
-
-        } else {
-
-            // Настраиваем экспозицию
-            camera.getProperty("exposure_absolute").set(1000); // 5-20000
-
-            // Настраиваем баланс белого
-            camera.getProperty("white_balance_temperature").set(1000); // 2800-10000
-
-            // Настройка фокуса
-            camera.getProperty("focus_auto").set(0);
-            camera.getProperty("focus_absolute").set(0); // 0-40
-
-            // Настройка зумма
-            camera.getProperty("zoom_absolute").set(0); // 0-10
-
+            camera.getProperty("focus_auto").set(1); 
         }
     }
 

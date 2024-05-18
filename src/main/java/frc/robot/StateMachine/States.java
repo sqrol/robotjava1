@@ -9,7 +9,7 @@ public class States {
             new StartPos(), 
             // new SetLiftPosition(50),
             // new SetLiftPosition(80),
-            new SetLiftPosition(100),
+            // new SetLiftPosition(100),
             // new InitLogicase(),
             // new Align("sonic", 85, 0, 0),
             // new SetRotatePos(45),
