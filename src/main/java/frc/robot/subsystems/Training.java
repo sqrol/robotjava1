@@ -107,9 +107,10 @@ public class Training extends SubsystemBase
 
     // private static final double[][] arrOfPosForRotate = { { -1500, -500, 0, 500, 1440 },
     //                                                          { -90, -45, 0, 45, 90 } };
-
-    private static final double[][] arrOfPosForRotate = { { -1500, -500, 0, 500, 1440 },
-                                                             { -90, -45, 0, 45, 90 } };
+    
+    private static final double[][] arrOfPosForRotate = 
+                { { -1000, -500, -400, -350, -300, -200, -100, 0, 100, 200, 300, 350, 400, 500, 1000 },
+                { -90, -45, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 90 } };
 
     private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
                                                         { -50, -45, -40, -35, -30, -25, 0, 25, 30, 35, 40, 45, 50 } };
@@ -151,7 +152,7 @@ public class Training extends SubsystemBase
         sharpLeftFilter = new MedianFilter(5);
 
         sonicRightFilter = new MedianFilter(6);
-        sonicBackFilter = new MedianFilter(10);
+        // sonicBackFilter = new MedianFilter(7);
 
         redLED = new DigitalOutput(20);
         greenLED = new DigitalOutput(21);
@@ -302,47 +303,83 @@ public class Training extends SubsystemBase
     }
 
             /**
-     * Метод для управления позицией поворота стрелы
-     * @param pos - позиция, на которую захват должен повернуться 
+     * Метод для управления поворотом стрелы
+     * @param degree - позиция, на которую захват должен повернуться 
      */
     // Для данного механизма не предусмотрен сброс позиции поэтому придется каждый раз при запуске выравнивать его рукой
     // Данная функция не дописана!
 
     public boolean rotateToPos(double degree) {
         
-        double currentRotatePos = getRotateEncoder();
-        double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
-        double rotateSpeedOut = -Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
-        boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -0.5, 0.5);
+        double currentRotatePos = -getEncRotateThread();
+       
+        double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate);
+        double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate);
+        
+        boolean rotateStop = Function.BooleanInRange(degree - rotateDegree, -5, 5);
 
-        SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
-        SmartDashboard.putNumber("rotateDegree", rotateDegree); 
-        SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
-        SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
+        SmartDashboard.putNumber("currentRotatePos", -getEncRotateThread());
+        SmartDashboard.putNumber("rotateDegree", rotateDegree);
+        SmartDashboard.putNumber("rotateDiff", rotateDegree - degree);
+        SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut);
+        SmartDashboard.putBoolean("rotateStop", rotateStop);
 
-        if (rotateSpeedOut > 0 && currentRotatePos < -1600) {
+        rotateMotorSpeedThread = -rotateSpeedOut;
+
+        if ((rotateSpeedOut < 0 && -getEncRotateThread() < -1600) || (rotateSpeedOut > 0 && -getEncRotateThread() > 1600)) {
             rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("RotateCheck", 1);
+            SmartDashboard.putNumber("rotateCheck", 324);
             return true;
-        } else if (rotateSpeedOut < 0 && currentRotatePos > 1600) {
+        } 
+        
+        if (rotateStop) {
             rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("RotateCheck", 2);
-            return true;
-        } else if (rotateStop) {
-            rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("RotateCheck", 3);
+            SmartDashboard.putNumber("rotateCheck", 3);
             return true;
         } else {
-            rotateMotorSpeedThread = rotateSpeedOut;
-            if(rotateStop) {
-                SmartDashboard.putNumber("RotateCheck", 4);
-                isFirstRotateCall = false;
-                return true;
-            }
+            
+            SmartDashboard.putNumber("rotateCheck", 4);
         }
         
         return false;
     }
+
+
+    // public boolean rotateToPos(double degree) {
+        
+    //     double currentRotatePos = -getRotateEncoder();
+    //     double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate); 
+    //     double rotateSpeedOut = -Function.TransitionFunction(rotateDegree - degree, speedForRotate); 
+    //     boolean rotateStop = Function.BooleanInRange(rotateDegree - degree, -0.5, 0.5);
+
+    //     SmartDashboard.putNumber("currentRotatePos", currentRotatePos); 
+    //     SmartDashboard.putNumber("rotateDegree", rotateDegree); 
+    //     SmartDashboard.putNumber("rotateDiff", rotateDegree - degree); 
+    //     SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut); 
+
+    //     if (rotateSpeedOut < 0 && currentRotatePos < -1600) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("RotateCheck", 1);
+    //         return true;
+    //     } else if (rotateSpeedOut > 0 && currentRotatePos > 1600) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("RotateCheck", 2);
+    //         return true;
+    //     } else if (rotateStop) {
+    //         rotateMotorSpeedThread = 0;
+    //         SmartDashboard.putNumber("RotateCheck", 3);
+    //         return true;
+    //     } else {
+    //         rotateMotorSpeedThread = rotateSpeedOut;
+    //         if(rotateStop) {
+    //             SmartDashboard.putNumber("RotateCheck", 4);
+    //             isFirstRotateCall = false;
+    //             return true;
+    //         }
+    //     }
+        
+    //     return false;
+    // }
 
     // /**
     //  * Метод для управления позицией поворота стрелы
@@ -754,7 +791,8 @@ public class Training extends SubsystemBase
         try{
             sonicBack.ping();
             Timer.delay(0.005);
-            return sonicBackFilter.Filter(sonicBack.getRangeMM() / 10);
+            return sonicBack.getRangeMM() / 10;
+            // return sonicBackFilter.Filter(sonicBack.getRangeMM() / 10);
         }catch (Exception e){
             return 0;
         }
@@ -794,6 +832,10 @@ public class Training extends SubsystemBase
     public Servo getGrip() {
         return servoGrab;
     } 
+    // это для End
+    public ServoContinuous getGlide() {
+        return servoGlide;
+    }
 
     /**
     * @return Значение с гироскопа в диапазоне от -180 до 180 

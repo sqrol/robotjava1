@@ -7,7 +7,8 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
-            new InitLogicase(),
+            // new InitLogicase(),
+            new Align("sonic", 85, 0, 0),
             new Transition(),
         },
         
@@ -291,7 +292,7 @@ public class States {
             new DriveXAxis(0, -90),
             new DriveXAxis(43, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(11, 0),
+            new DriveXAxis(13, 0),
             new Transition()
         },   
             // MOV_IN_FRIST_LZ_TO_CH3 // 26
@@ -332,11 +333,12 @@ public class States {
             // MOVE_IN_CH3_TO_FINISH // 29
         {
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 50, 0, 0),
+            new DriveXAxis(38, 0),
             new DriveXAxis(0, -90),
             new Align("sharp", 25, 0, 0),
             new DriveXAxis(0, 180),
-            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(80, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(98, 0),
             new Transition()
@@ -348,7 +350,7 @@ public class States {
             new DriveXAxis(0, -90),
             new Align("sharp", 20, 0, 0),
             new DriveXAxis(0, 180),
-            new Align("sonic", 35, 0, 0),
+            new Align("sonic", 40, 0, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(60, 0),
             new DriveXAxis(0, -90),
@@ -362,15 +364,16 @@ public class States {
             new DriveXAxis(0, -90),
             new Align("sharp", 20, 0, 0),
             new DriveXAxis(0, 180),
-            new Align("sonic", 35, 0, 0),
+            new Align("sonic", 40, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(90, 0),
+            new DriveXAxis(84, 0),
             new DriveXAxis(0, -90),
+            new DriveXAxis(11, 0),
             new Transition()
         },
             // MOV_IN_FRIST_RZ_TO_CH3 // 32
         {
-            new DriveXAxis(-5, 0),
+            new DriveXAxis(-15, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(94, 0),
             new DriveXAxis(0, 90),
@@ -451,7 +454,8 @@ public class States {
             // MOV_IN_CH3_TO_CON1 // 40
         {   
             new DriveXAxis(0, 180),
-            new Align("sonic", 89, 0, 0),
+            // new Align("sonic", 89, 0, 0),
+            new DriveXAxis(77, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 14, 0, 0),
             new Transition()
@@ -842,11 +846,11 @@ public class States {
             new Align("sharp", 15, 0, 0),
             new Transition()
         },
-            // GRAB_POS_20 // 72
+            // GRAB_POS_0_0_LOWER // 72
         {
             new SetGrabPos("OPEN"),
             new SetLiftPosition(90),
-            new SetGrabPos("PEAR"),
+            new SetGrabPos("BIG APPLE"),
             new SetLiftPosition(-1),
             new SetGripRotatePos("FOR DROP"),
             new Transition(),
@@ -856,7 +860,7 @@ public class States {
             new SetGrabPos("OPEN"),
             new Transition()
         },
-            // GRAB_POS_13 // 74
+            // GRAB_POS_1_0_LOWER // 74
         {
             new SetGrabPos("OPEN"),
             new SetGlidePosition(13),
@@ -867,13 +871,14 @@ public class States {
             new SetGripRotatePos("FOR DROP"),
             new Transition()
         },
-            // GRAB_POS_6 // 75
+            // GRAB_POS_2_0_MIDDLE // 75
         {
             new SetGrabPos("OPEN"),
             new SetGripRotatePos("ANGLE"),
-            new SetLiftPosition(100),
             new SetGlidePosition(12),
-            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(100),
+            
+            new SetGrabPos("SMALL APPLE"),
             new DriveXAxis(-30, 0),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
@@ -888,6 +893,10 @@ public class States {
             new SetLiftPosition(-1),
             new SetGripRotatePos("FOR DROP"),
             new Transition(),
+        },
+            // GRAB_POS_0_-45_LOWER // 77
+        {   
+
         }
     };
 }

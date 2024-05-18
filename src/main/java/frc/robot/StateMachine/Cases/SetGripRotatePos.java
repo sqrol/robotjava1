@@ -30,7 +30,7 @@ public class SetGripRotatePos implements IState {
         }
         RobotContainer.train.setAxisSpeed(0, 0);
 
-        return System.currentTimeMillis() - StateMachine.iterationTime > 2000;
+        return System.currentTimeMillis() - StateMachine.iterationTime > 1000;
     }
     
 }

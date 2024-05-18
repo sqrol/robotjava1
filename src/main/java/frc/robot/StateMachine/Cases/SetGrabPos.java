@@ -49,7 +49,7 @@ public class SetGrabPos implements IState {
                 RobotContainer.train.setGripServoValue(140);
                 break;
         }
-        return System.currentTimeMillis() - StateMachine.iterationTime > 2000;
+        return System.currentTimeMillis() - StateMachine.iterationTime > 1000;
     }
 
     @Override

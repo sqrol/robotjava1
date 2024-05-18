@@ -18,11 +18,9 @@ public class StartPos implements IState{
     public boolean execute() {
         
         if (firstCall) {
-            train.resetRotateEncoder(); 
+            train.resetEncRotate(); 
             firstCall = false;
         }
-
-        // train.rotateMotorSpeedThread = 0; 
 
         train.setGreenLED(true);
         train.setRedLED(true);
@@ -57,7 +55,8 @@ public class StartPos implements IState{
         //     }
         //     train.glideToMovePos(100); 
         // }
-
+        // train.rotateMotorSpeedThread = 10;
+        
         if(train.successInit) {
             train.resetLiftEncoder();
             train.resetRotateEncoder();

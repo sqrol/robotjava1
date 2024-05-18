@@ -21,10 +21,10 @@ public class RobotContainer {
 
       // logic = new LogicCore();
 
-      // Runnable runnableJavaCam = new JavaCam();
-      // Thread threadJavaCam = new Thread(runnableJavaCam);
-      // threadJavaCam.setDaemon(true);
-      // threadJavaCam.start();
+      Runnable runnableJavaCam = new JavaCam();
+      Thread threadJavaCam = new Thread(runnableJavaCam);
+      threadJavaCam.setDaemon(true);
+      threadJavaCam.start();
 
       // Runnable initRunnable = new InitThread();
       // Thread initThread = new Thread(initRunnable);

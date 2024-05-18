@@ -22,6 +22,7 @@ public class Align implements IState {
     private double speedZ, diffZ = 0;
     private double diffSharp, lastGyro = 0;
     private double coefForTime = 0;
+    private double elapsedTime = 0;
 
     Training train = RobotContainer.train;
  
@@ -30,6 +31,9 @@ public class Align implements IState {
 
     private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
                                           { 0, 3, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
+
+    // private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 50, 100}, 
+    //                                       { 0, 3, 10, 12, 18, 25, 40, 50} };
 
     private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
                                                { 6, 11, 17, 22, 28, 33, 38, 43, 50 } };
@@ -118,7 +122,7 @@ public class Align implements IState {
             isFirstIter = false;
         }
 
-        double time = Timer.getFPGATimestamp();
+        double time = System.currentTimeMillis();
 
         double backSonicDist = train.getBackSonicDistance();
 
@@ -129,7 +133,12 @@ public class Align implements IState {
         double speedZ = Function.TransitionFunction(diffZ, degFunction);
 
         train.setAxisSpeed(speedX, speedZ);
-
+        // if(Math.abs(diffX) < backSonicDist) {
+        //     elapsedTime = System.currentTimeMillis() - time;
+        //     if(elapsedTime < 2000) {
+        //         train.setAxisSpeed(0, speedZ);
+        //     }
+        // }
         finishX = Function.BooleanInRange(X - backSonicDist, -0.5, 0.5);
         finishZ = Function.BooleanInRange(lastGyro - train.getLongYaw(), -0.5, 0.5);
 

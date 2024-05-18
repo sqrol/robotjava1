@@ -18,7 +18,7 @@ public class SetRotatePos implements IState {
 
     @Override
     public boolean execute() {
-        return train.rotateToPos(angle) && Timer.getFPGATimestamp() - StateMachine.startTime > 5;
+        return train.rotateToPos(angle) && System.currentTimeMillis() - StateMachine.iterationTime > 5000;
     }
     
 }
