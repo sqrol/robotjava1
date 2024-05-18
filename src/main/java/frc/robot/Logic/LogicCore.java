@@ -3,8 +3,16 @@ package frc.robot.Logic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LogicCore {
+
+    // GRAB_POS_(ROT-DEGREE, GLIDEPOS, SUBGRABPOS)
+    // Пример: GRAB_POS_0_0_LOWER
+
+    // ROT-DEGREE = 0, 45, -45
+    // GLIDEPOS = 0, 1, 2
+    // SUBGRABPOS = LOWER, MIDDLE, UPPER
 
     private boolean fristCall = true;
     private boolean fristCallForInit = true;
@@ -18,19 +26,18 @@ public class LogicCore {
 
     private boolean fristCallForSubPath = false;
 
-
     // Зона 1
     private static final String[] firstTree = { "null", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "0", "4" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "5", "6", "7", "8", "9", "10", "11" },
+                    { "5", "AppleBigRipe", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
-                    { "12", "13", "14", "1", "16", "17", "18" },
+                    { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "AppleBigRipe", "25" } };
+                    { "AppleBigRipe", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 2
     private static final String[] secondTree = { "null", "null", "null"};
@@ -93,7 +100,7 @@ public class LogicCore {
     /**
      * Получение текущего массива зон для дерева
      */
-    String[][] getZoneArray(Integer zoneNum) {
+    private String[][] getZoneArray(Integer zoneNum) {
         if (zoneNum == 1) {
             return firstTreeZone;
         }
@@ -109,7 +116,7 @@ public class LogicCore {
     /**
      * Основная функция где мы формируем пути ко всем зонам
      */
-    public ArrayList<String> getFruitsForExport(Integer zoneNum)
+    private ArrayList<String> getFruitsForExport(Integer zoneNum)
     {
         ArrayList<String> outArray = new ArrayList<String>();
         String[][] currentZone = getZoneArray(zoneNum);
@@ -126,10 +133,53 @@ public class LogicCore {
         return outArray;
     }
 
+    // Пример: GRAB_POS_0_0_LOWER
+    // GRAB_POS_(GLIDEPOS, ROT-DEGREE, SUBGRABPOS)
+    private String grabPosGenerate(String inGrabPos) {
+        Map<String, String> grabPosMap = new HashMap<>();
+
+        // For UZL
+        grabPosMap.put("GRAB_POS_1", "GRAB_POS_0_-45_LOWER");
+        grabPosMap.put("GRAB_POS_2", "GRAB_POS_0_0_LOWER");
+
+        // For UZR
+        grabPosMap.put("GRAB_POS_3", "GRAB_POS_0_0_LOWER");
+        grabPosMap.put("GRAB_POS_4", "GRAB_POS_0_45_LOWER");
+
+        // For LOZ
+        grabPosMap.put("GRAB_POS_7", "GRAB_POS_2_-45_MIDDLE");
+        grabPosMap.put("GRAB_POS_8", "GRAB_POS_2_0_MIDDLE");
+        grabPosMap.put("GRAB_POS_9", "GRAB_POS_2_45_LOWER");
+        grabPosMap.put("GRAB_POS_14", "GRAB_POS_1_-45_LOWER");
+        grabPosMap.put("GRAB_POS_15", "GRAB_POS_1_0_LOWER");
+        grabPosMap.put("GRAB_POS_16", "GRAB_POS_1_45_LOWER");
+        grabPosMap.put("GRAB_POS_21", "GRAB_POS_0_-45_LOWER");
+        grabPosMap.put("GRAB_POS_22", "GRAB_POS_0_0_LOWER");
+        grabPosMap.put("GRAB_POS_23", "GRAB_POS_0_45_LOWER");
+
+        // For RZ
+        grabPosMap.put("GRAB_POS_25", "GRAB_POS_0_45_LOWER");
+        grabPosMap.put("GRAB_POS_24", "GRAB_POS_0_0_LOWER");
+        grabPosMap.put("GRAB_POS_18", "GRAB_POS_1_45_LOWER");
+        grabPosMap.put("GRAB_POS_17", "GRAB_POS_1_0_LOWER");
+        grabPosMap.put("GRAB_POS_11", "GRAB_POS_2_45_MIDDLE");
+        grabPosMap.put("GRAB_POS_10", "GRAB_POS_2_0_MIDDLE");
+
+        // For LZ
+        grabPosMap.put("GRAB_POS_20", "GRAB_POS_0_0_LOWER");
+        grabPosMap.put("GRAB_POS_19", "GRAB_POS_0_-45_LOWER");
+        grabPosMap.put("GRAB_POS_13", "GRAB_POS_1_0_LOWER");
+        grabPosMap.put("GRAB_POS_12", "GRAB_POS_1_-45_LOWER");
+        grabPosMap.put("GRAB_POS_6", "GRAB_POS_2_0_MIDDLE");
+        grabPosMap.put("GRAB_POS_5", "GRAB_POS_2_-45_MIDDLE");
+
+        return grabPosMap.getOrDefault(inGrabPos, "none");
+    }
+
     /**
      * Захват фруктов с дерева
      */
-    ArrayList<String> grabFromTreeZone(String[] currentTree, String zoneName) {
+    private ArrayList<String> grabFromTreeZone(String[] currentTree, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "TZ";
 
@@ -143,7 +193,7 @@ public class LogicCore {
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
     }
 
-    String getPosForTree(int numIndex) {
+    private String getPosForTree(int numIndex) {
         if (numIndex == 0) {
             return "GRAB_POS_DOWN";
         }
@@ -159,7 +209,7 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 1, 2 для указанного дерева
      */
-    ArrayList<String> grabFromUpperZoneLeft(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromUpperZoneLeft(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "UZL";
         int[][] indexes = { {0, 0}, {0, 1} }; // Тут указываем индексы для 1, 2
@@ -168,7 +218,7 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -177,7 +227,7 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 3, 4 для указанного дерева
      */
-    ArrayList<String> grabFromUpperZoneRight(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromUpperZoneRight(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "UZR";
         int[][] indexes = { {0, 5}, {0, 6} }; // Тут указываем индексы для 3, 4
@@ -186,7 +236,7 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -195,7 +245,7 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 19, 20, 12, 13, 5, 6 для указанного дерева
      */
-    ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LZ";
         int[][] indexes = { {3, 0}, {3, 1}, {2, 0}, {2, 1}, {1, 0}, {1, 1} }; // Тут указываем индексы для 19, 20, 12, 13, 5, 6
@@ -204,7 +254,7 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -213,7 +263,7 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 24, 25, 17, 18, 10, 11 для указанного дерева
      */
-    ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
         int[][] indexes = { {3, 5}, {3, 6}, {2, 5}, {2, 6}, {1, 5}, {1, 6} }; // Тут указываем индексы для 24, 25, 17, 18, 10, 11
@@ -222,7 +272,7 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -231,7 +281,7 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 21, 22, 23, 14, 15, 16, 7, 8, 9 для указанного дерева
      */
-    ArrayList<String> grabFromLowerZone(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromLowerZone(String[][] currentZone, String zoneName) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LOZ";
         int[][] indexes = { {3, 2}, {3, 3}, {3, 4}, {2, 2}, {2, 3}, {2, 4}, {1, 2}, {1, 3}, {1, 4}, }; // Тут указываем индексы для 21, 22, 23, 14, 15, 16, 7, 8, 9
@@ -240,7 +290,7 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]] + "/" + elemInArray);
+                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -249,7 +299,7 @@ public class LogicCore {
     /**
      * Собираем путь из зоны до контейнера
      */
-    ArrayList<String> subPathForDelivery(ArrayList<String> allFindFruits, String currentZoneName, String zoneName) {
+    private ArrayList<String> subPathForDelivery(ArrayList<String> allFindFruits, String currentZoneName, String zoneName) {
         ArrayList<String> outSubPathForDelivery = new ArrayList<String>();
         if (!allFindFruits.isEmpty()) {
             String currentZoneArea = zoneName + "_" + currentZoneName;
@@ -292,7 +342,7 @@ public class LogicCore {
     /**
      * Выбираем где лучше выровниться для каждого из зон
      */
-    String choosingBestZoneForCheck(String currentZoneName, String zoneName) {
+    private String choosingBestZoneForCheck(String currentZoneName, String zoneName) {
         String out = "";
         if (zoneName.equals("FRIST")) {
             switch (currentZoneName) {
@@ -384,7 +434,7 @@ public class LogicCore {
     /**
      * Проверяем является ли элемент последним в массиве
      */
-    boolean CheckingLastElement(ArrayList<String> allFindFruits, int currentIndex) {
+    private boolean CheckingLastElement(ArrayList<String> allFindFruits, int currentIndex) {
         int lastIndex = allFindFruits.size() - 1;
         return currentIndex == lastIndex;
     }
@@ -392,7 +442,7 @@ public class LogicCore {
     /**
      * Узнаем есть ли такой фрукт который на пришел через name
      */
-    boolean weNeedThisFruit(String name) {
+    private boolean weNeedThisFruit(String name) {
         for (String elem : allFullFruitsName) {
             if (elem.equals(name)) {
                 return true;
@@ -404,14 +454,14 @@ public class LogicCore {
     /**
      * Получение название зоны по номеру
      */
-    String getZoneName(Integer zoneNum) {
+    private String getZoneName(Integer zoneNum) {
         return zoneNum == 1 ? "FRIST" : zoneNum == 2 ? "SECOND" : zoneNum== 3 ? "THIRD" : "none";
     }
 
     /**
      * Получение текущего массива элементов на дереве
      */
-    String[] getTreeArray(Integer zoneNum) {
+    private String[] getTreeArray(Integer zoneNum) {
         if (zoneNum == 1) {
             return firstTree;
         }
@@ -427,14 +477,14 @@ public class LogicCore {
     /**
      * Получение последней точки робота
      */
-    public String getLastCheckpoint() {
+    private String getLastCheckpoint() {
         return lastCheckpoint;
     }
 
     /**
      * Установка последней точки робота
      */
-    public void setLastCheckpoint(String lastCheckpoint) {
+    private void setLastCheckpoint(String lastCheckpoint) {
         this.lastCheckpoint = lastCheckpoint;
     }
 }
