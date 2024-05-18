@@ -10,12 +10,19 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 public class Viscad2 {
+
+    public static Mat ConvertBGR2HSV(Mat src) {
+        Mat inImage = new Mat();
+        Imgproc.cvtColor(src, inImage, Imgproc.COLOR_BGR2HSV);
+
+        return inImage;
+    }
+    
     public static Mat RotateImage(Mat src, double deg) {
         Mat dst = new Mat(src.rows(), src.cols(), src.type());
         Point src_center = new Point(src.cols() / 2.0F, src.rows() / 2.0F);
         Mat rot_mat = Imgproc.getRotationMatrix2D(src_center, 360 - deg, 1.0);
         Imgproc.warpAffine(src, dst, rot_mat, src.size());
-
         rot_mat.release();
 
         return dst;
@@ -38,18 +45,21 @@ public class Viscad2 {
     public static Mat BinaryAnd(Mat first, Mat second) {
         Mat dst = new Mat();
         Core.bitwise_and(first, second, dst);
+
         return dst;
     }
 
     public static Mat BinaryOr(Mat first, Mat second) {
         Mat dst = new Mat();
         Core.bitwise_or(first, second, dst);
+
         return dst;
     }
 
     public static Mat BinaryNot(Mat src) {
         Mat dst = new Mat();
         Core.bitwise_not(src, dst);
+
         return dst;
     }
 
@@ -57,6 +67,7 @@ public class Viscad2 {
         Mat resizeImage = new Mat();
         Size sz = new Size(w, h);
         Imgproc.resize(src, resizeImage, sz);
+        
         return resizeImage;
     }
 
