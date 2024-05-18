@@ -1,9 +1,7 @@
 package frc.robot.MachineVision;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.CvSink;
@@ -11,15 +9,13 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Main;
 import frc.robot.RobotContainer;
 
 
 public class JavaCam implements Runnable
 {
-    private UsbCamera camera;
+    private static UsbCamera camera;
     private CvSink cvSink;
     private static CvSource outStream, outStream2, outStream3;
 
@@ -144,6 +140,34 @@ public class JavaCam implements Runnable
             return 0; 
         }
         
+    }
+
+    // С этим нужно поиграться не могу сказать что 100% работает!
+    public static void settingCameraParameters(final boolean mode) {
+        if (mode) {
+
+            camera.getProperty("exposure_auto").set(1);
+            camera.getProperty("white_balance_temperature_auto").set(1);
+            camera.getProperty("focus_auto").set(1);
+            camera.getProperty("focus_auto").set(0);
+            camera.getProperty("focus_absolute").set(15); // 0-40
+
+        } else {
+
+            // Настраиваем экспозицию
+            camera.getProperty("exposure_absolute").set(1000); // 5-20000
+
+            // Настраиваем баланс белого
+            camera.getProperty("white_balance_temperature").set(1000); // 2800-10000
+
+            // Настройка фокуса
+            camera.getProperty("focus_auto").set(0);
+            camera.getProperty("focus_absolute").set(0); // 0-40
+
+            // Настройка зумма
+            camera.getProperty("zoom_absolute").set(0); // 0-10
+
+        }
     }
 
 }
