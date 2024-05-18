@@ -7,8 +7,13 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
+            // new SetLiftPosition(50),
+            // new SetLiftPosition(80),
+            new SetLiftPosition(100),
             // new InitLogicase(),
-            new Align("sonic", 85, 0, 0),
+            // new Align("sonic", 85, 0, 0),
+            // new SetRotatePos(45),
+            // new SetRotatePos(45),
             new Transition(),
         },
         

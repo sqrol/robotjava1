@@ -43,7 +43,7 @@ public class JavaCam implements Runnable
         camera.setFPS(30); // Частота кадров
         cvSink = CameraServer.getInstance().getVideo(camera);
 
-        camera.getProperty("name").setString("value");
+        // camera.getProperty("name").setString("value");
 
         outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
         outStream2 = CameraServer.getInstance().putVideo("outBlur", 640, 480);
