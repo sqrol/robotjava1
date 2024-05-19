@@ -10,6 +10,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Main;
 import frc.robot.RobotContainer;
 
 
@@ -51,8 +52,11 @@ public class JavaCam implements Runnable
                 if (cvSink.grabFrame(source) == 0) {
                     continue;
                 }
-                RobotContainer.train.checkAppleResult = CheckApple(source);
-                SmartDashboard.putNumber("checkAppleResult", RobotContainer.train.checkAppleResult);
+
+                if (Main.currentCameraCommand != null) {
+                    Main.currentCameraCommand.execute(source);
+                }
+
                 source.release();
             } catch (final Exception e) {
                 DriverStation.reportError("An error occurred in JavaCam: " + e.getMessage(), false);

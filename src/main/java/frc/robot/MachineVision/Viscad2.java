@@ -106,6 +106,19 @@ public class Viscad2 {
         return dst2;
     }
 
+    public static Mat Erode(Mat src, int power) // !
+    {
+        Mat dst2 = new Mat();
+        src.copyTo(dst2);
+
+        Mat element1 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,
+                new Size(2 * power + 1, 2 * power + 1));
+        Imgproc.erode(src, dst2, element1);
+        element1.release();
+
+        return dst2;
+    }
+
 
 
     public static Mat Dilate(Mat src, int power) // !
