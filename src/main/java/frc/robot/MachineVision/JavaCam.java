@@ -94,7 +94,7 @@ public class JavaCam implements Runnable
         // final Point bluePoint = new Point(70, 170);
 
         Mat hsvImage = new Mat();
-        Mat blurMat = Viscad2.Blur(orig, 10);
+        Mat blurMat = Viscad2.Blur(orig, 0);
         Imgproc.cvtColor(blurMat, hsvImage, Imgproc.COLOR_BGR2HSV);
 
         final Mat redApple = Viscad2.Threshold(orig, new Point(0, 9), new Point(86, 255), new Point(0, 255));

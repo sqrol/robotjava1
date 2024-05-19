@@ -29,6 +29,6 @@ public class SetLiftPosition implements IState {
         RobotContainer.train.setAxisSpeed(0, 0);
         SmartDashboard.putBoolean("liftStop",  liftStop);
         // return false;
-        return liftStop && System.currentTimeMillis() - StateMachine.iterationTime > 2400;
+        return liftStop && System.currentTimeMillis() - StateMachine.iterationTime > 5000;
     }
 }

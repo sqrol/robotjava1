@@ -103,7 +103,7 @@ public class Training extends SubsystemBase
                                                  { -0.4, -0.4, -0.3, -0.25, -0.2, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
-                                                         { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2800, 3000 } };
+                                                         { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
 
     // private static final double[][] arrOfPosForRotate = { { -1500, -500, 0, 500, 1440 },
     //                                                          { -90, -45, 0, 45, 90 } };
@@ -152,7 +152,7 @@ public class Training extends SubsystemBase
         sharpLeftFilter = new MedianFilter(5);
 
         sonicRightFilter = new MedianFilter(6);
-        // sonicBackFilter = new MedianFilter(7);
+        sonicBackFilter = new MedianFilter(3);
 
         redLED = new DigitalOutput(20);
         greenLED = new DigitalOutput(21);
@@ -791,8 +791,8 @@ public class Training extends SubsystemBase
         try{
             sonicBack.ping();
             Timer.delay(0.005);
-            return sonicBack.getRangeMM() / 10;
-            // return sonicBackFilter.Filter(sonicBack.getRangeMM() / 10);
+            // return sonicBack.getRangeMM() / 10;
+            return sonicBackFilter.Filter(sonicBack.getRangeMM() / 10);
         }catch (Exception e){
             return 0;
         }

@@ -32,7 +32,7 @@ public class DriveXAxis implements IState {
     private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 26, 41, 60, 90 }, 
                                                  { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };
 
-    private double[][] startKoefSpeedForX = { { 0, 0.66,  1 }, { 0, 0.66, 1 } };
+    private double[][] startKoefSpeedForX = { { 0, 333, 666,  1000 }, { 0, 0.33, 0.66, 1 } };
 
     public DriveXAxis(double XPosition, double ZPosition){
         this.XPosition = XPosition;
@@ -48,7 +48,7 @@ public class DriveXAxis implements IState {
             isFirst = false;
         }
 
-        double startKoef = Function.TransitionFunction(Timer.getFPGATimestamp() - StateMachine.startTime, startKoefSpeedForX);
+        double startKoef = Function.TransitionFunction(System.currentTimeMillis() - StateMachine.iterationTime, startKoefSpeedForX);
         double gyro = train.getLongYaw(); 
 
         if (XPosition != 0) {
@@ -77,7 +77,7 @@ public class DriveXAxis implements IState {
             finishZ = Function.BooleanInRange(outSpeedForZ, -0.3, 0.3); 
         }
 
-        train.setAxisSpeed(outSpeedForX * startKoef, outSpeedForZ * startKoef);
+        train.setAxisSpeed(outSpeedForX * startKoef, outSpeedForZ);
 
         SmartDashboard.putNumber("posX", currentAxisX);
         SmartDashboard.putNumber("posZ", outSpeedForZ);
