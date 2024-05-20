@@ -27,7 +27,7 @@ public class LogicCore {
     private boolean fristCallForSubPath = false;
 
     // Зона 1
-    private static final String[] firstTree = { "null", "null", "null"};
+    private static final String[] firstTree = { "AppleSmallRipe", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
@@ -40,7 +40,7 @@ public class LogicCore {
                     { "19", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 2
-    private static final String[] secondTree = { "AppleBigRipe", "null", "null"};
+    private static final String[] secondTree = { "null", "null", "null"};
     private static final String[][] secondTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4

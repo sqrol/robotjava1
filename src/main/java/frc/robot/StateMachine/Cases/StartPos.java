@@ -16,11 +16,6 @@ public class StartPos implements IState{
 
     @Override
     public boolean execute() {
-        
-        if (firstCall) {
-            train.resetEncRotate(); 
-            firstCall = false;
-        }
 
         train.setGreenLED(true);
         train.setRedLED(true);
@@ -59,7 +54,7 @@ public class StartPos implements IState{
         
         if(train.successInit) {
             train.resetLiftEncoder();
-            train.resetRotateEncoder();
+            train.resetEncRotate();
             train.setGripServoValue(130); // 177
             train.setGripRotateServoValue(279);
             if(System.currentTimeMillis() - StateMachine.iterationTime > 8000){

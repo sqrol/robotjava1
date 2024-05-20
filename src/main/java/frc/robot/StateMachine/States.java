@@ -7,13 +7,11 @@ public class States {
                                            // 0 
         {
             new StartPos(),
-            new ObjectFinder(),
             
-            new End(),
             // для маленького яблока new SetLiftPosition(100),
             // для большого яблока new SetLiftPosition(85),
-            // new InitLogicase(),
-            
+            new InitLogicase(),
+        
             new Transition(),
         },
         
@@ -339,12 +337,11 @@ public class States {
             // MOVE_IN_CH3_TO_FINISH // 29
         {
             new DriveXAxis(0, 90),
-            new Align("sonic", 50, 0, 0),
-            new DriveXAxis(38, 0),
+            new Align("sonic", 85, 0, 0),
             new DriveXAxis(0, -90),
             new Align("sharp", 25, 0, 0),
             new DriveXAxis(0, 180),
-            new DriveXAxis(80, 0),
+            new DriveXAxis(77, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(98, 0),
             new Transition()
@@ -358,9 +355,9 @@ public class States {
             new DriveXAxis(0, 180),
             new Align("sonic", 40, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(60, 0),
+            new DriveXAxis(64, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(7, 0),
+            new DriveXAxis(10, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_FRIST_RZ // 31
@@ -421,6 +418,7 @@ public class States {
             // MOV_IN_CH3_TO_CON2 // 35
         {
             new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
             new DriveXAxis(14, 0),
             new DriveXAxis(0, -90),
             new Align("sharp", 15, 0, 0),
@@ -436,9 +434,9 @@ public class States {
         },
             // MOV_IN_FRIST_LOZ_TO_CH3 // 37
         {
-            new DriveXAxis(-10, 0),
+            new DriveXAxis(-12, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(60, 0),
+            new DriveXAxis(64, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 14, 0, 0),
             new DriveXAxis(0, -90),
@@ -860,8 +858,8 @@ public class States {
             // GRAB_POS_0_0_LOWER // 72
         {
             new SetGrabPos("OPEN"),
-            new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(100),
+            new SetGrabPos("SMALL APPLE"),
             new SetLiftPosition(-1),
             new SetGripRotatePos("FLOOR"),
             new Transition(),
@@ -927,12 +925,15 @@ public class States {
             // GRAB_POS_DOWN // 79
         {   
             new SetGrabPos("OPEN"),
-            new SetGripRotatePos("BRANCH"),
-            new DriveXAxis(2, 0),
-            new SetLiftPosition(100),
-            new SetGrabPos("BIG APPLE"),
-            new SetLiftPosition(-1),
+            
+            new SetGlidePosition(19),
             new SetGripRotatePos("FLOOR"),
+            new SetLiftPosition(41),
+            new SetGrabPos("SMALL APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetGripRotatePos("FLOOR"),
+            
             new Transition()
         },
             // B1 // 80

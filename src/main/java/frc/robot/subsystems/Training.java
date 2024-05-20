@@ -46,7 +46,7 @@ public class Training extends SubsystemBase
     private AnalogInput sharpRight, sharpLeft, cobraGlide;
 
     private DigitalOutput redLED, greenLED;
-    private DigitalInput limitSwitchLift;
+    private DigitalInput limitSwitchLift, startButton, EMS;
     
     private AHRS gyro;
     double currentRotatePos;
@@ -54,7 +54,7 @@ public class Training extends SubsystemBase
     private Servo servoGrab, servoTurnGrab;
     private ServoContinuous servoGlide; 
     
-    private Encoder limitSwitchGlide, startButton, EMS;
+    private Encoder limitSwitchGlide;
 
     public boolean initLift, initGlide, glideReachedPos, glideStop, finish = false;
     private boolean flag, isFirstRotateCall = true;
@@ -106,15 +106,15 @@ public class Training extends SubsystemBase
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
                                                          { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
 
-    // private static final double[][] arrOfPosForRotate = { { -1500, -500, 0, 500, 1440 },
-    //                                                          { -90, -45, 0, 45, 90 } };
+    private static final double[][] arrOfPosForRotate = { { 0, 500, 1500 },
+                                                             { 0, 45, 90 } };
     
-    private static final double[][] arrOfPosForRotate = 
-                { { -1000, -500, -400, -350, -300, -200, -100, 0, 100, 200, 300, 350, 400, 500, 1000 },
-                { -90, -45, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 90 } };
+    // private static final double[][] arrOfPosForRotate = 
+    //             { { -1000, -500, -400, -350, -300, -200, -100, 0, 100, 200, 300, 350, 400, 500, 1000 },
+    //             { -90, -45, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 90 } };
 
-    private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
-                                                        { -50, -45, -40, -35, -30, -25, 0, 25, 30, 35, 40, 45, 50 } };
+    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54 },
+                                                        { 0, 5, 10, 25, 35 } };
 
     // private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
     //                                                     { -15, -15, -15, -15, -15, -15, 0, 15, 15, 15, 15, 15, 15 } };
@@ -153,7 +153,7 @@ public class Training extends SubsystemBase
         sharpLeftFilter = new MedianFilter(5);
 
         sonicRightFilter = new MedianFilter(6);
-        sonicBackFilter = new MedianFilter(3);
+        sonicBackFilter = new MedianFilter(10);
 
         redLED = new DigitalOutput(20);
         greenLED = new DigitalOutput(21);
@@ -180,8 +180,8 @@ public class Training extends SubsystemBase
         // 
         // 
 
-        // startButton = new Encoder(4, 5);
-        // EMS = new Encoder(0, 1);
+        startButton = new DigitalInput(2);
+        EMS = new DigitalInput(3);
 
         gyro = new AHRS();
         
@@ -312,12 +312,12 @@ public class Training extends SubsystemBase
 
     public boolean rotateToPos(double degree) {
         
-        double currentRotatePos = -getEncRotateThread();
+        double currentRotatePos = getEncRotateThread();
        
         double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate);
         double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate);
         
-        boolean rotateStop = Function.BooleanInRange(degree - rotateDegree, -5, 5);
+        boolean rotateStop = Function.BooleanInRange(degree - rotateDegree, -7, 7);
 
         SmartDashboard.putNumber("currentRotatePos", -getEncRotateThread());
         SmartDashboard.putNumber("rotateDegree", rotateDegree);
@@ -325,23 +325,20 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut);
         SmartDashboard.putBoolean("rotateStop", rotateStop);
 
-        rotateMotorSpeedThread = -rotateSpeedOut;
+        if (rotateStop) {
+            rotateMotorSpeedThread = 0;
+            SmartDashboard.putNumber("rotateCheck", 3);
+            return true;
+        } else {
+            SmartDashboard.putNumber("rotateCheck", 4);
+            rotateMotorSpeedThread = -rotateSpeedOut;
+        }
 
         if ((rotateSpeedOut < 0 && -getEncRotateThread() < -1600) || (rotateSpeedOut > 0 && -getEncRotateThread() > 1600)) {
             rotateMotorSpeedThread = 0;
             SmartDashboard.putNumber("rotateCheck", 324);
             return true;
         } 
-        
-        if (rotateStop) {
-            rotateMotorSpeedThread = 0;
-            SmartDashboard.putNumber("rotateCheck", 3);
-            return true;
-        } else {
-            
-            SmartDashboard.putNumber("rotateCheck", 4);
-        }
-        
         return false;
     }
 
@@ -605,7 +602,7 @@ public class Training extends SubsystemBase
      */
     public boolean getEMSButton(){
         try {
-            boolean out = EMS.getDistance() == -1 || EMS.getDistance() == 2;
+            boolean out = EMS.get();
             return out;
         } catch (Exception e) {
             return false;
@@ -618,8 +615,9 @@ public class Training extends SubsystemBase
      */
     public boolean getStartButton(){
         try {
-            boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return out;
+            // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
+            // return out;
+            return false;
         } catch (Exception e) {
             return false;
         }   
@@ -873,10 +871,12 @@ public class Training extends SubsystemBase
 
         if (targetPosition != this.currentGlidePosition) {
 
+            SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
+
             if (this.direction) {
-                servoGlide.setSpeed(Function.getLimitedValue(glideServoSpeed, 0.2, 0.4)); 
+                servoGlide.setSpeed(glideServoSpeed); 
             } else { 
-                servoGlide.setSpeed(Function.getLimitedValue(glideServoSpeed, -0.2, -0.4));
+                servoGlide.setSpeed(glideServoSpeed);
             }
 
             this.glideExit = false;
@@ -905,7 +905,7 @@ public class Training extends SubsystemBase
         // ENCODERS ------------------------------------------------------
         SmartDashboard.putNumber("rightEnc", getRightEncoder());
         SmartDashboard.putNumber("leftEnc", getLeftEncoder());
-        SmartDashboard.putNumber("rotateEnc", -getRotateEncoder());
+        SmartDashboard.putNumber("rotateEnc", getRotateEncoder());
         SmartDashboard.putNumber("liftEnc", getLiftEncoder());
 
         SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
