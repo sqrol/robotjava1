@@ -864,20 +864,21 @@ public class Training extends SubsystemBase
      * Устанавливает выдвижной механизм на указанную позицию.
      * @param position - от 0 до 16
      */
-    public void servoGlidePosition(int position) { 
+    public void servoGlidePosition(int targetPosition) { 
         boolean blackLineDetect = getCobraVoltage() > 2.0;
-        double glideServoSpeed = Function.TransitionFunction(position - this.currentGlidePosition, speedForGlideServo);
-        
+        double glideServoSpeed = Function.TransitionFunction(targetPosition - this.currentGlidePosition, speedForGlideServo);
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
 
-        if (position != this.currentGlidePosition) {
-            if (position > this.currentGlidePosition) {
-                this.direction = true;
-                servoGlide.setSpeed(glideServoSpeed);
-            } else {
-                this.direction = false;
-                servoGlide.setSpeed(glideServoSpeed);
+        this.direction = targetPosition > this.currentGlidePosition;
+
+        if (targetPosition != this.currentGlidePosition) {
+
+            if (this.direction) {
+                servoGlide.setSpeed(Function.getLimitedValue(glideServoSpeed, 0.2, 0.4)); 
+            } else { 
+                servoGlide.setSpeed(Function.getLimitedValue(glideServoSpeed, -0.2, -0.4));
             }
+
             this.glideExit = false;
         } else {
             servoGlide.setDisabled();
