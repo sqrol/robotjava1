@@ -1,7 +1,10 @@
 package frc.robot.MachineVision;
 
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.CvSink;
@@ -18,9 +21,9 @@ public class JavaCam implements Runnable
 {
     private static UsbCamera camera;
     private CvSink cvSink;
-    private static CvSource outStream, outStream2, outStream3;
+    private static CvSource outStream, outStream2, outStream3, outStream4;
 
-    public int nowTask, nowResult = 0;
+    public int nowTask = 0;
 
     public String colorCube, colorStand;
     public boolean alignCamera = false;
@@ -45,6 +48,7 @@ public class JavaCam implements Runnable
         outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
         outStream2 = CameraServer.getInstance().putVideo("outBlur", 640, 480);
         outStream3 = CameraServer.getInstance().putVideo("outHSV", 640, 480);
+        outStream4 = CameraServer.getInstance().putVideo("mask", 640, 480);
 
         while (true) {
             try {
@@ -53,9 +57,15 @@ public class JavaCam implements Runnable
                     continue;
                 }
 
-                if (Main.currentCameraCommand != null) {
-                    Main.currentCameraCommand.execute(source);
+                SmartDashboard.putNumber("nowTask", RobotContainer.train.nowTask);
+
+                if (RobotContainer.train.nowTask == 1) {
+                    RobotContainer.train.nowResult = CheckFruit(source); 
                 }
+
+                // if (Main.currentCameraCommand != null) {
+                //     RobotContainer.train.cameraResult = Main.currentCameraCommand.execute(source);
+                // }
 
                 source.release();
             } catch (final Exception e) {
@@ -65,81 +75,55 @@ public class JavaCam implements Runnable
         }
     }
 
-    public static int CheckApple(final Mat orig) // Распознавание яблока
+    public static int CheckFruit(final Mat orig) // Распознавание яблока
     {
         // Нужно заменить массивом
-        final double red1 = SmartDashboard.getNumber("RED1", 0);
-        final double red2 = SmartDashboard.getNumber("RED2", 0);
+        double red1 = SmartDashboard.getNumber("RED1", 0);
+        double red2 = SmartDashboard.getNumber("RED2", 0);
 
-        final double green1 = SmartDashboard.getNumber("GREEN1", 0);
-        final double green2 = SmartDashboard.getNumber("GREEN2", 0);
+        double green1 = SmartDashboard.getNumber("GREEN1", 0);
+        double green2 = SmartDashboard.getNumber("GREEN2", 0);
 
-        final double blue1 = SmartDashboard.getNumber("BLUE1", 0);
-        final double blue2 = SmartDashboard.getNumber("BLUE2", 0);
+        double blue1 = SmartDashboard.getNumber("BLUE1", 0);
+        double blue2 = SmartDashboard.getNumber("BLUE2", 0);
 
-        final Point redPoint = new Point(red1, red2);
-        final Point greenPoint = new Point(green1, green2);
-        final Point bluePoint = new Point(blue1, blue2);
+        // Point redPoint = new Point(red1, red2);
+        // Point greenPoint = new Point(green1, green2);
+        // Point bluePoint = new Point(blue1, blue2);
 
-        // final Point redPoint = new Point(0, 9);
-        // final Point greenPoint = new Point(86, 255); // красное яблоко
-        // final Point bluePoint = new Point(0, 255);
+        Point redPoint1 = new Point(0, 200);
+        Point redPoint2 = new Point(160, 255);
+        Point redPoint3 = new Point(200, 255);
 
-        // final Point redPoint = new Point(17, 245);
-        // final Point greenPoint = new Point(200, 240); // желтая груша
-        // final Point bluePoint = new Point(170, 250);
+        Point yellowPoint1 = new Point(0, 200);
+        Point yellowPoint2 = new Point(160, 255);
+        Point yellowPoint3 = new Point(200, 255);
 
-        // final Point redPoint = new Point(31, 190);
-        // final Point greenPoint = new Point(90, 200); // зеленая груша
-        // final Point bluePoint = new Point(70, 170);
+        Mat blurMat = Viscad2.Blur(orig, 4);
+        Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
+        
+        Mat maskRedApple = Viscad2.Threshold(hsvImage, redPoint1, redPoint2, redPoint3);
 
-        Mat hsvImage = new Mat();
-        Mat blurMat = Viscad2.Blur(orig, 0);
-        Imgproc.cvtColor(blurMat, hsvImage, Imgproc.COLOR_BGR2HSV);
+        Mat erode = Viscad2.Erode(maskRedApple, 1); 
+        Mat dilate = Viscad2.Dilate(erode, 1); 
 
-        final Mat redApple = Viscad2.Threshold(orig, new Point(0, 9), new Point(86, 255), new Point(0, 255));
-        final Mat greenPear = Viscad2.Threshold(orig, new Point(31, 190), new Point(90, 200), new Point(70, 170));
-        final Mat yellowPear = Viscad2.Threshold(orig, new Point(17, 245), new Point(200, 240), new Point(170, 250));
+        int imageAreaRedApple = Viscad2.ImageTrueArea(dilate); 
 
-        final Mat filledYellowPear = Viscad2.FillHolesCAD(yellowPear);
-        final Mat filledRedApple = Viscad2.FillHolesCAD(redApple);
-        final Mat filledGreenPear = Viscad2.FillHolesCAD(greenPear);
-
-        final int imageAreaYellowPear = Viscad2.ImageTrueArea(filledYellowPear);
-        final int imageAreaGreenPear = Viscad2.ImageTrueArea(filledGreenPear);
-        final int imageAreaRedApple = Viscad2.ImageTrueArea(filledRedApple); // filledRedApple - 9500 // filledGreenPear
-                                                                             // - 8100 // filledYellowPear - 7400
-
-        SmartDashboard.putNumber("ImageAreaYellowPear", imageAreaYellowPear);
-        SmartDashboard.putNumber("ImageAreaGreenPear", imageAreaGreenPear);
         SmartDashboard.putNumber("ImageAreaRedApple", imageAreaRedApple);
 
-        // final Mat threshImage = Viscad2.Threshold(blurMat, redPoint, greenPoint,
-        // bluePoint);
-
-        // Mat threshImage = new Mat();
-
-        // Core.inRange(hsvImage, new Scalar(redPoint.x, greenPoint.x, bluePoint.x), new
-        // Scalar(redPoint.y, greenPoint.y, bluePoint.y), threshImage);
-
-        // final int imageArea = Viscad2.ImageTrueArea(threshImage);
-
-        outStream.putFrame(filledYellowPear);
-        outStream2.putFrame(filledRedApple); // Передача обработанного кадра на выходной поток
-        outStream3.putFrame(filledGreenPear); // Передача обработанного кадра на выходной поток
-
+        outStream.putFrame(blurMat);
+        outStream2.putFrame(hsvImage);
+        outStream3.putFrame(dilate);
+        
+        erode.release();
+        dilate.release();
+        maskRedApple.release();
         blurMat.release();
-        filledRedApple.release();
+        // filledRedApple.release();
         hsvImage.release();
-        filledYellowPear.release();
-        filledGreenPear.release();
 
-        if (imageAreaYellowPear > 7400) {
+        if(imageAreaRedApple > 15000) {
             return 1;
-        } else if(imageAreaGreenPear > 8100){
-            return 2;
-        } else if(imageAreaRedApple > 9500) {
-            return 3;
         } else {
             return 0; 
         }

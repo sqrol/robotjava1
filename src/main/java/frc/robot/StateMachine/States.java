@@ -7,6 +7,7 @@ public class States {
                                            // 0 
         {
             new StartPos(),
+            new ObjectFinder(),
             
             new End(),
             // для маленького яблока new SetLiftPosition(100),
