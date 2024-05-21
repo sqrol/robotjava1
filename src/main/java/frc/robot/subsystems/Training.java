@@ -841,11 +841,20 @@ public class Training extends SubsystemBase
      * Устанавливает угол поворота для сервомотра захвата
      * @param value - значение угла для установки на сервомотор захвата
      */
-    public void setGripServoValue(int value) {
+    public void setGripServoValue(Double value) {
         try {
             servoGrab.setAngle(value);
         } catch (Exception e) {
             System.out.println("Pizdes servaky setGripServoValue");
+        }
+        
+    }
+
+    public double getGripServoValue() {
+        try {
+            return servoGrab.getAngle();
+        } catch (Exception e) {
+            return 0;
         }
         
     }

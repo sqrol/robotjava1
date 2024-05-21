@@ -15,7 +15,7 @@ public class StateMachine {
         
         if(States.mainStates[currentArray][currentIndex].execute()){
             double startTime = System.currentTimeMillis();
-            startTime = Timer.getFPGATimestamp();
+            startTime = System.currentTimeMillis();
             first = true;
             currentIndex++;
             SmartDashboard.putNumber("Index", currentIndex);

@@ -25,7 +25,7 @@ public class InitThread implements Runnable {
                     firstInitForGlideDone = true; 
                     if(firstInitForGlideDone) {
                         train.setGripRotateServoValue(32);
-                        train.setGripServoValue(15);
+                        train.setGripServoValue(15.0);
                     }
                     } else {
                         if (firstInitForGlideDone) {

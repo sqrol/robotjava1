@@ -5,7 +5,7 @@ import frc.robot.StateMachine.*;
 
 public class Grab implements IState {
     
-    private int pos = 0;
+    private double pos = 0;
     public Grab(int pos) {
             this.pos = pos;
     }

@@ -7,17 +7,25 @@ public class States {
                                            // 0 
         {
             new StartPos(),
+
+            new SetGrabPos("BIG APPLE", false),
+            new SetGrabPos("SMALL APPLE", false),
+            new SetGrabPos("PEAR", false),
+            new SetGrabPos("OPEN", false),
+
+            new End(),
             
             // для маленького яблока new SetLiftPosition(100),
             // для большого яблока new SetLiftPosition(85),
             // с нижней ветки для маленького яблока new SetLiftPosition(41)
             // с нижней ветки для большого яблока new SetLiftPosition(35)
+
             new SetRotatePos(26),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetGripRotatePos("ANGLE"),
             new SetGlidePosition(11),
             new SetLiftPosition(95),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetGripRotatePos("FLOOR"),
@@ -872,9 +880,9 @@ public class States {
         },
             // GRAB_POS_0_0_LOWER // 72
         {
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(100),
-            new SetGrabPos("SMALL APPLE"),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new SetGripRotatePos("FLOOR"),
             new DriveXAxis(-12, 0),
@@ -882,18 +890,18 @@ public class States {
         },
             // RESET_FRUIT // 73
         {
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new DriveXAxis(-5, 0),
             new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // GRAB_POS_1_0_LOWER // 74
         {
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetRotatePos(33),
             new SetGlidePosition(12),
             new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetRotatePos(0),
             new SetGlidePosition(0),
@@ -902,12 +910,12 @@ public class States {
         },
             // GRAB_POS_2_0_MIDDLE // 75
         {
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetGripRotatePos("ANGLE"),
             new SetGlidePosition(15),
             new SetLiftPosition(100),
             
-            new SetGrabPos("SMALL APPLE"),
+            new SetGrabPos("SMALL APPLE", false),
             new DriveXAxis(-30, 0),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
@@ -916,9 +924,9 @@ public class States {
         },
             // GRAB_POS_24 // 76
         {
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(100),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGripRotatePos("FOR DROP"),
             new Transition(),
@@ -929,9 +937,9 @@ public class States {
             new DriveXAxis(-4, 0),
             new SetGripRotatePos("FLOOR"),
             new SetGlidePosition(9),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(100),
-            new SetGrabPos("SMALL APPLE"),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -952,12 +960,12 @@ public class States {
         },
             // GRAB_POS_DOWN // 79
         {   
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             
             new SetGlidePosition(19),
             new SetGripRotatePos("FLOOR"),
             new SetLiftPosition(41),
-            new SetGrabPos("SMALL APPLE"),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetGripRotatePos("FLOOR"),
@@ -992,9 +1000,9 @@ public class States {
             // Управление элементом
             new StartPos(),
             new SetGripRotatePos("FLOOR"),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(100),
-            new SetGrabPos("SMALL APPLE"),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new End()
         },
@@ -1004,7 +1012,7 @@ public class States {
             new SetGripRotatePos("BRANCH"),
             new SetLiftPosition(60),
             new SetGlidePosition(9),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1061,7 +1069,7 @@ public class States {
             new SetGripRotatePos("BRANCH"),
             new SetLiftPosition(0),
             new SetGlidePosition(9),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1073,9 +1081,9 @@ public class States {
             new SetRotatePos(-33),
             new SetGripRotatePos("FLOOR"),
             new SetGlidePosition(15),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(99),
-            new SetGrabPos("SMALL APPLE"),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1084,11 +1092,11 @@ public class States {
             // GRAB_POS_2_-45_MIDDLE // 88
         {
             new SetRotatePos(-25),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetGripRotatePos("SMALL ANGLE"),
             new SetGlidePosition(16),
             new SetLiftPosition(95),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetGripRotatePos("FLOOR"),
@@ -1098,11 +1106,11 @@ public class States {
             // GRAB_POS_0_20_LOWER // 89
         {
             new SetRotatePos(25),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetGripRotatePos("FLOOR"),
             new SetGlidePosition(16),
             new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1112,10 +1120,10 @@ public class States {
         {
             new SetRotatePos(-11),
             new SetGlidePosition(14),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetGripRotatePos("FLOOR"),
             new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1126,9 +1134,9 @@ public class States {
             new SetRotatePos(-37),
             new SetGripRotatePos("FLOOR"),
             new SetGlidePosition(13),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1140,9 +1148,9 @@ public class States {
             new DriveXAxis(-4, 0),
             new SetGripRotatePos("FLOOR"),
             new SetGlidePosition(7),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1152,9 +1160,9 @@ public class States {
         {
             new SetRotatePos(35),
             new SetGlidePosition(11),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -1163,11 +1171,11 @@ public class States {
             // GRAB_POS_2_45_MIDDLE // 94
         {
             new SetRotatePos(25),
-            new SetGrabPos("OPEN"),
+            new SetGrabPos("OPEN", false),
             new SetGripRotatePos("SMALL ANGLE"),
             new SetGlidePosition(16),
             new SetLiftPosition(95),
-            new SetGrabPos("BIG APPLE"),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetGripRotatePos("FLOOR"),
