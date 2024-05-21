@@ -27,7 +27,7 @@ public class LogicCore {
     private boolean fristCallForSubPath = false;
 
     // Зона 1
-    private static final String[] firstTree = { "AppleSmallRipe", "null", "null"};
+    private static final String[] firstTree = { "null", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
@@ -35,7 +35,7 @@ public class LogicCore {
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
-                    { "12", "13", "14", "15", "16", "17", "18" },
+                    { "12", "13", "14", "15", "16", "17", "AppleSmallRipe" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
                     { "19", "20", "21", "22", "23", "24", "25" } };
 
@@ -139,8 +139,8 @@ public class LogicCore {
         Map<String, String> grabPosMap = new HashMap<>();
 
         // For UZL
-        grabPosMap.put("GRAB_POS_1", "GRAB_POS_0_-45_LOWER");
-        grabPosMap.put("GRAB_POS_2", "GRAB_POS_0_0_LOWER");
+        grabPosMap.put("GRAB_POS_1", "GRAB_POS_0_-45_LOWER_UZ");
+        grabPosMap.put("GRAB_POS_2", "GRAB_POS_0_20_LOWER");
 
         // For UZR
         grabPosMap.put("GRAB_POS_3", "GRAB_POS_0_0_LOWER");
@@ -150,7 +150,7 @@ public class LogicCore {
         grabPosMap.put("GRAB_POS_7", "GRAB_POS_2_-45_MIDDLE");
         grabPosMap.put("GRAB_POS_8", "GRAB_POS_2_0_MIDDLE");
         grabPosMap.put("GRAB_POS_9", "GRAB_POS_2_45_LOWER");
-        grabPosMap.put("GRAB_POS_14", "GRAB_POS_1_-45_LOWER");
+        grabPosMap.put("GRAB_POS_14", "GRAB_POS_1_-45_LOWER_14");
         grabPosMap.put("GRAB_POS_15", "GRAB_POS_1_0_LOWER");
         grabPosMap.put("GRAB_POS_16", "GRAB_POS_1_45_LOWER");
         grabPosMap.put("GRAB_POS_21", "GRAB_POS_0_-45_LOWER");

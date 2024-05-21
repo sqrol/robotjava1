@@ -245,6 +245,51 @@ public class InitLogicase implements IState {
                 case "GRAB_POS_DOWN":
                     indexList.add(79);
                     break;
+                case "B1":
+                    indexList.add(80);
+                    break;
+                case "B2":
+                    indexList.add(81);
+                    break;
+                case "GRAB_POS_MID":
+                    indexList.add(82);
+                    break;
+                case "MOV_IN_CH3_TO_SECOND_LOZ":
+                    indexList.add(83);
+                    break;
+                case "MOV_IN_CH3_TO_SECOND_TZ":
+                    indexList.add(84);
+                    break;
+                case "MOV_IN_CH3_TO_SECOND_RZ":
+                    indexList.add(85);
+                    break;
+                case "GRAB_POS_UP":
+                    indexList.add(86);
+                    break;
+                case "GRAB_POS_1_-45_LOWER":
+                    indexList.add(87);
+                    break;
+                case "GRAB_POS_2_-45_MIDDLE":
+                    indexList.add(88);
+                    break;
+                case "GRAB_POS_0_20_LOWER":
+                    indexList.add(89);
+                    break;
+                case "GRAB_POS_0_-45_LOWER_UZ":
+                    indexList.add(90);
+                    break;
+                case "GRAB_POS_1_-45_LOWER_14":
+                    indexList.add(91);
+                    break;
+                case "GRAB_POS_0_45_LOWER":
+                    indexList.add(92);
+                    break;
+                case "GRAB_POS_1_45_LOWER":
+                    indexList.add(93);
+                    break;
+                case "GRAB_POS_2_45_MIDDLE":
+                    indexList.add(64);
+                    break;
             }
         }
         return true;

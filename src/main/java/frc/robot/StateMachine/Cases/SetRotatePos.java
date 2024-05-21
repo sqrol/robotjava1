@@ -13,12 +13,14 @@ public class SetRotatePos implements IState {
 
     public SetRotatePos(double angle) {
         this.angle = angle;
-        RobotContainer.train.setAxisSpeed(0, 0);
     }
 
     @Override
     public boolean execute() {
-        return train.rotateToPos(angle) && System.currentTimeMillis() - StateMachine.iterationTime > 5000;
+        train.setAxisSpeed(0, 0);
+        train.resetEncLeft();
+        train.resetEncRight();
+        return train.rotateToPos(angle) && System.currentTimeMillis() - StateMachine.iterationTime > 2000;
     }
     
 }

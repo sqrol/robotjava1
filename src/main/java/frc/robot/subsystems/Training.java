@@ -99,6 +99,15 @@ public class Training extends SubsystemBase
     private double encRightResetValue = 0;
     private double encLeftResetValue = 0;
     private double encRotateResetValue = 0; 
+
+    public float newGyroThread = 0;
+    public boolean resetGyroThread = false;
+    public boolean resetGyroThreadOnce = false;
+    public float resetGyroValue = 0;
+    private float lastYaw = 0;
+
+    public boolean plus360once = false;
+    public boolean minus360once = false;
  
     private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, 2, 4, 6, 8, 10 } ,
                                                  { -0.4, -0.4, -0.3, -0.25, -0.2, 0.2, 0.25, 0.3, 0.4, 0.4} };
@@ -127,7 +136,7 @@ public class Training extends SubsystemBase
 
     public Training()       
     {                                   // почему не константы
-        rightMotor = new TitanQuad(42, 1);
+        rightMotor = new TitanQuad(42, 1); 
         leftMotor = new TitanQuad(42, 3); 
         rotateMotor = new TitanQuad(42, 0); 
         liftMotor = new TitanQuad(42, 2); 
@@ -147,7 +156,7 @@ public class Training extends SubsystemBase
         cobraGlide = new AnalogInput(2);
 
         sonicBack = new Ultrasonic(9, 8);
-        // sonicRight = new Ultrasonic(Constants.SIDE_SONIC_TRIGG, Constants.SIDE_SONIC_ECHO);
+        sonicRight = new Ultrasonic(11, 10);
 
         sharpRightFilter = new MedianFilter(5);
         sharpLeftFilter = new MedianFilter(5);
@@ -162,14 +171,14 @@ public class Training extends SubsystemBase
         limitSwitchLift = new DigitalInput(0);
 
         // Инициализация сервоприводов
-        servoGrab = new Servo(Constants.GRAB_SERVO);
+        servoGrab = new Servo(0);
         // 177 закрыть 
         // 110 открыть
         // для фруктов:
         // большое яблоко - 160
         // маленькое яблоко - 177
         // груша - 164
-        servoTurnGrab = new Servo(Constants.GRAB_ROTATE_SERVO);
+        servoTurnGrab = new Servo(2);
         // 190 смотрит вперед
         // 279 смотрит вниз
         // 222 смотрит вперед и чуть ниже
@@ -213,6 +222,37 @@ public class Training extends SubsystemBase
                 //     }
                 // }
                     successInit = getLimitSwitchLift();
+
+                    float yaw = (float)getLongYaw();
+                    float dYaw = yaw - lastYaw;
+                    float outYaw = 0;
+                    
+                    if (!resetGyroThread && !resetGyroThreadOnce)
+                    {
+                        outYaw = dYaw + newGyroThread;
+                    }
+                    if (resetGyroThread)
+                    {
+                        outYaw = resetGyroValue;
+                    }
+                    if (resetGyroThreadOnce)
+                    {
+                        outYaw = resetGyroValue;
+                        resetGyroThreadOnce = false;
+                    }
+                    if (plus360once)
+                    {
+                        outYaw += 360;
+                        plus360once = false;
+                    }
+                    if (minus360once)
+                    {
+                        outYaw -= 360;
+                        minus360once = false;
+                    }
+                    newGyroThread = outYaw;
+                    lastYaw = yaw;
+
                     Thread.sleep(5);
                 }
                 catch (Exception e) 

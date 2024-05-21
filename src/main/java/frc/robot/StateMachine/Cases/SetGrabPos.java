@@ -46,7 +46,7 @@ public class SetGrabPos implements IState {
                 RobotContainer.train.setGripServoValue(164);
                 break;
             case "OPEN":
-                RobotContainer.train.setGripServoValue(140);
+                RobotContainer.train.setGripServoValue(144);
                 break;
         }
         return System.currentTimeMillis() - StateMachine.iterationTime > 1000;

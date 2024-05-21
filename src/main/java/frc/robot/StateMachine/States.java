@@ -10,7 +10,22 @@ public class States {
             
             // для маленького яблока new SetLiftPosition(100),
             // для большого яблока new SetLiftPosition(85),
-            new InitLogicase(),
+            // с нижней ветки для маленького яблока new SetLiftPosition(41)
+            // с нижней ветки для большого яблока new SetLiftPosition(35)
+            new SetRotatePos(26),
+            new SetGrabPos("OPEN"),
+            new SetGripRotatePos("ANGLE"),
+            new SetGlidePosition(11),
+            new SetLiftPosition(95),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetGripRotatePos("FLOOR"),
+            new SetRotatePos(0),
+            
+            new End(),
+
+            // new InitLogicase(),
         
             new Transition(),
         },
@@ -296,7 +311,7 @@ public class States {
             new DriveXAxis(0, -90),
             new DriveXAxis(43, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(13, 0),
+            new DriveXAxis(10, 0),
             new Transition()
         },   
             // MOV_IN_FRIST_LZ_TO_CH3 // 26
@@ -509,7 +524,7 @@ public class States {
             new DriveXAxis(0, 180),
             new DriveXAxis(30, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(25, 0), 
+            new DriveXAxis(35, 0), 
             new DriveXAxis(0, -90),
             new DriveXAxis(28, 0),
             new Transition()
@@ -862,6 +877,7 @@ public class States {
             new SetGrabPos("SMALL APPLE"),
             new SetLiftPosition(-1),
             new SetGripRotatePos("FLOOR"),
+            new DriveXAxis(-12, 0),
             new Transition(),
         },
             // RESET_FRUIT // 73
@@ -874,10 +890,12 @@ public class States {
             // GRAB_POS_1_0_LOWER // 74
         {
             new SetGrabPos("OPEN"),
-            new SetGlidePosition(13),
-            new SetLiftPosition(100),
-            new SetGrabPos("SMALL APPLE"),
+            new SetRotatePos(33),
+            new SetGlidePosition(12),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE"),
             new SetLiftPosition(-1),
+            new SetRotatePos(0),
             new SetGlidePosition(0),
             new SetGripRotatePos("FLOOR"),
             new Transition()
@@ -907,7 +925,17 @@ public class States {
         },
             // GRAB_POS_0_-45_LOWER // 77
         {   
-
+            new SetRotatePos(-45),
+            new DriveXAxis(-4, 0),
+            new SetGripRotatePos("FLOOR"),
+            new SetGlidePosition(9),
+            new SetGrabPos("OPEN"),
+            new SetLiftPosition(100),
+            new SetGrabPos("SMALL APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
         },
             // MOV_IN_THIRD_LZ_TO_CH1 // 78
         {
@@ -969,6 +997,182 @@ public class States {
             new SetGrabPos("SMALL APPLE"),
             new SetLiftPosition(-1),
             new End()
+        },
+            // GRAB_POS_MID // 82
+        {
+            new SetRotatePos(-30),
+            new SetGripRotatePos("BRANCH"),
+            new SetLiftPosition(60),
+            new SetGlidePosition(9),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new SetGripRotatePos("FOR DROP"),
+            new Transition()
+        },
+            // MOV_IN_CH3_TO_SECOND_LOZ // 83
+        {
+            new DriveXAxis(0, 90),
+            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(0, 180),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(228, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(18, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(12, 0),
+            new Transition()
+        },
+            // MOV_IN_CH3_TO_SECOND_TZ // 84
+        {
+            new DriveXAxis(0, 90),
+            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(0, 180),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(228, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(18, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(9, 0),
+            new Transition()
+        },
+            // MOV_IN_CH3_TO_SECOND_RZ // 85
+        {
+            new DriveXAxis(0, 90),
+            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(0, 180),
+            new DriveXAxis(47, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(235, 0),
+            new Transition()
+        },
+            // GRAB_POS_UP // 86
+        {
+            new SetRotatePos(34),
+            new SetGripRotatePos("BRANCH"),
+            new SetLiftPosition(0),
+            new SetGlidePosition(9),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new SetGripRotatePos("FLOOR"),
+            new Transition()
+        },
+            // GRAB_POS_1_-45_LOWER // 87
+        {
+            new SetRotatePos(-33),
+            new SetGripRotatePos("FLOOR"),
+            new SetGlidePosition(15),
+            new SetGrabPos("OPEN"),
+            new SetLiftPosition(99),
+            new SetGrabPos("SMALL APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_2_-45_MIDDLE // 88
+        {
+            new SetRotatePos(-25),
+            new SetGrabPos("OPEN"),
+            new SetGripRotatePos("SMALL ANGLE"),
+            new SetGlidePosition(16),
+            new SetLiftPosition(95),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetGripRotatePos("FLOOR"),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_0_20_LOWER // 89
+        {
+            new SetRotatePos(25),
+            new SetGrabPos("OPEN"),
+            new SetGripRotatePos("FLOOR"),
+            new SetGlidePosition(16),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_0_-45_LOWER_UZ // 90
+        {
+            new SetRotatePos(-11),
+            new SetGlidePosition(14),
+            new SetGrabPos("OPEN"),
+            new SetGripRotatePos("FLOOR"),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_1_-45_LOWER_14 // 91
+        {
+            new SetRotatePos(-37),
+            new SetGripRotatePos("FLOOR"),
+            new SetGlidePosition(13),
+            new SetGrabPos("OPEN"),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_0_45_LOWER // 92
+        {
+            new SetRotatePos(42),
+            new DriveXAxis(-4, 0),
+            new SetGripRotatePos("FLOOR"),
+            new SetGlidePosition(7),
+            new SetGrabPos("OPEN"),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_1_45_LOWER // 93
+        {
+            new SetRotatePos(35),
+            new SetGlidePosition(11),
+            new SetGrabPos("OPEN"),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // GRAB_POS_2_45_MIDDLE // 94
+        {
+            new SetRotatePos(25),
+            new SetGrabPos("OPEN"),
+            new SetGripRotatePos("SMALL ANGLE"),
+            new SetGlidePosition(16),
+            new SetLiftPosition(95),
+            new SetGrabPos("BIG APPLE"),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetGripRotatePos("FLOOR"),
+            new SetRotatePos(0),
+            new Transition()
         }
     };
 }
