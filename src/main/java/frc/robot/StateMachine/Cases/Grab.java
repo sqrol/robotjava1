@@ -9,6 +9,7 @@ public class Grab implements IState {
     public Grab(int pos) {
             this.pos = pos;
     }
+    
     @Override
     public boolean execute() {
         RobotContainer.train.setGripServoValue(pos);

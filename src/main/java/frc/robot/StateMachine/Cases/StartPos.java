@@ -31,6 +31,7 @@ public class StartPos implements IState{
         } else {
             train.liftMotorSpeedThread = 50;
         }
+
         
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);

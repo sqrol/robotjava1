@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //Vendor imports
 import com.kauailabs.navx.frc.AHRS;
@@ -25,6 +26,8 @@ import com.studica.frc.Servo;
 import com.studica.frc.ServoContinuous;
 import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
+
+import org.opencv.core.Point;
 
 public class Training extends SubsystemBase
 {
@@ -47,7 +50,9 @@ public class Training extends SubsystemBase
 
     private DigitalOutput redLED, greenLED;
     private DigitalInput limitSwitchLift, startButton, EMS;
-    
+
+    public static List<Point> centersForClass = new ArrayList<>();
+
     private AHRS gyro;
     double currentRotatePos;
     // SERVO

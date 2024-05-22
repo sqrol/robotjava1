@@ -7,6 +7,8 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
+
+            new FruitReversal(),
  
             // для маленького яблока new SetLiftPosition(100),
             // для большого яблока new SetLiftPosition(85),
