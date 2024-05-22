@@ -21,7 +21,7 @@ public class JavaCam implements Runnable
 {
     private static UsbCamera camera;
     private CvSink cvSink;
-    private static CvSource outStream, outBlur, outHSV, mask;
+    private static CvSource outStream, outBlur, outHSV, mask, oustream1;
 
     public int nowTask = 0;
 
@@ -31,12 +31,26 @@ public class JavaCam implements Runnable
     @Override
     public void run() {
 
-        SmartDashboard.putNumber("RED1", 0.0);
-        SmartDashboard.putNumber("RED2", 0.0);
-        SmartDashboard.putNumber("GREEN1", 0.0);
-        SmartDashboard.putNumber("GREEN2", 0.0);
-        SmartDashboard.putNumber("BLUE1", 0.0);
-        SmartDashboard.putNumber("BLUE2", 0.0);
+        // SmartDashboard.putNumber("RED1 YP", 0.0);
+        // SmartDashboard.putNumber("RED2 YP", 0.0);
+        // SmartDashboard.putNumber("GREEN1 YP", 0.0);
+        // SmartDashboard.putNumber("GREEN2 YP", 0.0);
+        // SmartDashboard.putNumber("BLUE1 YP", 0.0);
+        // SmartDashboard.putNumber("BLUE2 YP", 0.0);
+
+        // SmartDashboard.putNumber("RED1 RA", 0.0);
+        // SmartDashboard.putNumber("RED2 RA", 0.0);
+        // SmartDashboard.putNumber("GREEN1 RA", 0.0);
+        // SmartDashboard.putNumber("GREEN2 RA", 0.0);
+        // SmartDashboard.putNumber("BLUE1 RA", 0.0);
+        // SmartDashboard.putNumber("BLUE2 RA", 0.0);
+
+        // SmartDashboard.putNumber("RED1 GP", 0.0);
+        // SmartDashboard.putNumber("RED2 GP", 0.0);
+        // SmartDashboard.putNumber("GREEN1 GP", 0.0);
+        // SmartDashboard.putNumber("GREEN2 GP", 0.0);
+        // SmartDashboard.putNumber("BLUE1 GP", 0.0);
+        // SmartDashboard.putNumber("BLUE2 GP", 0.0);
         
         camera = CameraServer.getInstance().startAutomaticCapture(); // Находим доступные камеры и подсасывам его
         camera.setResolution(640, 480); // Разрешение
@@ -47,8 +61,8 @@ public class JavaCam implements Runnable
         
         outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
         outBlur = CameraServer.getInstance().putVideo("outBlur", 640, 480);
-        outHSV = CameraServer.getInstance().putVideo("outHSV", 640, 480);
         mask = CameraServer.getInstance().putVideo("mask", 640, 480);
+        oustream1 = CameraServer.getInstance().putVideo("outstream1", 640, 480);
 
         while (true) {
             try {
@@ -78,34 +92,62 @@ public class JavaCam implements Runnable
     public static int CheckFruit(final Mat orig) // Распознавание яблока
     {
         // Нужно заменить массивом
-        double red1 = SmartDashboard.getNumber("RED1", 0);
-        double red2 = SmartDashboard.getNumber("RED2", 0);
+        double red1YP = SmartDashboard.getNumber("RED1 YP", 0);
+        double red2YP = SmartDashboard.getNumber("RED2 YP", 0);
 
-        double green1 = SmartDashboard.getNumber("GREEN1", 0);
-        double green2 = SmartDashboard.getNumber("GREEN2", 0);
+        double green1YP = SmartDashboard.getNumber("GREEN1 YP", 0);
+        double green2YP = SmartDashboard.getNumber("GREEN2 YP", 0);
 
-        double blue1 = SmartDashboard.getNumber("BLUE1", 0);
-        double blue2 = SmartDashboard.getNumber("BLUE2", 0);
+        double blue1YP = SmartDashboard.getNumber("BLUE1 YP", 0);
+        double blue2YP = SmartDashboard.getNumber("BLUE2 YP", 0);
+        
+
+        double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+        double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+
+        double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+        double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+
+        double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+        double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+
+
+        double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
+        double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
+
+        double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
+        double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
+
+        double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
+        double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
 
         // Point redPoint = new Point(red1, red2);
         // Point greenPoint = new Point(green1, green2);
         // Point bluePoint = new Point(blue1, blue2);
 
-        Point redPoint1 = new Point(red1, red2);      // Point(0, 200);
-        Point redPoint2 = new Point(green1, green2);  // Point(160, 255);
-        Point redPoint3 = new Point(blue1, blue2);    // Point(200, 255);
+        Point yellowPoint1 = new Point(29, 234);      // Point(0, 200);
+        Point yellowPoint2 = new Point(198, 236);  // Point(160, 255);
+        Point yellowPoint3 = new Point(249, 255);    // Point(200, 255);
 
-        Point yellowPoint1 = new Point(0, 200);      // Point(34, 255);
-        Point yellowPoint2 = new Point(160, 255);    // Point(70, 255);
-        Point yellowPoint3 = new Point(200, 255);    // Point(200, 255);
+        Point redPoint1 = new Point(2, 23);      // Point(34, 255);
+        Point redPoint2 = new Point(11, 255);    // Point(70, 255);
+        Point redPoint3 = new Point(222, 255);    // Point(200, 255);
+
+        Point greenPoint1 = new Point(43, 216);
+        Point greenPoint2 = new Point(38, 255);
+        Point greenPoint3 = new Point(226, 255);
+
+        Point greenPoint21 = new Point(38, 189);  
+        Point greenPoint22 = new Point(201, 229);
+        Point greenPoint23 = new Point(95, 247);
 
         Mat blurMat = Viscad2.Blur(orig, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
         
-        Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(0, 24), new Point(25, 255), new Point(56, 255));
-        Mat maskGreenApple = Viscad2.Threshold(hsvImage, new Point(34, 255), new Point(70, 255), new Point(200, 255));
-        Mat maskYellowPear = Viscad2.Threshold(hsvImage, redPoint1, redPoint2, redPoint3);
-        Mat maskGreenPear = Viscad2.Threshold(hsvImage, new Point(39, 50), new Point(210, 255), new Point(201, 255));
+        Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(2, 23), new Point(11, 255), new Point(222, 255));
+        Mat maskGreenApple = Viscad2.Threshold(hsvImage, new Point(45, 200), new Point(160, 255), new Point(178, 255));
+        Mat maskYellowPear = Viscad2.Threshold(hsvImage, new Point(29, 234), new Point(198, 236), new Point(249, 255));
+        Mat maskGreenPear = Viscad2.Threshold(hsvImage, new Point(38, 189), new Point(201, 229), new Point(95, 247));
 
         Mat erodeRedApple = Viscad2.Erode(maskRedApple, 1); 
         Mat erodeGreenApple = Viscad2.Erode(maskGreenApple, 1);
@@ -131,8 +173,9 @@ public class JavaCam implements Runnable
 
         outStream.putFrame(blurMat);
         outBlur.putFrame(dilateYellowPear);
-        outHSV.putFrame(dilateGreenApple);
+        
         mask.putFrame(fillHolesGreenPear);
+        oustream1.putFrame(dilateRedApple);
 
         erodeRedApple.release();
         erodeGreenApple.release();
@@ -150,7 +193,7 @@ public class JavaCam implements Runnable
         fillHolesGreenPear.release();
         // filledRedApple.release();
         hsvImage.release();
-
+        orig.release();
         if(imageAreaRedApple > 15000) {
             return 1;
         } else {
@@ -181,9 +224,10 @@ public class JavaCam implements Runnable
             // camera.getProperty("white_balance_temperature").set(9999);
             // camera.getProperty("white_balance_temperature_auto").set(1);
             camera.getProperty("focus_auto").set(0); 
-            // camera.getProperty("exposure_auto").set(0);
-            // camera.getProperty("brightness").set(0);
-            // camera.getProperty("exposure_absolute").set(1);
+            // camera.getProperty("exposure_auto").set(4);
+            camera.getProperty("saturation").set(49);
+            camera.getProperty("brightness").set(0);
+            // camera.getProperty("exposure_absolute").set(100);
         }
     }
 

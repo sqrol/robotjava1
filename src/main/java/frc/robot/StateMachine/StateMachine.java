@@ -14,14 +14,13 @@ public class StateMachine {
         first = false;
         
         if(States.mainStates[currentArray][currentIndex].execute()){
-            double startTime = System.currentTimeMillis();
-            startTime = System.currentTimeMillis();
+            startTime = Timer.getFPGATimestamp();
             first = true;
             currentIndex++;
             SmartDashboard.putNumber("Index", currentIndex);
             SmartDashboard.putNumber("Array", currentArray);
             SmartDashboard.putBoolean("First", first); 
-            iterationTime = System.currentTimeMillis() - startTime;
+            iterationTime = Timer.getFPGATimestamp() - startTime;
         }
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
     }

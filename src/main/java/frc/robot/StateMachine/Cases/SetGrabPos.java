@@ -70,12 +70,12 @@ public class SetGrabPos implements IState {
     private boolean grab(String fruit) {
 
         if (fruit.equals("BIG APPLE")) {
-            if (smooth){ endMovement = smoothServoMovement(160.0, 0.05); } 
+            if (smooth){ endMovement = smoothServoMovement(165.0, 0.05); } 
             else { endMovement = smoothServoMovement(160.0, 0.01); }
         } 
         if (fruit.equals("SMALL APPLE")) {
             if (smooth){ endMovement = smoothServoMovement(177.0, 0.05); } 
-            else { endMovement = smoothServoMovement(177.0, 0.01); }
+            else { endMovement = smoothServoMovement(177.0, 0.001); }
         } 
         if (fruit.equals("PEAR")) {
             if (smooth){ endMovement = smoothServoMovement(164.0, 0.05); } 

@@ -288,7 +288,10 @@ public class InitLogicase implements IState {
                     indexList.add(93);
                     break;
                 case "GRAB_POS_2_45_MIDDLE":
-                    indexList.add(64);
+                    indexList.add(94);
+                    break;
+                case "MOV_IN_CH3_TO_SECOND_LZ":
+                    indexList.add(95);
                     break;
             }
         }

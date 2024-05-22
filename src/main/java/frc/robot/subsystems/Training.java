@@ -109,8 +109,8 @@ public class Training extends SubsystemBase
     public boolean plus360once = false;
     public boolean minus360once = false;
  
-    private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, 2, 4, 6, 8, 10 } ,
-                                                 { -0.4, -0.4, -0.3, -0.25, -0.2, 0.2, 0.25, 0.3, 0.4, 0.4} };
+    private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, -1, 0, 1, 2, 4, 6, 8, 10 } ,
+                                                 { -0.4, -0.4, -0.3, -0.25, -0.2, -0.15, 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
                                                          { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
@@ -847,7 +847,6 @@ public class Training extends SubsystemBase
         } catch (Exception e) {
             System.out.println("Pizdes servaky setGripServoValue");
         }
-        
     }
 
     public double getGripServoValue() {
@@ -856,7 +855,6 @@ public class Training extends SubsystemBase
         } catch (Exception e) {
             return 0;
         }
-        
     }
 
     /**
