@@ -7,7 +7,7 @@ import frc.robot.Logic.LogicCore;
 import frc.robot.StateMachine.*;
 import frc.robot.subsystems.Training;
 
-public class InitLogicase implements IState {
+public class InitLogic implements IState {
     private LogicCore logic; 
     
     @Override
@@ -292,6 +292,51 @@ public class InitLogicase implements IState {
                     break;
                 case "MOV_IN_CH3_TO_SECOND_LZ":
                     indexList.add(95);
+                    break;
+                case "GRAB_POS_2_45_LOWER":
+                    indexList.add(96);
+                    break;
+                case "MOV_IN_CH3_TO_SECOND_UZL":
+                    indexList.add(97);
+                    break;
+                case "MOV_IN_CH3_TO_SECOND_UZR":
+                    indexList.add(98);
+                    break;
+                case "MOV_IN_CH3_TO_THIRD_LZ":
+                    indexList.add(99);
+                    break;
+                case "MOV_IN_CH3_TO_THIRD_LOZ":
+                    indexList.add(100);
+                    break;
+                case "MOV_IN_CH3_TO_THIRD_TZ":
+                    indexList.add(101);
+                    break;
+                case "MOV_IN_CH3_TO_THIRD_RZ":
+                    indexList.add(102);
+                    break;
+                case "MOV_IN_CH3_TO_THIRD_UZL":
+                    indexList.add(103);
+                    break;
+                case "MOV_IN_CH3_TO_THIRD_UZR":
+                    indexList.add(104);
+                    break;
+                case "MOV_IN_CH2_TO_THIRD_LZ":
+                    indexList.add(105);
+                    break;
+                case "MOV_IN_CH2_TO_THIRD_UZL":
+                    indexList.add(106);
+                    break;
+                case "MOV_IN_CH2_TO_THIRD_LOZ":
+                    indexList.add(107);
+                    break;
+                case "MOV_IN_CH2_TO_THIRD_TZ":
+                    indexList.add(108);
+                    break;
+                case "MOV_IN_CH2_TO_THIRD_RZ":
+                    indexList.add(109);
+                    break;
+                case "MOV_IN_CH2_TO_THIRD_UZR":
+                    indexList.add(110);
                     break;
             }
         }

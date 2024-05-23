@@ -9,7 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.MachineVision.JavaCam;;
+import frc.robot.MachineVision.JavaCam;
+import frc.robot.subsystems.Training;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,7 +21,7 @@ import frc.robot.MachineVision.JavaCam;;
 public class Robot extends TimedRobot {
 
   public static JavaCam javcam;
-  
+  public Training train = RobotContainer.train;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
   }
 
   /**
@@ -63,10 +65,27 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called periodically during autonomous.
+   * This function is called periodically during autonomous. Добавил в поток обработку EMS, но пока не доделал.  
    */
+
   @Override
   public void autonomousPeriodic() {
+    if (false) {
+      train.setLeftMotorSpeed(0.0, true);
+      train.setRightMotorSpeed(0.0, true);
+      train.setLiftMotorSpeed(0.0, true);
+      train.setRotateMotorSpeed(0.0, true);
+      try {
+          // gripRotate.setDisabled();
+          // grip.setDisabled();
+        } catch (Exception e) {
+            System.out.println("Pizdec Servakam");
+      } 
+
+    } else {
+      // Training.getGripRotate().setDisabled();
+      // Training.getGrip().setDisabled();
+    }
   }
 
   @Override

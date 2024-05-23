@@ -51,10 +51,9 @@ public class Training extends SubsystemBase
     private AHRS gyro;
     double currentRotatePos;
     // SERVO
-    private Servo servoGrab, servoTurnGrab;
+    private Servo servoGrab;
+    private Servo servoTurnGrab;
     private ServoContinuous servoGlide; 
-    
-    private Encoder limitSwitchGlide;
 
     public boolean initLift, initGlide, glideReachedPos, glideStop, finish = false;
     private boolean flag, isFirstRotateCall = true;
@@ -62,7 +61,7 @@ public class Training extends SubsystemBase
     public static ArrayList<Integer> indexList = new ArrayList<>();
 
     // Подключение ПИДов
-    private boolean usePIDForMotors = true; 
+    public boolean usePIDForMotors = true; 
 
     private final PID rightPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     private final PID leftPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
@@ -85,10 +84,10 @@ public class Training extends SubsystemBase
     private boolean firstCallForOMS = true;
     public boolean successInit = false;
 
-    public double leftMotorSpeedThread = 0; 
-    public double rightMotorSpeedThread = 0; 
-    public double liftMotorSpeedThread = 0; 
-    public double rotateMotorSpeedThread = 0;
+    public static double leftMotorSpeedThread = 0; 
+    public static double rightMotorSpeedThread = 0; 
+    public static double liftMotorSpeedThread = 0; 
+    public static double rotateMotorSpeedThread = 0;
 
     // Glide
     private boolean blackLineFlag = false; 
@@ -100,11 +99,11 @@ public class Training extends SubsystemBase
     private double encLeftResetValue = 0;
     private double encRotateResetValue = 0; 
 
-    public float newGyroThread = 0;
+    public double newGyroThread = 0;
     public boolean resetGyroThread = false;
     public boolean resetGyroThreadOnce = false;
-    public float resetGyroValue = 0;
-    private float lastYaw = 0;
+    public double resetGyroValue = 0;
+    private double lastYaw = 0;
 
     public boolean plus360once = false;
     public boolean minus360once = false;
@@ -183,70 +182,37 @@ public class Training extends SubsystemBase
         // 279 смотрит вниз
         // 222 смотрит вперед и чуть ниже
         servoGlide = new ServoContinuous(1);
-        
-        // 
-        // 
-        // 
-        // 
 
         startButton = new DigitalInput(2);
         EMS = new DigitalInput(3);
 
         gyro = new AHRS();
         
-    //     // Поток для anal
+        // Поток для anal
         new Thread( () -> {
-            while(!Thread.interrupted())
-            {
+            while(!Thread.interrupted()){
                 try {
-                // // Инициализируем СМО
-                // if (firstInitForGlide && !firstInitForGlideDone) {
-                //     firstInitForGlideDone = initForGlide();
-                //     if(firstInitForGlideDone) {
-                //         // setGripRotateServoValue(32); 
-                //         // setGripServoValue(60);
-                //         // setMainRotateServoValue(230);
-                //     }
-                // } else {
-                //     if (firstInitForGlideDone) {
-                //         if (firstInitForLift && !firstInitForLiftDone) {
-                //             firstInitForLiftDone = initForLift();
-                //         } else {
-                //             if(firstInitForGlideDone && firstInitForLiftDone) {
-                //                 glideReachedPos = true; //glideToMovePos(50)
-                //                 if(glideReachedPos) {
-                //                     successInit = true;
-                //                 }
-                //             }  
-                //         }   
-                //     }
-                // }
                     successInit = getLimitSwitchLift();
 
-                    float yaw = (float)getLongYaw();
-                    float dYaw = yaw - lastYaw;
-                    float outYaw = 0;
+                    double yaw = getLongYaw();
+                    double dYaw = yaw - lastYaw;
+                    double outYaw = 0;
                     
-                    if (!resetGyroThread && !resetGyroThreadOnce)
-                    {
+                    if (!resetGyroThread && !resetGyroThreadOnce) {
                         outYaw = dYaw + newGyroThread;
                     }
-                    if (resetGyroThread)
-                    {
+                    if (resetGyroThread) {
                         outYaw = resetGyroValue;
                     }
-                    if (resetGyroThreadOnce)
-                    {
+                    if (resetGyroThreadOnce) {
                         outYaw = resetGyroValue;
                         resetGyroThreadOnce = false;
                     }
-                    if (plus360once)
-                    {
+                    if (plus360once) {
                         outYaw += 360;
                         plus360once = false;
                     }
-                    if (minus360once)
-                    {
+                    if (minus360once) {
                         outYaw -= 360;
                         minus360once = false;
                     }
@@ -255,75 +221,46 @@ public class Training extends SubsystemBase
 
                     Thread.sleep(5);
                 }
-                catch (Exception e) 
-                {
+                catch (Exception e) {
                     e.printStackTrace();
-                    DriverStation.reportError("INITIALIZATION THREAD ERROR", true);
+                    DriverStation.reportError("INIT THREAD ERROR", true);
                 }
             }
         }).start();
 
-        // Поток для работы с моторами
+        // Пока что свободный поток
         new Thread( () -> {
             while(!Thread.interrupted())
             {
-                try
-                 {
-                    // if (getEMSButton()) {
+                try {
                     if (false) {
                         setLeftMotorSpeed(0.0, true);
                         setRightMotorSpeed(0.0, true);
                         setLiftMotorSpeed(0.0, true);
                         setRotateMotorSpeed(0.0, true);
                         try {
-                            // mainRotate.setDisabled();
                             // gripRotate.setDisabled();
                             // grip.setDisabled();
-                        } catch (Exception e) {
-                            System.out.println("Pizdec Servakam");
-                        }
-
-                    } else {
+                          } catch (Exception e) {
+                              System.out.println("Pizdec Servakam");
+                        } 
+                  
+                      } else {
                         setLeftMotorSpeed(leftMotorSpeedThread, usePIDForMotors);
                         setRightMotorSpeed(rightMotorSpeedThread, usePIDForMotors);
                         setLiftMotorSpeed(liftMotorSpeedThread, usePIDForMotors);
                         setRotateMotorSpeed(rotateMotorSpeedThread, usePIDForMotors);
-                        // servoGrab.setDisabled();
-                    }
-                    
+                      }
                     Thread.sleep(5);
                 } 
-                catch (Exception e) 
-                {
+                catch (Exception e) {
                     e.printStackTrace();
-                    DriverStation.reportError("EMS THREAD ERROR", true);
                 }
             }
         }).start();
     }
 
-    // /**
-    //  * Метод для инициализации выдвижного механизма
-    //  */
-    // public boolean initForGlide() {
-    //     try {
-    //         if (getLimitSwitchGlide()) {
-    //             resetGlideEncoder();
-    //             glideMotorSpeedThread = 0;
-    //             return true;
-    //         } else {
-    //             glideMotorSpeedThread = 60;
-    //         }
-    //         return false;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return true;
-    //     }
-        
-    // }
-    
-
-    /**
+     /**
      * Метод для инициализации лифта
      */
     public boolean initForLift() {
@@ -827,12 +764,12 @@ public class Training extends SubsystemBase
      * @return значение с заднего инфракрасного датчика в миллиметрах
      */
     public double getBackSonicDistance(){
-        try{
+        try {
             sonicBack.ping();
             Timer.delay(0.005);
             // return sonicBack.getRangeMM() / 10;
             return sonicBackFilter.Filter(sonicBack.getRangeMM() / 10);
-        }catch (Exception e){
+        } catch (Exception e){
             return 0;
         }
     }
@@ -841,7 +778,7 @@ public class Training extends SubsystemBase
      * Устанавливает угол поворота для сервомотра захвата
      * @param value - значение угла для установки на сервомотор захвата
      */
-    public void setGripServoValue(Double value) {
+    public void setGripServoValue(double value) {
         try {
             servoGrab.setAngle(value);
         } catch (Exception e) {
@@ -867,10 +804,17 @@ public class Training extends SubsystemBase
         } catch (Exception e) {
             System.out.println("Pizdes servaky setGripRotateServoValue");
         }
-        
     }
 
-    //с этой строчки кринж для EMSThread 
+    // с этой строчки кринж для потока в Robot (я пока не доделал)
+    public double getNonStaticGripRotateAngle() {
+        return servoTurnGrab.getAngle();
+    }
+
+    public double getNonStaticGripAngle() {
+        return servoGrab.getAngle();
+    }
+
     public Servo getGripRotate() {
         return servoTurnGrab;
     }
@@ -878,6 +822,7 @@ public class Training extends SubsystemBase
     public Servo getGrip() {
         return servoGrab;
     } 
+
     // это для End
     public ServoContinuous getGlide() {
         return servoGlide;

@@ -16,9 +16,9 @@ public class SetGrabPos implements IState {
     private boolean endMovement = false;
     private boolean smooth;
 
-    private double lastUpdateTime = 0; 
+    private double lastUpdateTime = 0;
 
-    private static final double STEP = 1.0;  // Increment step for each iteration
+    private static final double STEP = 1.0; // Increment step for each iteration
 
     public SetGrabPos(String fruit, boolean smooth) {
         this.fruit = fruit;
@@ -27,64 +27,77 @@ public class SetGrabPos implements IState {
     }
 
     // private boolean operate(int value) {
-    //     switch(servo) {
-    //         case "mainRotate":
-    //             RobotContainer.train.setMainRotateServoValue(value);
-    //             break;
-    //         case "glide":
-    //             RobotContainer.train.setGlideServoValue(value);
-    //             break;
-    //         case "grip":
-    //             RobotContainer.train.setGripServoValue(value);
-    //             break;
-    //         case "gripRotate":
-    //             RobotContainer.train.setGripRotateServoValue(value);
-    //             break;
-    //     }
-    //     return Timer.getFPGATimestamp() - StateMachine.startTime > 2;
+    // switch(servo) {
+    // case "mainRotate":
+    // RobotContainer.train.setMainRotateServoValue(value);
+    // break;
+    // case "glide":
+    // RobotContainer.train.setGlideServoValue(value);
+    // break;
+    // case "grip":
+    // RobotContainer.train.setGripServoValue(value);
+    // break;
+    // case "gripRotate":
+    // RobotContainer.train.setGripRotateServoValue(value);
+    // break;
+    // }
+    // return Timer.getFPGATimestamp() - StateMachine.startTime > 2;
     // }
 
     // private boolean grab(String fruit) {
-    //     switch(fruit) {
-    //         case "BIG APPLE":
-    //             // train.setGripServoValue(160.0);
-                
-    //             endMovement = smoothServoMovement(160.0);
-    //             break;
-    //         case "SMALL APPLE":
-    //             // train.setGripServoValue(177.0);
-    //             endMovement = smoothServoMovement(177.0);
-    //             break;
-    //         case "PEAR":
-    //             // train.setGripServoValue(164.0);
-    //             endMovement = smoothServoMovement(164.0);
-    //             break;
-    //         case "OPEN":
-    //             // train.setGripServoValue(144.0);
-    //             endMovement = smoothServoMovement(144.0);
-    //             break;
-    //     }
-    //     return System.currentTimeMillis() - StateMachine.iterationTime > 1000 && endMovement;
+    // switch(fruit) {
+    // case "BIG APPLE":
+    // // train.setGripServoValue(160.0);
+
+    // endMovement = smoothServoMovement(160.0);
+    // break;
+    // case "SMALL APPLE":
+    // // train.setGripServoValue(177.0);
+    // endMovement = smoothServoMovement(177.0);
+    // break;
+    // case "PEAR":
+    // // train.setGripServoValue(164.0);
+    // endMovement = smoothServoMovement(164.0);
+    // break;
+    // case "OPEN":
+    // // train.setGripServoValue(144.0);
+    // endMovement = smoothServoMovement(144.0);
+    // break;
+    // }
+    // return System.currentTimeMillis() - StateMachine.iterationTime > 1000 &&
+    // endMovement;
     // }
 
     private boolean grab(String fruit) {
 
         if (fruit.equals("BIG APPLE")) {
-            if (smooth){ endMovement = smoothServoMovement(165.0, 0.05); } 
-            else { endMovement = smoothServoMovement(160.0, 0.01); }
-        } 
+            if (smooth) {
+                endMovement = smoothServoMovement(165.0, 0.05);
+            } else {
+                endMovement = smoothServoMovement(160.0, 0.01);
+            }
+        }
         if (fruit.equals("SMALL APPLE")) {
-            if (smooth){ endMovement = smoothServoMovement(177.0, 0.05); } 
-            else { endMovement = smoothServoMovement(177.0, 0.001); }
-        } 
+            if (smooth) {
+                endMovement = smoothServoMovement(177.0, 0.05);
+            } else {
+                endMovement = smoothServoMovement(177.0, 0.001);
+            }
+        }
         if (fruit.equals("PEAR")) {
-            if (smooth){ endMovement = smoothServoMovement(164.0, 0.05); } 
-            else { endMovement = smoothServoMovement(164.0, 0.01); }
-        } 
+            if (smooth) {
+                endMovement = smoothServoMovement(164.0, 0.05);
+            } else {
+                endMovement = smoothServoMovement(164.0, 0.01);
+            }
+        }
         if (fruit.equals("OPEN")) {
-            if (smooth){ endMovement = smoothServoMovement(144.0, 0.05); } 
-            else { endMovement = smoothServoMovement(144.0, 0.01); }
-        } 
+            if (smooth) {
+                endMovement = smoothServoMovement(144.0, 0.05);
+            } else {
+                endMovement = smoothServoMovement(144.0, 0.01);
+            }
+        }
 
         return System.currentTimeMillis() - StateMachine.iterationTime > 1000 && endMovement;
     }
