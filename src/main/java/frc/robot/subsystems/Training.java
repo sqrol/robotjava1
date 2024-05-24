@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //Vendor imports
 import com.kauailabs.navx.frc.AHRS;
@@ -25,6 +26,8 @@ import com.studica.frc.Servo;
 import com.studica.frc.ServoContinuous;
 import com.studica.frc.TitanQuad;
 import com.studica.frc.TitanQuadEncoder;
+
+import org.opencv.core.Point;
 
 public class Training extends SubsystemBase
 {
@@ -36,6 +39,8 @@ public class Training extends SubsystemBase
     private double rightLast, leftLast = 0;
 
     public static double posX, posY;
+
+    public List<Point> centersForClass = new ArrayList<>();
 
     private double liftSpeed, glideSpeed;
 
@@ -687,7 +692,7 @@ public class Training extends SubsystemBase
             rotatePID.reset();
             rotateMotor.set(0);
         } else {
-            rotatePID.calculate(-rotateEnc.getSpeed(), speed);
+            rotatePID.calculate(rotateEnc.getSpeed(), speed);
             if (withPID) {
                 rotateMotor.set(-rotatePID.getOutput());
                 // glideMotor.set(Function.getLimitedValue(glidePID.getOutput(), -0.15, 0.15));
@@ -848,6 +853,45 @@ public class Training extends SubsystemBase
 
     public double getCobraVoltage() {
         return cobraGlide.getAverageVoltage();
+    }
+
+    public boolean justMoveForGlide(Double glideServoSpeed) {
+        boolean blackLineDetect = getCobraVoltage() > 2.0;
+
+        SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
+
+        this.direction = glideServoSpeed > 0;
+
+        if (glideServoSpeed == 0) {
+
+            SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
+
+            if (this.direction) {
+                servoGlide.setSpeed(glideServoSpeed); 
+            } else { 
+                servoGlide.setSpeed(glideServoSpeed);
+            }
+            this.glideExit = false;
+        } else {
+            servoGlide.setDisabled();
+            this.glideExit = true;
+        }
+
+        if (blackLineDetect && !this.blackLineFlag) {
+            if (this.direction) {
+                this.currentGlidePosition++; 
+            } else {
+                this.currentGlidePosition--;
+            }
+            this.blackLineFlag = true;
+
+        }
+        if (!blackLineDetect && this.blackLineFlag) {
+            this.blackLineFlag = false;
+        }
+        
+        return currentGlidePosition > 16; 
+
     }
 
     /**

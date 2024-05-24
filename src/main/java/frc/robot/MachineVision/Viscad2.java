@@ -134,33 +134,44 @@ public class Viscad2 {
         return dst2;
     }
 
-    public static List<Rect> ParticleAnalysis(Mat src, Mat dst) // !
-    {
+    public static List<Rect> ParticleAnalysis(Mat src, Mat dst) {
         Mat origCopy = src.clone();
-
+    
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
-
+    
         // Find the contours in the image
-        Imgproc.findContours( origCopy, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
-
+        Imgproc.findContours(origCopy, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+    
+        // Check if contours are empty
+        if (contours.isEmpty()) {
+            origCopy.release();
+            hierarchy.release();
+            return Collections.emptyList();
+        }
+    
         List<Rect> listOfBoxes = new ArrayList<>();
         List<Double> listOfAreas = new ArrayList<>();
-
-        for (MatOfPoint cont : contours)
-        {
+    
+        for (MatOfPoint cont : contours) {
             Rect bound = Imgproc.boundingRect(cont);
             listOfBoxes.add(bound);
             listOfAreas.add(Imgproc.contourArea(cont));
         }
-
-        ArrayList<Rect> sortedList = new ArrayList(listOfBoxes);
-        if (listOfBoxes.size() > 1)
-            Collections.sort(sortedList, (left, right) -> ((int)listOfAreas.get(listOfBoxes.indexOf(right)).doubleValue() - (int)listOfAreas.get(listOfBoxes.indexOf(left)).doubleValue()));
-
+    
+        ArrayList<Rect> sortedList = new ArrayList<>(listOfBoxes);
+        if (listOfBoxes.size() > 1) {
+            Collections.sort(sortedList, (left, right) -> 
+                Double.compare(
+                    listOfAreas.get(listOfBoxes.indexOf(right)), 
+                    listOfAreas.get(listOfBoxes.indexOf(left))
+                )
+            );
+        }
+    
         origCopy.release();
         hierarchy.release();
-
+    
         return sortedList;
     }
 

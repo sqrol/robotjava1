@@ -56,12 +56,13 @@ public class StartPos implements IState{
         if(train.successInit) {
             train.resetLiftEncoder();
             train.resetEncRotate();
-            train.setGripServoValue(130.0); // 177
+            // train.setGripServoValue(130.0); // 177
+            train.setGripServoValue(130); // 177
             train.setGripRotateServoValue(279);
             if(System.currentTimeMillis() - StateMachine.iterationTime > 8000){
                 return true;
             }
         }
-        return false;
+        return true;
     }
 }

@@ -7,6 +7,10 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
+
+            new GlideMovToFruit(),
+
+            new End(),
  
             // для маленького яблока new SetLiftPosition(100),
             // для большого яблока new SetLiftPosition(85),

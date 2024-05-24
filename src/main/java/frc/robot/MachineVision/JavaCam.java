@@ -1,9 +1,14 @@
 package frc.robot.MachineVision;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -21,7 +26,7 @@ public class JavaCam implements Runnable
 {
     private static UsbCamera camera;
     private CvSink cvSink;
-    private static CvSource outStream, outBlur, outHSV, mask, oustream1;
+    private static CvSource outStream, outBlur, outHSV, mask, oustream1, oustream2, oustream3, mask2;
 
     public int nowTask = 0;
 
@@ -38,12 +43,12 @@ public class JavaCam implements Runnable
         // SmartDashboard.putNumber("BLUE1 YP", 0.0);
         // SmartDashboard.putNumber("BLUE2 YP", 0.0);
 
-        // SmartDashboard.putNumber("RED1 RA", 0.0);
-        // SmartDashboard.putNumber("RED2 RA", 0.0);
-        // SmartDashboard.putNumber("GREEN1 RA", 0.0);
-        // SmartDashboard.putNumber("GREEN2 RA", 0.0);
-        // SmartDashboard.putNumber("BLUE1 RA", 0.0);
-        // SmartDashboard.putNumber("BLUE2 RA", 0.0);
+        SmartDashboard.putNumber("RED1 RA", 0.0);
+        SmartDashboard.putNumber("RED2 RA", 0.0);
+        SmartDashboard.putNumber("GREEN1 RA", 0.0);
+        SmartDashboard.putNumber("GREEN2 RA", 0.0);
+        SmartDashboard.putNumber("BLUE1 RA", 0.0);
+        SmartDashboard.putNumber("BLUE2 RA", 0.0);
 
         // SmartDashboard.putNumber("RED1 GP", 0.0);
         // SmartDashboard.putNumber("RED2 GP", 0.0);
@@ -62,7 +67,12 @@ public class JavaCam implements Runnable
         outStream = CameraServer.getInstance().putVideo("outStream", 640, 480);
         outBlur = CameraServer.getInstance().putVideo("outBlur", 640, 480);
         mask = CameraServer.getInstance().putVideo("mask", 640, 480);
+
         oustream1 = CameraServer.getInstance().putVideo("outstream1", 640, 480);
+        oustream2 = CameraServer.getInstance().putVideo("outstream2", 640, 480);
+        oustream3 = CameraServer.getInstance().putVideo("outstream3", 640, 480);
+
+        mask2 = CameraServer.getInstance().putVideo("mask2", 640, 480);
 
         while (true) {
             try {
@@ -77,6 +87,10 @@ public class JavaCam implements Runnable
                     RobotContainer.train.nowResult = CheckFruit(source); 
                 }
 
+                if (RobotContainer.train.nowTask == 2) {
+                    RobotContainer.train.centersForClass = getFruitPosition(source);
+                }
+
                 // if (Main.currentCameraCommand != null) {
                 //     RobotContainer.train.cameraResult = Main.currentCameraCommand.execute(source);
                 // }
@@ -87,6 +101,94 @@ public class JavaCam implements Runnable
                 e.printStackTrace();
             }
         }
+    }
+
+    public static List<Point> getFruitPosition(final Mat orig) {
+
+        double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+        double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+
+        double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+        double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+
+        double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+        double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+
+        Point greenPoint21 = new Point(0, 255);  
+        Point greenPoint22 = new Point(100, 255);
+        Point greenPoint23 = new Point(100, 255);
+
+        final Mat blurMat = Viscad2.Blur(orig, 4);
+        final Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
+
+        final Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(red1RA, red2RA), new Point(green1RA, green2RA), new Point(blue1RA, blue2RA));
+
+        final Mat erodeRedApple = Viscad2.Erode(maskRedApple, 1);
+        final Mat dilateRedApple = Viscad2.Dilate(erodeRedApple, 1);
+
+        final Mat outPA = new Mat();
+
+        List<Rect> currentCordinate = Viscad2.ParticleAnalysis(dilateRedApple, outPA);
+
+        // oustream2.putFrame(outPA);
+        mask2.putFrame(maskRedApple);
+
+        blurMat.release();
+        hsvImage.release();
+        maskRedApple.release();
+        erodeRedApple.release();
+        dilateRedApple.release();
+        outPA.release();
+
+        if (currentCordinate.isEmpty()) {
+            SmartDashboard.putNumber("444444", 1);
+            return new ArrayList<>();
+        } else {
+            SmartDashboard.putNumber("444444", 2);
+            return processRectangles(orig, currentCordinate);
+        }   
+    }
+    
+    public static List<Point> processRectangles(Mat image, List<Rect> currentCordinate) {
+        List<Point> centers = new ArrayList<>();
+        List<Point> centers1 = new ArrayList<>();
+
+        if (currentCordinate.isEmpty()) {
+            return centers1; 
+        } else {
+            for (Rect rect : currentCordinate) {
+                int x = rect.x;
+                int y = rect.y;
+                int width = rect.width;
+                int height = rect.height;
+    
+                // Рисуем прямоугольник на изображении
+                Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0, 255, 0), 2);
+    
+                // Выводим информацию о прямоугольнике
+                System.out.println("Rectangle: ");
+                System.out.println("x: " + x);
+                System.out.println("y: " + y);
+                System.out.println("width: " + width);
+                System.out.println("height: " + height);
+    
+                // Вычисляем центр прямоугольника
+                int centerX = x + width / 2;
+                int centerY = y + height / 2;
+                Point center = new Point(centerX, centerY);
+    
+                centers.add(center);
+    
+                SmartDashboard.putNumber("centerX", centerX);
+                SmartDashboard.putNumber("centerY", centerY);
+    
+                System.out.println("Center: (" + centerX + ", " + centerY + ")");
+            }
+        }
+
+        // Сохраняем изображение с нарисованными прямоугольниками
+        oustream3.putFrame(image);
+        return centers; 
     }
 
     public static int CheckFruit(final Mat orig) // Распознавание яблока
@@ -199,7 +301,6 @@ public class JavaCam implements Runnable
         } else {
             return 0; 
         }
-        
     }
 
     // С этим нужно поиграться не могу сказать что 100% работает!
