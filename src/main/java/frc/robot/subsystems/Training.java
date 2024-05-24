@@ -55,6 +55,7 @@ public class Training extends SubsystemBase
     
     private AHRS gyro;
     double currentRotatePos;
+
     // SERVO
     private Servo servoGrab;
     private Servo servoTurnGrab;
@@ -113,30 +114,15 @@ public class Training extends SubsystemBase
     public boolean plus360once = false;
     public boolean minus360once = false;
  
-    private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, -1, 0, 1, 2, 4, 6, 8, 10 } ,
-                                                 { -0.4, -0.4, -0.3, -0.25, -0.2, -0.15, 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
+    private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, -1, 0, 1, 2, 4, 6, 8, 10 } , { -0.4, -0.4, -0.3, -0.25, -0.2, -0.15, 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
-    private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, 
-                                                         { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
+    private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
 
-    private static final double[][] arrOfPosForRotate = { { 0, 500, 1500 },
-                                                             { 0, 45, 90 } };
-    
-    // private static final double[][] arrOfPosForRotate = 
-    //             { { -1000, -500, -400, -350, -300, -200, -100, 0, 100, 200, 300, 350, 400, 500, 1000 },
-    //             { -90, -45, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 90 } };
+    private static final double[][] arrOfPosForRotate = { { 0, 500, 1500 }, { 0, 45, 90 } };
 
-    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54 },
-                                                        { 0, 5, 10, 25, 35 } };
+    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54 }, { 0, 5, 10, 25, 35 } };
 
-    // private static final double[][] speedForRotate =  { { -90, -72, -54, -36, -18, -5, 0, 5, 18, 36, 54, 72, 90 },
-    //                                                     { -15, -15, -15, -15, -15, -15, 0, 15, 15, 15, 15, 15, 15 } };
-
-    // private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54, 72, 90 },
-    //                                                     { 0, 4, 13, 20, 30, 47, 60 } };
-
-    private static final double[][] arrForLift = { { -350, -200, -100, -20, -8, 0, 8, 100, 200, 350 } ,
-                                                    { -72, -48, -24, -12, -8, 0, 13, 20, 45, 60 } };
+    private static final double[][] arrForLift = { { -350, -200, -100, -20, -8, 0, 8, 100, 200, 350 } , { -72, -48, -24, -12, -8, 0, 13, 20, 45, 60 } };
 
     public Training()       
     {                                   // почему не константы

@@ -3,6 +3,7 @@ package frc.robot.MachineVision;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.opencv.core.*;
@@ -67,7 +68,7 @@ public class Viscad2 {
         Mat resizeImage = new Mat();
         Size sz = new Size(w, h);
         Imgproc.resize(src, resizeImage, sz);
-        
+
         return resizeImage;
     }
 
@@ -80,6 +81,7 @@ public class Viscad2 {
     {
         Mat dst = new Mat();
         Imgproc.blur(src, dst, new Size(power, power));
+
         return dst;
     }
 
@@ -119,15 +121,11 @@ public class Viscad2 {
         return dst2;
     }
 
-
-
     public static Mat Dilate(Mat src, int power) // !
     {
         Mat dst2 = new Mat();
         src.copyTo(dst2);
-
-        Mat element1 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,
-                new Size(2 * power + 1, 2 * power + 1));
+        Mat element1 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2 * power + 1, 2 * power + 1));
         Imgproc.dilate(src, dst2, element1);
         element1.release();
 
@@ -174,7 +172,7 @@ public class Viscad2 {
     
         return sortedList;
     }
-
+  
     public static List<Rect> ParticleAnalysis(Mat src)
     {
         Mat deleteIt = new Mat();
@@ -193,16 +191,19 @@ public class Viscad2 {
         Mat imageROI = src.submat(cont);
         int c = ImageTrueArea(imageROI);
         imageROI.release();
+
         return c;
     }
 
     public static Point CenterOfMass(MatOfPoint contour) {
         Moments moments = Imgproc.moments(contour);
+
         return new Point(moments.m10 / moments.m00, moments.m01 / moments.m00);
     }
 
     public static Point CenterOfMass(Mat src) {
         Moments moments = Imgproc.moments(src);
+
         return new Point(moments.m10 / moments.m00, moments.m01 / moments.m00);
     }
 
@@ -222,6 +223,7 @@ public class Viscad2 {
         }
 
         hierarchy.release();
+
         return biggestBlob;
     }
 
@@ -254,12 +256,14 @@ public class Viscad2 {
             Imgproc.cvtColor(out, newOut, Imgproc.COLOR_HSV2BGR);
             return newOut;
         }
+
         return out;
     }
 
     public static List<MatOfPoint2f> RemakeContours(List<MatOfPoint> contours, float k)
     {
         List<MatOfPoint2f> newContours = new ArrayList<MatOfPoint2f>();
+        
         for (MatOfPoint con : contours)
         {
             MatOfPoint2f c2f = new MatOfPoint2f(con.toArray());
@@ -270,6 +274,7 @@ public class Viscad2 {
             newContours.add(newCon);
             c2f.release();
         }
+
         return newContours;
     }
 }

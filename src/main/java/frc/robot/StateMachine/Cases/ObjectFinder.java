@@ -6,13 +6,9 @@ import frc.robot.Main;
 import frc.robot.RobotContainer;
 import frc.robot.functions.Function;
 import frc.robot.StateMachine.*;
-import frc.robot.MachineVision.CameraCommand;
-import frc.robot.MachineVision.FruitCheck;
 import frc.robot.MachineVision.JavaCam;
 
 public class ObjectFinder implements IState {
-
-    private static final CameraCommand FruitCheck = null;
 
     @Override
     public boolean execute() {

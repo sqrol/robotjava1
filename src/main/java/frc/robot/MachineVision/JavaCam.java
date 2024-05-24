@@ -1,6 +1,7 @@
 package frc.robot.MachineVision;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.opencv.core.Core;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Main;
 import frc.robot.RobotContainer;
+import frc.robot.functions.Function;
 
 
 public class JavaCam implements Runnable
@@ -91,10 +93,6 @@ public class JavaCam implements Runnable
                     RobotContainer.train.centersForClass = getFruitPosition(source);
                 }
 
-                // if (Main.currentCameraCommand != null) {
-                //     RobotContainer.train.cameraResult = Main.currentCameraCommand.execute(source);
-                // }
-
                 source.release();
             } catch (final Exception e) {
                 DriverStation.reportError("An error occurred in JavaCam: " + e.getMessage(), false);
@@ -116,156 +114,156 @@ public class JavaCam implements Runnable
 
         Point greenPoint21 = new Point(0, 255);  
         Point greenPoint22 = new Point(100, 255);
-        Point greenPoint23 = new Point(100, 255);
+        Point greenPoint23 = new Point(160, 255);
 
         final Mat blurMat = Viscad2.Blur(orig, 4);
         final Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
-        final Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(2, 23), new Point(11, 255), new Point(222, 255));
-
-        final Mat erodeRedApple = Viscad2.Erode(maskRedApple, 1);
-        final Mat dilateRedApple = Viscad2.Dilate(erodeRedApple, 1);
+        Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
 
         final Mat outPA = new Mat();
 
-        List<Rect> currentCordinate = Viscad2.ParticleAnalysis(dilateRedApple, outPA);
+        List<Rect> currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
 
-        // oustream2.putFrame(outPA);
-        mask2.putFrame(dilateRedApple);
+        mask2.putFrame(maskRedApple);
 
         blurMat.release();
         hsvImage.release();
         maskRedApple.release();
-        erodeRedApple.release();
-        dilateRedApple.release();
+
+        releaseMats(blurMat, hsvImage, maskRedApple);
+        
         outPA.release();
 
         if (currentCordinate.isEmpty()) {
-            SmartDashboard.putNumber("444444", 1);
+
+            SmartDashboard.putNumber("12121212212121", 1);
             return new ArrayList<>();
+            
         } else {
-            SmartDashboard.putNumber("444444", 2);
+
+            SmartDashboard.putNumber("12121212212121", 2);
             return processRectangles(orig, currentCordinate);
+
         }   
     }
-    
-    public static List<Point> processRectangles(Mat image, List<Rect> currentCordinate) {
+
+    // Ебать оно живое теперь он отмечает только ближайший объект к камере
+    public static List<Point> processRectangles(Mat image, List<Rect> currentCoordinate) {
         List<Point> centers = new ArrayList<>();
-        List<Point> centers1 = new ArrayList<>();
-
-        if (currentCordinate.isEmpty()) {
-            return centers1; 
+        
+        if (currentCoordinate.isEmpty()) {
+            return centers;
         } else {
-            for (Rect rect : currentCordinate) {
-                int x = rect.x;
-                int y = rect.y;
-                int width = rect.width;
-                int height = rect.height;
-    
-                // Рисуем прямоугольник на изображении
-                Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0, 255, 0), 2);
-    
-                // Выводим информацию о прямоугольнике
-                System.out.println("Rectangle: ");
-                System.out.println("x: " + x);
-                System.out.println("y: " + y);
-                System.out.println("width: " + width);
-                System.out.println("height: " + height);
-    
-                // Вычисляем центр прямоугольника
-                int centerX = x + width / 2;
-                int centerY = y + height / 2;
-                Point center = new Point(centerX, centerY);
-    
-                centers.add(center);
-    
-                SmartDashboard.putNumber("centerX", centerX);
-                SmartDashboard.putNumber("centerY", centerY);
-    
-                System.out.println("Center: (" + centerX + ", " + centerY + ")");
+            // Находим высоту изображения
+            double imageHeight = image.rows();
+            
+            // Находим нижние точки всех прямоугольников и их расстояния до нижней границы изображения
+            List<Double> distancesToBottom = new ArrayList<>();
+            for (Rect rect : currentCoordinate) {
+                double bottomY = rect.y + rect.height;
+                double distance = imageHeight - bottomY;
+                distancesToBottom.add(distance);
             }
+            
+            // Находим индекс ближайшего прямоугольника к нижней границе
+            int nearestIndex = distancesToBottom.indexOf(Collections.min(distancesToBottom));
+            Rect nearestRect = currentCoordinate.get(nearestIndex);
+            
+            int x = nearestRect.x;
+            int y = nearestRect.y;
+            int width = nearestRect.width;
+            int height = nearestRect.height;
+            
+            // Рисуем прямоугольник на изображении
+            Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0, 255, 0), 2);
+            
+            // Выводим информацию о прямоугольнике
+            System.out.println("Rectangle: ");
+            System.out.println("x: " + x);
+            System.out.println("y: " + y);
+            System.out.println("width: " + width);
+            System.out.println("height: " + height);
+            
+            // Вычисляем центр прямоугольника
+            int centerX = x + width / 2;
+            int centerY = y + height / 2;
+            Point center = new Point(centerX, centerY);
+            
+            centers.add(center);
+            
+            SmartDashboard.putNumber("centerX", centerX);
+            SmartDashboard.putNumber("centerY", centerY);
+            
+            System.out.println("Center: (" + centerX + ", " + centerY + ")");
         }
-
+    
         // Сохраняем изображение с нарисованными прямоугольниками
         oustream3.putFrame(image);
-        return centers; 
+        return centers;
     }
 
     public static int CheckFruit(final Mat orig) // Распознавание яблока
     {
         // Нужно заменить массивом
-        double red1YP = SmartDashboard.getNumber("RED1 YP", 0);
-        double red2YP = SmartDashboard.getNumber("RED2 YP", 0);
+        // double red1YP = SmartDashboard.getNumber("RED1 YP", 0);
+        // double red2YP = SmartDashboard.getNumber("RED2 YP", 0);
 
-        double green1YP = SmartDashboard.getNumber("GREEN1 YP", 0);
-        double green2YP = SmartDashboard.getNumber("GREEN2 YP", 0);
+        // double green1YP = SmartDashboard.getNumber("GREEN1 YP", 0);
+        // double green2YP = SmartDashboard.getNumber("GREEN2 YP", 0);
 
-        double blue1YP = SmartDashboard.getNumber("BLUE1 YP", 0);
-        double blue2YP = SmartDashboard.getNumber("BLUE2 YP", 0);
+        // double blue1YP = SmartDashboard.getNumber("BLUE1 YP", 0);
+        // double blue2YP = SmartDashboard.getNumber("BLUE2 YP", 0);
         
 
-        double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
-        double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+        // double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+        // double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
 
-        double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
-        double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+        // double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+        // double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
 
-        double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
-        double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+        // double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+        // double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
 
 
-        double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
-        double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
+        // double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
+        // double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
 
-        double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
-        double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
+        // double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
+        // double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
 
-        double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
-        double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
+        // double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
+        // double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
 
-        // Point redPoint = new Point(red1, red2);
-        // Point greenPoint = new Point(green1, green2);
-        // Point bluePoint = new Point(blue1, blue2);
+        // Point yellowPoint1 = new Point(29, 234);      // Point(0, 200);
+        // Point yellowPoint2 = new Point(198, 236);  // Point(160, 255);
+        // Point yellowPoint3 = new Point(249, 255);    // Point(200, 255);
 
-        Point yellowPoint1 = new Point(29, 234);      // Point(0, 200);
-        Point yellowPoint2 = new Point(198, 236);  // Point(160, 255);
-        Point yellowPoint3 = new Point(249, 255);    // Point(200, 255);
+        // Point redPoint1 = new Point(2, 23);      // Point(34, 255);
+        // Point redPoint2 = new Point(11, 255);    // Point(70, 255);
+        // Point redPoint3 = new Point(222, 255);    // Point(200, 255);
 
-        Point redPoint1 = new Point(2, 23);      // Point(34, 255);
-        Point redPoint2 = new Point(11, 255);    // Point(70, 255);
-        Point redPoint3 = new Point(222, 255);    // Point(200, 255);
+        // Point greenPoint1 = new Point(43, 216);
+        // Point greenPoint2 = new Point(38, 255);
+        // Point greenPoint3 = new Point(226, 255);
 
-        Point greenPoint1 = new Point(43, 216);
-        Point greenPoint2 = new Point(38, 255);
-        Point greenPoint3 = new Point(226, 255);
-
-        Point greenPoint21 = new Point(38, 189);  
-        Point greenPoint22 = new Point(201, 229);
-        Point greenPoint23 = new Point(95, 247);
+        // Point greenPoint21 = new Point(38, 189);  
+        // Point greenPoint22 = new Point(201, 229);
+        // Point greenPoint23 = new Point(95, 247);
 
         Mat blurMat = Viscad2.Blur(orig, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
         
-        Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(2, 23), new Point(11, 255), new Point(222, 255));
-        Mat maskGreenApple = Viscad2.Threshold(hsvImage, new Point(45, 200), new Point(160, 255), new Point(178, 255));
-        Mat maskYellowPear = Viscad2.Threshold(hsvImage, new Point(29, 234), new Point(198, 236), new Point(249, 255));
-        Mat maskGreenPear = Viscad2.Threshold(hsvImage, new Point(38, 189), new Point(201, 229), new Point(95, 247));
+        Mat maskRedApple = thresholdAndProcess(hsvImage, new Point(2, 23), new Point(11, 255), new Point(222, 255), 1, 1);
+        Mat maskGreenApple = thresholdAndProcess(hsvImage, new Point(45, 200), new Point(160, 255), new Point(178, 255), 1, 4);
+        Mat maskYellowPear = thresholdAndProcess(hsvImage, new Point(29, 234), new Point(198, 236), new Point(249, 255), 1, 1);
+        Mat maskGreenPear = thresholdAndProcess(hsvImage, new Point(38, 189), new Point(201, 229), new Point(95, 247), 3, 2);
+    
+        Mat fillHolesGreenPear = Viscad2.FillHolesCAD(maskGreenPear);
 
-        Mat erodeRedApple = Viscad2.Erode(maskRedApple, 1); 
-        Mat erodeGreenApple = Viscad2.Erode(maskGreenApple, 1);
-        Mat erodeYellowPear = Viscad2.Erode(maskYellowPear, 1);
-        Mat erodeGreenPear = Viscad2.Erode(maskGreenPear, 3);
-
-        Mat dilateRedApple = Viscad2.Dilate(erodeRedApple, 1); 
-        Mat dilateGreenApple = Viscad2.Dilate(erodeGreenApple, 4);
-        Mat dilateYellowPear = Viscad2.Dilate(erodeYellowPear, 1);
-        Mat dilateGreenPear = Viscad2.Dilate(erodeGreenPear, 2);
-
-        Mat fillHolesGreenPear = Viscad2.FillHolesCAD(dilateGreenPear);
-
-        int imageAreaRedApple = Viscad2.ImageTrueArea(dilateRedApple); 
-        int imageAreaGreenApple = Viscad2.ImageTrueArea(dilateGreenApple);
-        int imageAreaYellowPear = Viscad2.ImageTrueArea(dilateYellowPear);
+        int imageAreaRedApple = Viscad2.ImageTrueArea(maskRedApple); 
+        int imageAreaGreenApple = Viscad2.ImageTrueArea(maskGreenApple);
+        int imageAreaYellowPear = Viscad2.ImageTrueArea(maskYellowPear);
         int imageAreaGreenPear = Viscad2.ImageTrueArea(fillHolesGreenPear);
 
         SmartDashboard.putNumber("ImageAreaRedApple", imageAreaRedApple);
@@ -274,32 +272,35 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("ImageAreaGreenPear", imageAreaGreenPear);
 
         outStream.putFrame(blurMat);
-        outBlur.putFrame(dilateYellowPear);
+        outBlur.putFrame(maskYellowPear);
         
         mask.putFrame(fillHolesGreenPear);
-        oustream1.putFrame(dilateRedApple);
+        oustream1.putFrame(maskRedApple);
 
-        erodeRedApple.release();
-        erodeGreenApple.release();
-        dilateGreenApple.release();
-        dilateRedApple.release();
-        maskRedApple.release();
-        maskGreenApple.release();
-        maskYellowPear.release();
-        dilateYellowPear.release();
-        erodeYellowPear.release();
-        blurMat.release();
-        dilateGreenPear.release();
-        erodeGreenPear.release();
-        maskGreenPear.release();
-        fillHolesGreenPear.release();
-        // filledRedApple.release();
-        hsvImage.release();
-        orig.release();
-        if(imageAreaRedApple > 15000) {
-            return 1;
-        } else {
-            return 0; 
+        releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear, maskGreenPear, fillHolesGreenPear);
+
+        if(Function.BooleanInRange(imageAreaRedApple,   0, 5000)) { return 1; } 
+        if(Function.BooleanInRange(imageAreaGreenApple, 0, 5000)) { return 2; } 
+        if(Function.BooleanInRange(imageAreaYellowPear, 0, 5000)) { return 3; } 
+        if(Function.BooleanInRange(imageAreaGreenPear,  0, 5000)) { return 4; } 
+
+        return 0;
+    }
+
+    private static Mat thresholdAndProcess(Mat hsvImage, Point lowerBound, Point upperBound, Point upperBound3, int erodeIterations, int dilateIterations) {
+        Mat mask = Viscad2.Threshold(hsvImage, lowerBound, upperBound, upperBound3);
+        Mat eroded = Viscad2.Erode(mask, erodeIterations);
+        Mat dilated = Viscad2.Dilate(eroded, dilateIterations);
+
+        eroded.release();
+        mask.release();
+
+        return dilated;
+    }
+
+    private static void releaseMats(Mat... mats) {
+        for (Mat mat : mats) {
+            mat.release();
         }
     }
 

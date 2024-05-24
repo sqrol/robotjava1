@@ -9,6 +9,8 @@ public class States {
         {
             new StartPos(), 
 
+            new testForNewCam(),
+
             // new ObjectFinder(),
             
             // для маленького яблока new SetLiftPosition(98),
