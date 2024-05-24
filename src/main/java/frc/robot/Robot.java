@@ -70,22 +70,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    if (false) {
-      train.setLeftMotorSpeed(0.0, true);
-      train.setRightMotorSpeed(0.0, true);
-      train.setLiftMotorSpeed(0.0, true);
-      train.setRotateMotorSpeed(0.0, true);
-      try {
-          // gripRotate.setDisabled();
-          // grip.setDisabled();
-        } catch (Exception e) {
-            System.out.println("Pizdec Servakam");
-      } 
+    // if (false) {
+    //   train.setLeftMotorSpeed(0.0, true);
+    //   train.setRightMotorSpeed(0.0, true);
+    //   train.setLiftMotorSpeed(0.0, true);
+    //   train.setRotateMotorSpeed(0.0, true);
+    //   try {
+    //       // gripRotate.setDisabled();
+    //       // grip.setDisabled();
+    //     } catch (Exception e) {
+    //         System.out.println("Pizdec Servakam");
+    //   } 
 
-    } else {
-      // Training.getGripRotate().setDisabled();
-      // Training.getGrip().setDisabled();
-    }
+    // } else {
+    //   // Training.getGripRotate().setDisabled();
+    //   // Training.getGrip().setDisabled();
+    // }
   }
 
   @Override

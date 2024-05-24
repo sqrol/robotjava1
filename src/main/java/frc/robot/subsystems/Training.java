@@ -89,10 +89,10 @@ public class Training extends SubsystemBase
     private boolean firstCallForOMS = true;
     public boolean successInit = false;
 
-    public static double leftMotorSpeedThread = 0; 
-    public static double rightMotorSpeedThread = 0; 
-    public static double liftMotorSpeedThread = 0; 
-    public static double rotateMotorSpeedThread = 0;
+    public double leftMotorSpeedThread = 0; 
+    public double rightMotorSpeedThread = 0; 
+    public double liftMotorSpeedThread = 0; 
+    public double rotateMotorSpeedThread = 0;
 
     // Glide
     private boolean blackLineFlag = false; 
@@ -299,7 +299,7 @@ public class Training extends SubsystemBase
         double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate);
         double rotateSpeedOut = Function.TransitionFunction(rotateDegree - degree, speedForRotate);
         
-        boolean rotateStop = Function.BooleanInRange(degree - rotateDegree, -7, 7);
+        boolean rotateStop = Function.BooleanInRange(degree - rotateDegree, -2, 2);
 
         SmartDashboard.putNumber("currentRotatePos", -getEncRotateThread());
         SmartDashboard.putNumber("rotateDegree", rotateDegree);
@@ -803,7 +803,7 @@ public class Training extends SubsystemBase
      * Устанавливает угол поворота сервомотора для поворота захвата
      * @param value - значение угла для установки на сервомотор поворота захвата
      */
-    public void setGripRotateServoValue(int value) {
+    public void setGripRotateServoValue(double value) {
         try {
             servoTurnGrab.setAngle(value);
         } catch (Exception e) {
@@ -855,14 +855,14 @@ public class Training extends SubsystemBase
         return cobraGlide.getAverageVoltage();
     }
 
-    public boolean justMoveForGlide(Double glideServoSpeed) {
+    public boolean justMoveForGlide(double glideServoSpeed) {
         boolean blackLineDetect = getCobraVoltage() > 2.0;
 
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
 
         this.direction = glideServoSpeed > 0;
 
-        if (glideServoSpeed == 0) {
+        if (glideServoSpeed != 0) {
 
             SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
 
@@ -901,13 +901,13 @@ public class Training extends SubsystemBase
     public void servoGlidePosition(int targetPosition) { 
         boolean blackLineDetect = getCobraVoltage() > 2.0;
         double glideServoSpeed = Function.TransitionFunction(targetPosition - this.currentGlidePosition, speedForGlideServo);
-        SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
+        // SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
 
         this.direction = targetPosition > this.currentGlidePosition;
 
         if (targetPosition != this.currentGlidePosition) {
 
-            SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
+            // SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
 
             if (this.direction) {
                 servoGlide.setSpeed(glideServoSpeed); 

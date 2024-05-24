@@ -30,6 +30,7 @@ public class SetGripRotatePos implements IState {
             case "SMALL ANGLE":
                 train.setGripRotateServoValue(235);
                 break;
+            
         }
         RobotContainer.train.setAxisSpeed(0, 0);
 

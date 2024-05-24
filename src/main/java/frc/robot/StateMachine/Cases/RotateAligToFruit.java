@@ -68,11 +68,11 @@ public class RotateAligToFruit implements IState {
         }
 
         train.setAxisSpeed(0, 0);
-
+        SmartDashboard.putBoolean("RotateAlig.rotateStop", rotateStop);
         if (rotateStop) {
 
             train.rotateMotorSpeedThread = 0;
-            return Timer.getFPGATimestamp() - stopTimer > 3;
+            return Timer.getFPGATimestamp() - stopTimer > 2;
         } else {
 
             stopTimer = Timer.getFPGATimestamp();

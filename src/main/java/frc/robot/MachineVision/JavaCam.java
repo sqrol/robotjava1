@@ -121,7 +121,7 @@ public class JavaCam implements Runnable
         final Mat blurMat = Viscad2.Blur(orig, 4);
         final Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
-        final Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(red1RA, red2RA), new Point(green1RA, green2RA), new Point(blue1RA, blue2RA));
+        final Mat maskRedApple = Viscad2.Threshold(hsvImage, new Point(2, 23), new Point(11, 255), new Point(222, 255));
 
         final Mat erodeRedApple = Viscad2.Erode(maskRedApple, 1);
         final Mat dilateRedApple = Viscad2.Dilate(erodeRedApple, 1);
@@ -131,7 +131,7 @@ public class JavaCam implements Runnable
         List<Rect> currentCordinate = Viscad2.ParticleAnalysis(dilateRedApple, outPA);
 
         // oustream2.putFrame(outPA);
-        mask2.putFrame(maskRedApple);
+        mask2.putFrame(dilateRedApple);
 
         blurMat.release();
         hsvImage.release();

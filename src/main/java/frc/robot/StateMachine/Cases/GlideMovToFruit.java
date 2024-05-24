@@ -17,14 +17,14 @@ public class GlideMovToFruit implements IState {
 
     private double startKoef = 0; 
     private double diffSpeed = 0; 
-    private boolean rotateStop = false; 
+    private boolean glideStop = false; 
 
     private boolean objectFind = false;
 
     private double stopTimer;
 
-    private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, -1, 0, 1, 2, 4, 6, 8, 10 } ,
-                                                 { -0.4, -0.4, -0.3, -0.25, -0.2, -0.15, 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
+    private static final double[][] speedForGlideServo = { { 0, 10, 20, 40, 60, 80, 100 } ,
+                                                     { 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
     public GlideMovToFruit() {
          
@@ -57,30 +57,30 @@ public class GlideMovToFruit implements IState {
         //     train.justMoveForGlide(true);
         // }
 
-        double glideServoSpeed = Function.TransitionFunction(fruitPosY - 144, speedForGlideServo);
-
+        double glideServoSpeed = Function.TransitionFunction(fruitPosY - 256, speedForGlideServo);
+        glideStop = Function.BooleanInRange(fruitPosY - 256, -3, 3);
+        SmartDashboard.putNumber("diffGlideServo", fruitPosY - 256);
+        SmartDashboard.putBoolean("GlideMove.objectFind", objectFind);
+        SmartDashboard.putNumber("GlideMov.glideServoSpeed", glideServoSpeed);
         if (objectFind) {
-            
-            train.justMoveForGlide(glideServoSpeed);
-
+            train.justMoveForGlide(-glideServoSpeed);
         } else {
-
             train.justMoveForGlide(0.4);
-
         }
 
-        // train.setAxisSpeed(0, 0);
+        train.setAxisSpeed(0, 0);
 
-        // if (rotateStop) {
+        SmartDashboard.putBoolean("GlideMov.glideStop", glideStop);
+        if (glideStop) {
 
-        //     train.rotateMotorSpeedThread = 0;
-        //     return Timer.getFPGATimestamp() - stopTimer > 3;
-        // } else {
+            train.rotateMotorSpeedThread = 0;
+            return Timer.getFPGATimestamp() - stopTimer > 1;
+        } else {
             
-        //     stopTimer = Timer.getFPGATimestamp();
-        //     return Timer.getFPGATimestamp() - StateMachine.startTime > 1.5 && this.rotateStop ;
-        // }   
-        return false;   
+            stopTimer = Timer.getFPGATimestamp();
+            return Timer.getFPGATimestamp() - StateMachine.startTime > 1.5 && this.glideStop ;
+        }   
+         
     }
     
 }

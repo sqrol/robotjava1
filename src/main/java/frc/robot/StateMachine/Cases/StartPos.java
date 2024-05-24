@@ -52,7 +52,7 @@ public class StartPos implements IState{
         //     train.glideToMovePos(100); 
         // }
         // train.rotateMotorSpeedThread = 10;
-        
+
         if(train.successInit) {
             train.resetLiftEncoder();
             train.resetEncRotate();
@@ -63,6 +63,6 @@ public class StartPos implements IState{
                 return true;
             }
         }
-        return true;
+        return false;
     }
 }
