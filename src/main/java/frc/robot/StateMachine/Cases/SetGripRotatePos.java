@@ -14,6 +14,7 @@ public class SetGripRotatePos implements IState {
     }
     @Override
     public boolean execute() {
+        
         switch(pos) {
             case "FLOOR":
                 train.setGripRotateServoValue(279);

@@ -17,11 +17,10 @@ public class StartPos implements IState{
 
     @Override
     public boolean execute() {
-
-        train.setGreenLED(true);
-        train.setRedLED(true);
+        train.setIndication("WAITING");
         train.reset2Motors();
         train.OdometryReset(0, 0);
+        train.setAxisSpeed(0, 0);
         train.resetGyro();
         // train.setAxisSpeed(0.0f, 30.0f);
 
@@ -57,9 +56,10 @@ public class StartPos implements IState{
             train.resetLiftEncoder();
             train.resetEncRotate();
             // train.setGripServoValue(130.0); // 177
-            train.setGripServoValue(130); // 177
+            train.setGripServoValue(123); // 177
             train.setGripRotateServoValue(279);
-            if(System.currentTimeMillis() - StateMachine.iterationTime > 8000){
+            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
+                train.setIndication("IN PROCESS");
                 return true;
             }
         }

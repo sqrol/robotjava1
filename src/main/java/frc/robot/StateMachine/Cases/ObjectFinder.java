@@ -5,24 +5,63 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Main;
 import frc.robot.RobotContainer;
 import frc.robot.functions.Function;
+import frc.robot.subsystems.Training;
 import frc.robot.StateMachine.*;
 import frc.robot.MachineVision.JavaCam;
 
 public class ObjectFinder implements IState {
 
+    private Training train = RobotContainer.train;
+
     @Override
     public boolean execute() {
-        RobotContainer.train.nowTask = 1; 
+        
+        train.nowTask = 1; 
         SmartDashboard.putNumber("nowResult", RobotContainer.train.nowResult);
-        if(RobotContainer.train.nowResult == 1) {
-            RobotContainer.train.setAxisSpeed(0f, 0f);
-        } else if(RobotContainer.train.nowResult == 2){ 
-            RobotContainer.train.setAxisSpeed(0f, 0f);
-        } else if(RobotContainer.train.nowResult == 3){
-            RobotContainer.train.setAxisSpeed(0f, 0f);
+        train.setGripRotateServoValue(260);
+        
+        if(train.nowResult == 1) {
+            train.setAxisSpeed(0, 0);
+            train.setIndication("IN PROCESS");
+
+        } else if(train.nowResult == 2){ 
+            train.setAxisSpeed(0, 0);
+            // train.setGreenLED(true);
+            // train.setRedLED(false);
+            train.setIndication("IN PROCESS");
+
+        } else if(train.nowResult == 3){
+            train.setAxisSpeed(0, 0);
+            
+            // train.setGreenLED(true);
+            // train.setRedLED(true);
+            train.setIndication("IN PROCESS");
+
+        } else if(train.nowResult == 4){
+            train.setAxisSpeed(0, 0);
+            // train.setGreenLED(false);
+            // train.setRedLED(true);
+            train.setIndication("IN PROCESS");
+            
+
+        } else if(train.nowResult == 5) {
+            train.setAxisSpeed(0, 0);
+            
+            // train.setGreenLED(true);
+            train.setIndication("IN PROCESS");
+            // train.setRedLED(true);
+        } else if(train.nowResult == 6) {
+            train.setIndication("IN PROCESS");
+            train.setAxisSpeed(0, 0);
+        } else if(train.nowResult == 7) {
+            train.setIndication("IN PROCESS");
+            train.setAxisSpeed(0, 0);
         } else {
-            RobotContainer.train.setAxisSpeed(0f, 0f);
+            train.setIndication("WAITING");
+            
+            train.nowResult = 0;
         }
+
         return false;
     }
 }

@@ -141,7 +141,7 @@ public class DriveXAxis implements IState {
 
     @Override
     public boolean execute() {
-
+        
         if (isFirst) {
             // allReset();
             // train.resetLeftEnc();
@@ -149,7 +149,7 @@ public class DriveXAxis implements IState {
             currentAxisX = 0;
             lastRightEnc = train.getRightEncoder(); 
             lastLeftEnc = train.getLeftEncoder(); 
-
+            
             train.resetGyro();
             isFirst = false;
         }

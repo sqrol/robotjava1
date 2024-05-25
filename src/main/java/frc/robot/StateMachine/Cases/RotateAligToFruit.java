@@ -33,8 +33,9 @@ public class RotateAligToFruit implements IState {
 
     @Override
     public boolean execute() {
+        
         RobotContainer.train.nowTask = 2; 
-
+        
         if (train.centersForClass.isEmpty()) {
 
             fruitPosX = 0; 

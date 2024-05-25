@@ -21,6 +21,7 @@ public class OMS implements IState {
     }
     @Override
     public boolean execute() {
+        
         switch(pos) {
             case "FLOOR OPEN":
                 train.setGripRotateServoValue(120);

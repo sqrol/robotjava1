@@ -8,10 +8,13 @@ import frc.robot.StateMachine.*;
 import frc.robot.subsystems.Training;
 
 public class InitLogic implements IState {
+
     private LogicCore logic; 
-    
+    private Training train = RobotContainer.train;
+
     @Override
     public boolean execute() {
+        
         logic = RobotContainer.logic;
         logic.logicInit();
         
@@ -337,6 +340,21 @@ public class InitLogic implements IState {
                     break;
                 case "MOV_IN_CH2_TO_THIRD_UZR":
                     indexList.add(110);
+                    break;
+                case "UNDER_TREE_15":
+                    indexList.add(111);
+                    break;
+                case "UNDER_TREE_8":
+                    indexList.add(112);
+                    break; 
+                case "GRAB_POS_0_-45_LOWER_3":
+                    indexList.add(113);
+                    break;
+                case "MOV_IN_CH1_TO_THIRD_UZL":
+                    indexList.add(114);
+                    break;
+                case "END":
+                    indexList.add(115);
                     break;
             }
         }

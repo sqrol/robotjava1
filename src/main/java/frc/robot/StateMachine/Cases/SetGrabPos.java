@@ -69,7 +69,7 @@ public class SetGrabPos implements IState {
     // }
 
     private boolean grab(String fruit) {
-
+        
         if (fruit.equals("BIG APPLE")) {
             if (smooth) {
                 endMovement = smoothServoMovement(165.0, 0.05);
@@ -97,9 +97,16 @@ public class SetGrabPos implements IState {
             } else {
                 endMovement = smoothServoMovement(144.0, 0.01);
             }
+        
         }
-
-        return System.currentTimeMillis() - StateMachine.iterationTime > 1000 && endMovement;
+        if (fruit.equals("OPEN SMALL APPLE")) {
+            if (smooth) {
+                endMovement = smoothServoMovement(151.0, 0.05);
+            } else {
+                endMovement = smoothServoMovement(151.0, 0.01);
+            }
+        }
+        return Timer.getFPGATimestamp() - StateMachine.iterationTime > 1 && endMovement;
     }
 
     private boolean smoothServoMovement(double targetPosition, double DELAY) {

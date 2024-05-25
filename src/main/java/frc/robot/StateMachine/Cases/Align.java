@@ -51,6 +51,7 @@ public class Align implements IState {
 
     @Override
     public boolean execute() {
+        
         switch(sensors){
             case "sharp":
                 exit = alignIR(X);

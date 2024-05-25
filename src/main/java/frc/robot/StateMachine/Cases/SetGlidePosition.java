@@ -17,8 +17,9 @@ public class SetGlidePosition implements IState {
 
     @Override
     public boolean execute() {
+        
         train.servoGlidePosition(this.pos);
-        RobotContainer.train.setAxisSpeed(0, 0);
+        train.setAxisSpeed(0, 0);
         return train.glideExit && System.currentTimeMillis() - StateMachine.startTime > 5000;
     }
 }

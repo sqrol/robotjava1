@@ -26,12 +26,16 @@ public class LogicCore {
 
     private boolean fristCallForSubPath = false;
 
+    // Для сдачи модулей B отключает построение пути назад 
+
+    private boolean autonomusMode = false;
+
     // Зона 1
     private static final String[] firstTree = { "null", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
@@ -57,9 +61,9 @@ public class LogicCore {
     private static final String[][] thitdTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "AppleSmallRipe", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "5", "6", "7", "8", "9", "10", "11" },
+                    { "RottenPeer", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
@@ -90,8 +94,10 @@ public class LogicCore {
             for (int zoneNum = 1; zoneNum <= 3; zoneNum++) {
                 arrayWithLogic.addAll(getFruitsForExport(zoneNum));
             }
-            if (!arrayWithLogic.isEmpty()) {
+            if (!arrayWithLogic.isEmpty() && autonomusMode) {
                 arrayWithLogic.add("MOVE_IN_" + getLastCheckpoint() + "_TO_FINISH");
+            } else {
+                arrayWithLogic.add("END");
             }
             fristCallForInit = false;
         }
@@ -326,7 +332,7 @@ public class LogicCore {
                 outSubPathForDelivery.add("MOV_IN_" + bestWayForCheck + "_TO_" + containersForFruits.get(currentFruit));
                 outSubPathForDelivery.add("RESET_FRUIT");
 
-                if (CheckingLastElement(allFindFruits, i)) { // Смотрим это последний фрукт для этой зоны или нет
+                if (CheckingLastElement(allFindFruits, i) && autonomusMode) { // Смотрим это последний фрукт для этой зоны или нет
                     outSubPathForDelivery.add("MOV_IN_" + containersForFruits.get(currentFruit) + "_TO_" + bestWayForCheck);
                     setLastCheckpoint(bestWayForCheck);
                 }

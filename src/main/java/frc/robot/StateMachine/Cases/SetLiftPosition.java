@@ -18,7 +18,7 @@ public class SetLiftPosition implements IState {
 
     @Override
     public boolean execute() {
-
+        
         // if (!train.getLimitSwitchLift()) {
         //     train.initLift = true;
         // } else {

@@ -90,9 +90,9 @@ public class Training extends SubsystemBase
     private boolean firstCallForOMS = true;
     public boolean successInit = false;
 
-    public double leftMotorSpeedThread = 0; 
-    public double rightMotorSpeedThread = 0; 
-    public double liftMotorSpeedThread = 0; 
+    public double leftMotorSpeedThread = 0;
+    public double rightMotorSpeedThread = 0;
+    public double liftMotorSpeedThread = 0;
     public double rotateMotorSpeedThread = 0;
 
     // Glide
@@ -114,6 +114,8 @@ public class Training extends SubsystemBase
     public boolean plus360once = false;
     public boolean minus360once = false;
  
+    private String indication = "";
+
     private static final double[][] speedForGlideServo = { { -10, -8, -6, -4, -2, -1, 0, 1, 2, 4, 6, 8, 10 } , { -0.4, -0.4, -0.3, -0.25, -0.2, -0.15, 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
 
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
@@ -154,8 +156,8 @@ public class Training extends SubsystemBase
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MedianFilter(10);
 
-        redLED = new DigitalOutput(20);
-        greenLED = new DigitalOutput(21);
+        redLED = new DigitalOutput(21);
+        greenLED = new DigitalOutput(20);
 
         // Инициализация концевого выключателя 
         limitSwitchLift = new DigitalInput(0);
@@ -219,12 +221,12 @@ public class Training extends SubsystemBase
             }
         }).start();
 
-        // Пока что свободный поток
+        
         new Thread( () -> {
             while(!Thread.interrupted())
             {
                 try {
-                    if (false) {
+                    if (getEMSButton()) {
                         setLeftMotorSpeed(0.0, true);
                         setRightMotorSpeed(0.0, true);
                         setLiftMotorSpeed(0.0, true);
@@ -249,6 +251,38 @@ public class Training extends SubsystemBase
                 }
             }
         }).start();
+
+
+        new Thread( () -> {
+            while(!Thread.interrupted()) {
+                try {
+                    switch(indication) {
+                        case "WAITING":
+                            setRedLED(true);
+                            setGreenLED(false);
+                            break;
+                        case "IN PROCESS":
+                            setRedLED(true);
+                            setGreenLED(true);
+                            break;
+                        case "FINISHED":
+                            setRedLED(false);
+                            setGreenLED(false);
+                            break;
+                        case "CHECK":
+                            setRedLED(false);
+                            setGreenLED(true);
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void setIndication(String RobotState) {
+        this.indication = RobotState;
     }
 
      /**
@@ -570,8 +604,7 @@ public class Training extends SubsystemBase
      */
     public boolean getEMSButton(){
         try {
-            boolean out = EMS.get();
-            return out;
+            return EMS.get();
         } catch (Exception e) {
             return false;
         }
@@ -584,8 +617,7 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            // return out;
-            return false;
+            return startButton.get();
         } catch (Exception e) {
             return false;
         }   
@@ -840,6 +872,8 @@ public class Training extends SubsystemBase
     public double getCobraVoltage() {
         return cobraGlide.getAverageVoltage();
     }
+
+    
 
     public boolean justMoveForGlide(double glideServoSpeed) {
         boolean blackLineDetect = getCobraVoltage() > 2.0;
