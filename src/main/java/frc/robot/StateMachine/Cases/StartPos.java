@@ -19,9 +19,12 @@ public class StartPos implements IState{
     public boolean execute() {
         train.setIndication("WAITING");
         train.reset2Motors();
+
         train.OdometryReset(0, 0);
         train.setAxisSpeed(0, 0);
+
         train.resetGyro();
+        
         // train.setAxisSpeed(0.0f, 30.0f);
 
         if (train.getLimitSwitchLift()) {
@@ -52,17 +55,17 @@ public class StartPos implements IState{
         // }
         // train.rotateMotorSpeedThread = 10;
 
-        if(train.successInit) {
-            train.resetLiftEncoder();
-            train.resetEncRotate();
-            // train.setGripServoValue(130.0); // 177
-            train.setGripServoValue(123); // 177
-            train.setGripRotateServoValue(279);
-            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
-                train.setIndication("IN PROCESS");
-                return true;
-            }
-        }
-        return false;
+        // if(train.successInit) {
+        //     train.resetLiftEncoder();
+        //     train.resetEncRotate();
+        //     // train.setGripServoValue(130.0); // 177
+        //     train.setGripServoValue(123); // 177
+        //     train.setGripRotateServoValue(279);
+        //     if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
+        //         train.setIndication("IN PROCESS");
+        //         return true;
+        //     }
+        // }
+        return true;
     }
 }

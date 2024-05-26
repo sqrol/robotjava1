@@ -7,6 +7,8 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
+
+            new testForNewCam(),
             
             // для маленького яблока new SetLiftPosition(98),
             // для большого яблока new SetLiftPosition(85),

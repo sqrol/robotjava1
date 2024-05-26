@@ -248,6 +248,9 @@ public class Viscad2 {
         Mat bright = new Mat();
         Core.multiply(dstOut.get(2), new Scalar(mulK), bright);
 
+        
+
+
         Mat out = new Mat();
         Core.merge(new ArrayList<Mat>(Arrays.asList(new Mat[]{dstOut.get(0), dstOut.get(1), bright})), out);
         if (outBGR)
@@ -256,6 +259,10 @@ public class Viscad2 {
             Imgproc.cvtColor(out, newOut, Imgproc.COLOR_HSV2BGR);
             return newOut;
         }
+
+        hsvCut.release();
+        hsvOut.release();
+        bright.release();
 
         return out;
     }
