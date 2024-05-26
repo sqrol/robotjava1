@@ -18,44 +18,57 @@ public class ObjectFinder implements IState {
         
         train.nowTask = 1; 
         SmartDashboard.putNumber("nowResult", RobotContainer.train.nowResult);
-        train.setGripRotateServoValue(260);
+        train.setGripRotateServoValue(269);
         
         if(train.nowResult == 1) {
             train.setAxisSpeed(0, 0);
             train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
         } else if(train.nowResult == 2){ 
             train.setAxisSpeed(0, 0);
-            // train.setGreenLED(true);
-            // train.setRedLED(false);
             train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
         } else if(train.nowResult == 3){
             train.setAxisSpeed(0, 0);
-            
-            // train.setGreenLED(true);
-            // train.setRedLED(true);
             train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
         } else if(train.nowResult == 4){
             train.setAxisSpeed(0, 0);
-            // train.setGreenLED(false);
-            // train.setRedLED(true);
             train.setIndication("IN PROCESS");
-            
+            if(train.getStartButton()) {
+                return true;
+            }
 
         } else if(train.nowResult == 5) {
-            train.setAxisSpeed(0, 0);
-            
-            // train.setGreenLED(true);
+            train.setAxisSpeed(0, 0);  
             train.setIndication("IN PROCESS");
-            // train.setRedLED(true);
+            if(train.getStartButton()) {
+                return true;
+            }
+
         } else if(train.nowResult == 6) {
             train.setIndication("IN PROCESS");
             train.setAxisSpeed(0, 0);
+            if(train.getStartButton()) {
+                return true;
+            }
+
         } else if(train.nowResult == 7) {
             train.setIndication("IN PROCESS");
             train.setAxisSpeed(0, 0);
+            if(train.getStartButton()) {
+                return true;
+            }
+
         } else {
             train.setIndication("WAITING");
             

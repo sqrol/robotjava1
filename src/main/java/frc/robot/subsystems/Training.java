@@ -44,10 +44,10 @@ public class Training extends SubsystemBase
 
     private double liftSpeed, glideSpeed;
 
-    private MedianFilter sharpRightFilter, sharpLeftFilter, sonicRightFilter, sonicBackFilter;
-    private MeanFilter rightMotorMeanFilter, leftMotorMeanFilter, glideMotorMeanFilter, liftMotorMeanFilter;
+    private MedianFilter sharpRightFilter, sharpLeftFilter, sonicRightFilter;
+    private MeanFilter rightMotorMeanFilter, leftMotorMeanFilter, glideMotorMeanFilter, liftMotorMeanFilter, sonicBackFilter;
 
-    private Ultrasonic sonicRight, sonicBack;
+    private Ultrasonic leftSonicBack, rightSonicBack;
     private AnalogInput sharpRight, sharpLeft, cobraGlide;
 
     private DigitalOutput redLED, greenLED;
@@ -147,14 +147,14 @@ public class Training extends SubsystemBase
         // Датчик черной линии для подсчета линий на Glide
         cobraGlide = new AnalogInput(2);
 
-        sonicBack = new Ultrasonic(9, 8);
-        sonicRight = new Ultrasonic(11, 10);
+        rightSonicBack = new Ultrasonic(9, 8);
+        leftSonicBack = new Ultrasonic(6, 7);
 
         sharpRightFilter = new MedianFilter(5);
         sharpLeftFilter = new MedianFilter(5);
 
         sonicRightFilter = new MedianFilter(6);
-        sonicBackFilter = new MedianFilter(10);
+        sonicBackFilter = new MeanFilter(10);
 
         redLED = new DigitalOutput(21);
         greenLED = new DigitalOutput(20);
@@ -184,8 +184,8 @@ public class Training extends SubsystemBase
         // Поток для anal
         new Thread( () -> {
             while(!Thread.interrupted()){
+                successInit = getLimitSwitchLift();
                 try {
-                    successInit = getLimitSwitchLift();
 
                     double yaw = getLongYaw();
                     double dYaw = yaw - lastYaw;
@@ -232,10 +232,12 @@ public class Training extends SubsystemBase
                         setLiftMotorSpeed(0.0, true);
                         setRotateMotorSpeed(0.0, true);
                         try {
+                            // servoGlide.setDisabled();
                             // gripRotate.setDisabled();
                             // grip.setDisabled();
                           } catch (Exception e) {
-                              System.out.println("Pizdec Servakam");
+                              System.out.println("Pizdec Servakam ");
+                              e.printStackTrace();
                         } 
                   
                       } else {
@@ -617,7 +619,8 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return startButton.get();
+            // return startButton.get();
+            return true;
         } catch (Exception e) {
             return false;
         }   
@@ -775,9 +778,10 @@ public class Training extends SubsystemBase
      */
     public double getSideSonicDistance(){
         try{
-            sonicRight.ping();
+            leftSonicBack.ping();
             Timer.delay(0.005);
-            return sonicRightFilter.Filter(sonicRight.getRangeMM() / 10);
+            // return sonicRightFilter.Filter(leftSonicBack.getRangeMM() / 10);
+            return leftSonicBack.getRangeMM();
         }catch (Exception e){
             return 0;
         }
@@ -788,10 +792,11 @@ public class Training extends SubsystemBase
      */
     public double getBackSonicDistance(){
         try {
-            sonicBack.ping();
+            rightSonicBack.ping();
             Timer.delay(0.005);
-            // return sonicBack.getRangeMM() / 10;
-            return sonicBackFilter.Filter(sonicBack.getRangeMM() / 10);
+            // return rightSonicBack.getRangeMM() / 10;
+            return  sonicRightFilter.Filter(sonicBackFilter.Filter(rightSonicBack.getRangeMM() / 10));
+            // return sonicBackFilter.Filter(rightSonicBack.getRangeMM() / 10);
         } catch (Exception e){
             return 0;
         }

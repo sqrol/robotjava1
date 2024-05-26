@@ -290,7 +290,7 @@ public class JavaCam implements Runnable
         greenOut.putFrame(maskGreenApple);
         yellowOut.putFrame(maskYellowPear);
 
-        mask3.putFrame(imgTemplate);
+        mask3.putFrame(blurMat);
         // outStream.putFrame(maskRedApple);
         // outBlur.putFrame(maskGreenApple);
 
@@ -300,11 +300,11 @@ public class JavaCam implements Runnable
         // oustream2.putFrame(maskGreenApple);
 
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
-         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate);
+                        maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate);
 
         if(Function.BooleanInRange(imageAreaRedApple,       1000, 30000)) { return 1; }  // BigRed
         if(Function.BooleanInRange(imageAreaGreenApple,     15000, 24000)) { return 2; } // BigGreen
-        if(Function.BooleanInRange(imageAreaYellowPear,     10000, 20000)) { return 3; } // YellowPear
+        if(Function.BooleanInRange(imageAreaYellowPear,     5000, 20000)) { return 3; } // YellowPear
         if(Function.BooleanInRange(imageAreaGreenPear,      10000, 20000)) { return 4; } // GreenPear
         
         if(Function.BooleanInRange(imageAreaRedApple,       2000, 4000)) { return 6; }   // SmallRed
@@ -313,12 +313,34 @@ public class JavaCam implements Runnable
     }
 
     public static int CheckRotten(final Mat orig) {
-        Mat blurMat = Viscad2.Blur(orig, 4);
+
+
+        double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
+        double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
+
+        double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
+        double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
+
+        double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
+        double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
+
+        Point greenPointPear1 = new Point(145, 255);
+        Point greenPointPear2 = new Point(78, 255);
+        Point greenPointPear3 = new Point(123, 255);
+
+        Mat cutRotten = Viscad2.ExtractImage(orig, new Rect(180, 150, 240, 200));
+        Mat extractedRotten = Viscad2.ExtractImage(orig, new Rect(0, 0, 200, 180));
+        Mat autoBrightMat = Viscad2.AutoBrightnessCAD(extractedRotten, cutRotten, 150, true);
+
+        Mat blurMat = Viscad2.Blur(autoBrightMat, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
-        Mat rottenFruit = thresholdAndProcess(hsvImage, new Point(123, 255), new Point(0, 255), new Point(0, 255), 3, 2);
+        Mat rottenFruit = thresholdAndProcess(hsvImage, greenPointPear1, greenPointPear2, greenPointPear3, 1, 1);
         int imageAreaRottenFruit = Viscad2.ImageTrueArea(rottenFruit);
-        
+
+        SmartDashboard.putNumber("ImageAreaRotten", imageAreaRottenFruit);
+
         outBlur.putFrame(rottenFruit);
+        releaseMats(cutRotten, extractedRotten, autoBrightMat, blurMat, hsvImage, rottenFruit);
         if(Function.BooleanInRange(imageAreaRottenFruit,    1000, 5000)) { 
             return 5; 
         }

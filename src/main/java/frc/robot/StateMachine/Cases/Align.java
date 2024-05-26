@@ -32,11 +32,17 @@ public class Align implements IState {
     private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
                                           { 0, 3, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
 
+    // private double[][] sonicArray = { { -100, -50, -35, -18, -14, -12, -10, -5, -2.5, -1, 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100 } , 
+    //                                   { -95, -85, -75, -50, -35, -25, -18, -12, -10, -3, 0, 3, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
+
     // private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 50, 100}, 
     //                                       { 0, 3, 10, 12, 18, 25, 40, 50} };
 
-    private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
-                                               { 6, 11, 17, 22, 28, 33, 38, 43, 50 } };
+    // private static double[][] degFunction = { { 0.1, 0.5, 1.5, 2, 5, 15, 20, 25, 35 }, 
+    //                                            { 6, 11, 17, 22, 28, 33, 38, 43, 50 } };
+
+    // Sage
+    private static double[][] degFunction = {{ 0.1, 2, 4, 8, 12, 15, 20, 25 },{ 5, 9, 11, 18, 24, 26, 33, 35 }};
 
     private static double[][] arrayForTime = { { 0, 1 },
                                                { 0, 1 } };
@@ -130,8 +136,12 @@ public class Align implements IState {
         diffX = X - backSonicDist;
         diffZ = lastGyro - train.getLongYaw();
 
+        SmartDashboard.putNumber("diffSonic", diffX);
+
         double speedX = Function.TransitionFunction(diffX, sonicArray);
         double speedZ = Function.TransitionFunction(diffZ, degFunction);
+
+        SmartDashboard.putNumber("speedXForSonic", speedX);
 
         train.setAxisSpeed(speedX, speedZ);
         // if(Math.abs(diffX) < backSonicDist) {
@@ -142,6 +152,7 @@ public class Align implements IState {
         // }
         finishX = Function.BooleanInRange(X - backSonicDist, -0.5, 0.5);
         finishZ = Function.BooleanInRange(lastGyro - train.getLongYaw(), -0.5, 0.5);
+
 
         if(finishX && finishZ) {
             train.setAxisSpeed(0, 0);

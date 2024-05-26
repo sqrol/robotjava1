@@ -55,17 +55,18 @@ public class StartPos implements IState{
         // }
         // train.rotateMotorSpeedThread = 10;
 
-        // if(train.successInit) {
-        //     train.resetLiftEncoder();
-        //     train.resetEncRotate();
-        //     // train.setGripServoValue(130.0); // 177
-        //     train.setGripServoValue(123); // 177
-        //     train.setGripRotateServoValue(279);
-        //     if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
-        //         train.setIndication("IN PROCESS");
-        //         return true;
-        //     }
-        // }
-        return true;
+        if(train.successInit) {
+            train.resetLiftEncoder();
+            train.resetEncRotate();
+            
+            // train.setGripServoValue(130.0); // 177
+            train.setGripServoValue(123); // 177
+            train.setGripRotateServoValue(279);
+            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
+                train.setIndication("IN PROCESS");
+                return true;
+            }
+        }
+        return false;
     }
 }
