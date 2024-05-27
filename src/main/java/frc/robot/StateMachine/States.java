@@ -7,17 +7,8 @@ public class States {
                                            // 0 
         {
             new StartPos(), 
-
-            new RotateAligToFruit(),
-            new GlideMovToFruit(),
-            new SetGrabPos("OPEN", false),
-            new SetLiftPosition(95),
-            new SetGrabPos("SMALL APPLE", false),
-            new SetLiftPosition(-1),
-            new SetGlidePosition(1),
-            new SetRotatePos(0),
-            new End(),
             
+            // new testForNewCam(),
             // для маленького яблока new SetLiftPosition(98),
             // для большого яблока new SetLiftPosition(85),
             // с нижней ветки для маленького яблока new SetLiftPosition(41)
@@ -29,25 +20,37 @@ public class States {
             // new StartPos(),
             // new DriveXAxis(104, 0), // метр вперед
             // new StartPos(),
-            // // // // змейка
-            // new DriveXAxis(62, 0),  // прямо со старта
-            // new DriveXAxis(0, -90),
 
-            // new DriveXAxis(75, 0), // между зеленой и красной
+            // new DriveXAxis(0, -90),
+            // new DriveXAxis(57, 0),
             // new DriveXAxis(0, 90),
+            // new Align("sharp", 14, 0, 0),
             
-            // new DriveXAxis(52, 0), // от красной к зеленой
             // new DriveXAxis(0, 90),
-
-            // new DriveXAxis(54, 0), // между красной и зеленой
+            // new Align("sonic", 90, 0, 0),
+            // new DriveXAxis(0, 90),
+            // new Align("sonic", 85, 0, 0),
+            // new DriveXAxis(0, 90),
+            // new Align("sonic", 50, 0, 0),
             // new DriveXAxis(0, -90),
-
-            // new DriveXAxis(53, 0), // от предпоследней к последней
+            // new DriveXAxis(115, 0),
             // new DriveXAxis(0, -90),
+            // new Align("sharp", 16, 0, 0),
+
+            new SetRotatePos(47),
+            new SetGrabPos("OPEN", false),
+            new SetGlidePosition(15),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
             
-            // new DriveXAxis(75, 0), // между предпоследней и последней
-            // new DriveXAxis(0, 90),
-            // new DriveXAxis(50, 0),
+            
+            
+            // new SetRotatePos(-90),
+            // new StartPos(),
+
             // new ObjectFinder(),
             // new RottenDetection(),
             // new End(),
@@ -55,43 +58,28 @@ public class States {
             // new SonicCheck(),
             
             // // Управление элементом
-            // new StartPos(),
-            // new SetGripRotatePos("FLOOR"),
-            // new SetGrabPos("OPEN", false),
-            // new SetLiftPosition(85),
-            // new SetGrabPos("BIG APPLE", false),
-            // new SetLiftPosition(-1),
-
+            
             // // new StartPos(),
             // // new SharpCheck(),
             // // new StartPos(),
             // // new ObjectFinder(),
-            new InitLogic(),
-            // new End(),
+            // new InitLogic(),
+            new End(),
             new Transition(),
         },
         
             // MOV_IN_START_TO_CH1 // 1
         {
             new DriveXAxis(0, -90),
-            new Align("sharp", 14, 0, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 18, 0, 0),
-            new DriveXAxis(0, -90),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(-140, 0),
+            new Align("sonic", 70, 0, 0),
             new Transition()
         },
             // MOV_IN_CH1_TO_THIRD_RZ // 2
         {
-            new DriveXAxis(0, -90),
-            new DriveXAxis(170, 0),  // можно сделать потом чтоб стенку держал
-            new DriveXAxis(0, 90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(-33, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(58, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(10, 0),
+            new DriveXAxis(138, 90),
             new Transition()
         },
             // GRAB_POS_17 // 3
@@ -121,13 +109,14 @@ public class States {
         }, 
             // MOV_IN_CON2_TO_CH1 // 6
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 85, 0, 0),
-            new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, 90),
-            new Align("sharp", 18, 0, 0),
+            new Align("sonic", 7, 0, 0),
             new DriveXAxis(0, -90),
+            new DriveXAxis(-140, 0),
+            new DriveXAxis(0, 180),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sonic", 70, 0, 0),
             new Transition()
         },
             // MOVE_IN_CH1_TO_FINISH // 7
@@ -138,20 +127,17 @@ public class States {
             new Align("sharp", 20, 0, 0),
             new DriveXAxis(0, 180),
             new Align("sonic", 80, 0, 0),
-            new Transition()
+            new End()
         },
             // MOV_IN_CH1_TO_THIRD_LOZ // 8
         {
+            new DriveXAxis(120, 90),
             new DriveXAxis(0, -90),
-            new DriveXAxis(170, 0),  // можно сделать потом чтоб стенку держал
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 57, 0, 0),
+            new DriveXAxis(62, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(75, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(22, 0),
+            new DriveXAxis(8, 0),
             new Transition()
         },
             // MOV_IN_THIRD_LOZ_TO_CH1 // 9
@@ -184,16 +170,17 @@ public class States {
         },
             // MOV_IN_CON4_TO_CH2 // 11
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 70, 0, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(190, 0),
+            new DriveXAxis(-70, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(150, 0),
             new DriveXAxis(0, 90),
             new DriveXAxis(20, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
+            new Align("sharp", 18, 0, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FLOOR"),
             new Transition() 
         },
             // MOVE_IN_CH2_TO_FINISH // 12
@@ -206,7 +193,7 @@ public class States {
             new DriveXAxis(20, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(110, 0),
-            new Transition()
+            new End()
         },
             // MOV_IN_CH1_TO_THIRD_LZ // 13
         {
@@ -248,26 +235,26 @@ public class States {
         },
             // MOV_IN_START_TO_CH2 // 17
         {
-            new DriveXAxis(0, 180),
-            new DriveXAxis(125, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(30, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(-35, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 18, 0, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
             new Transition()   
         },
             // MOV_IN_CH2_TO_SECOND_LOZ // 18
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 60, 0, 0),
-            new DriveXAxis(0, -90),
+            new DriveXAxis(0, 90),
             new Align("sonic", 50, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(68, 0),
+            new DriveXAxis(74, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(15, 0),
+            new DriveXAxis(6, 0),
             new Transition()
         },
             // MOV_IN_SECOND_LOZ_TO_CH2 // 19
@@ -283,14 +270,9 @@ public class States {
         },
             // MOV_IN_CH2_TO_SECOND_RZ // 20
         {
-            new DriveXAxis(0, 180),
+            new DriveXAxis(0, 90),
             new Align("sonic", 60, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sonic", 50, 0, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(43, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(14.4, 0),
+            new DriveXAxis(8, 0),
             new Transition()
             
         },
@@ -307,14 +289,14 @@ public class States {
         },
             // MOV_IN_CH2_TO_SECOND_LZ // 22
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 50, 0, 0),
             new DriveXAxis(0, -90),
             new Align("sonic", 50, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(86, 0),
+            new DriveXAxis(96, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(12.4, 0),
+            new DriveXAxis(11, 0),
             new Transition()
         },
             // MOV_IN_SECOND_LZ_TO_CH2 // 23
@@ -330,27 +312,17 @@ public class States {
         },
             // MOV_IN_START_TO_CH3  // 24
         {
-            new DriveXAxis(93, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 14, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(92, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_FRIST_LZ // 25
         {
-            new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-    
-            new DriveXAxis(-33, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(39, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(16, 0),
+            new DriveXAxis(32, 0),
             new Transition()
         },   
             // MOV_IN_FRIST_LZ_TO_CH3 // 26
@@ -380,13 +352,15 @@ public class States {
         },
             // MOV_IN_CON4_TO_CH3 // 28
         {
-            new Align("sonic", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sharp", 14, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(-80, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(40, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOVE_IN_CH3_TO_FINISH // 29
@@ -399,32 +373,26 @@ public class States {
             new DriveXAxis(74, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(98, 0),
-            new Transition()
+            new End()
         },
             // MOV_IN_CH3_TO_FRIST_LOZ // 30
         {
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 44, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(-33, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(61, 0),
+            new DriveXAxis(75, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(13, 0),
+            new DriveXAxis(9, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_FRIST_RZ // 31
         {
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 44, 0, 0),
+            new DriveXAxis(0, -90), 
+            new DriveXAxis(92, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(-33, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(80, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(13.4, 0),
+            new DriveXAxis(8, 0),
             new Transition()
         },
             // MOV_IN_FRIST_RZ_TO_CH3 // 32
@@ -456,16 +424,15 @@ public class States {
         },
             // MOV_IN_CON3_TO_CH3 // 34
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 80, 0, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(225, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 14, 0, 0),
+            new DriveXAxis(-60, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(229, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()   
         },
             // MOV_IN_CH3_TO_CON2 // 35
@@ -479,10 +446,10 @@ public class States {
         },
             // MOV_IN_CON2_TO_CH3 // 36
         {
-            new DriveXAxis(0, -90),
-            new Align("sharp", 18, 0, 0),
-            new DriveXAxis(0, 90),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_FRIST_LOZ_TO_CH3 // 37
@@ -519,12 +486,13 @@ public class States {
         },
             // MOV_IN_CON1_TO_CH3 // 41
         {
-            new DriveXAxis(0, 90),
-            new Align("sharp", 14, 0, 0),
             new DriveXAxis(0, -90),
+            new DriveXAxis(-70, 0),
+            new DriveXAxis(0, 180),
             new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, 90),
-            new Align("sharp", 14, 0, 0),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_CH2_TO_CON1 // 42
@@ -543,15 +511,15 @@ public class States {
         },
             // MOV_IN_CON1_TO_CH2 // 43
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 80, 0, 0),
-            new DriveXAxis(190, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(20, 0),
+            new DriveXAxis(-280, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(27, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 18, 0, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_CH3_TO_FRIST_UZL // 44
@@ -673,12 +641,13 @@ public class States {
         },
             // MOV_IN_CON1_TO_CH1 // 53
         {
-            new DriveXAxis(0, -90),
-            new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, 90),
-            new Align("sharp", 18, 0, 0),
-            new DriveXAxis(0, -90),
+            new DriveXAxis(-70, 0),
+            new DriveXAxis(0, 180),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_CH1_TO_CON4 // 54
@@ -692,10 +661,10 @@ public class States {
         },
             // MOV_IN_CON4_TO_CH1 // 55
         {
-            new DriveXAxis(0, 90),
-            new Align("sharp", 18, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_CH1_TO_CON3 // 56
@@ -715,16 +684,15 @@ public class States {
         },
             // MOV_IN_CON3_TO_CH1 // 57
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 70, 0, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(205, 0),
+            new DriveXAxis(-60, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 14, 0, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(210, 0),
             new DriveXAxis(0, -90),
             new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_CH2_TO_SECOND_UZR // 58
@@ -775,14 +743,14 @@ public class States {
         },
             // MOV_IN_CH2_TO_SECOND_TZ // 62
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 60, 0, 0),
-            new DriveXAxis(0, -90),
+            new DriveXAxis(0, 90),
             new Align("sonic", 50, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(66, 0),
+            new DriveXAxis(74, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(12, 0),
+            new DriveXAxis(6, 0),
             new Transition()
         },
             // MOV_IN_CH2_TO_CON3 // 63
@@ -799,12 +767,13 @@ public class States {
         },
             // MOV_IN_CON3_TO_CH2 // 64
         {   
-            new DriveXAxis(0, 180),
-            new DriveXAxis(105, 0),
-            new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
+            new DriveXAxis(-86, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FLOOR"),
             new Transition()
         },
             // MOV_IN_CH2_TO_CON2 // 65
@@ -831,17 +800,19 @@ public class States {
             // MOV_IN_CON2_TO_CH2 // 66
         {
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 70, 0, 0),
+            new DriveXAxis(15, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 90, 0, 0),
+            new Align("sonic", 60, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(210, 0),
+            new DriveXAxis(170, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(20, 0),
+            new DriveXAxis(60 , 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
+            new Align("sharp", 18, 0, 0),
             new DriveXAxis(0, 90),
             new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, 90),
             new Transition()
         },
             // MOV_IN_SECOND_TZ_TO_CH2 // 67
@@ -858,15 +829,11 @@ public class States {
             // MOV_IN_CH3_TO_FRIST_TZ // 68
         {   
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 44, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 45, 0, 0),
+            new DriveXAxis(75, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(59, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(7, 0),
+            new DriveXAxis(9, 0),
             new Transition()
         },
             // MOV_IN_FRIST_TZ_TO_CH3 // 69
@@ -885,16 +852,13 @@ public class States {
         },
             // MOV_IN_CH1_TO_THIRD_TZ // 70
         {
+            new DriveXAxis(120, 90),
             new DriveXAxis(0, -90),
-            new DriveXAxis(170, 0),  // можно сделать потом чтоб стенку держал
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 57, 0, 0),
+            new DriveXAxis(62, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(77, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(16, 0),
+            new DriveXAxis(8, 0),
             new Transition()
         },
             // MOV_IN_THIRD_TZ_TO_CH1 // 71
@@ -923,9 +887,6 @@ public class States {
             // RESET_FRUIT // 73
         {
             new SetGrabPos("OPEN", false),
-            new DriveXAxis(-5, 0),
-            new SetGripRotatePos("FLOOR"),
-            new End(),
             new Transition()
         },
             // GRAB_POS_1_0_LOWER // 74
@@ -1005,28 +966,41 @@ public class States {
         {
             new StartPos(),
             new DriveXAxis(102, 0), // метр вперед
-
-            // змейка
-            new DriveXAxis(59, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(70, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(64, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(80, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(64, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(75, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(60, 0),
             
+            // змейка
+            new StartPos(),
+            new DriveXAxis(62, 0),  // прямо со старта
+            new DriveXAxis(0, -90),
+
+            new DriveXAxis(75, 0), // между зеленой и красной
+            new DriveXAxis(0, 90),
+            
+            new DriveXAxis(54, 0), // от красной к зеленой
+            new DriveXAxis(0, 90),
+
+            new DriveXAxis(54, 0), // между красной и зеленой
+            new DriveXAxis(0, -90),
+
+            new DriveXAxis(53, 0), // от предпоследней к последней
+            new DriveXAxis(0, -90),
+            
+            new DriveXAxis(71, 0), 
+            new DriveXAxis(0, 90), // между предпоследней и последней
+            new DriveXAxis(50, 0),
+            
+            new StartPos(),
             new SonicCheck(),
-            new SharpCheck()
+            new StartPos(),
+            new SharpCheck(),
+            new StartPos(),
+            new ObjectFinder()
         },
             // B2 // 81
         {
+            new StartPos(),
             new ObjectFinder(),
+            new StartPos(),
+            new RottenDetection(),
 
             // Управление элементом
             new StartPos(),
@@ -1053,46 +1027,31 @@ public class States {
         },
             // MOV_IN_CH3_TO_SECOND_LOZ // 83
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new DriveXAxis(50, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(228, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(18, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(12, 0),
+            new DriveXAxis(241, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_SECOND_TZ // 84
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new DriveXAxis(50, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(228, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(18, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(9, 0),
+            new DriveXAxis(241, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_SECOND_RZ // 85
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(105, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new DriveXAxis(44, 0),
+            new Align("sharp", 14, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(233, 0),
+            new DriveXAxis(12, 0),
             new Transition()
         },
             // GRAB_POS_UP // 86
@@ -1216,18 +1175,15 @@ public class States {
         },
             // MOV_IN_CH3_TO_SECOND_LZ // 95
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sonic", 50, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new DriveXAxis(50, 0),
+            new DriveXAxis(230, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(228, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(42.6, 0),
+            new Align("sharp", 29, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(7, 0),
+            new DriveXAxis(10, 0),
             new Transition()
         },
             // GRAB_POS_2_45_LOWER // 96
@@ -1264,58 +1220,66 @@ public class States {
         },
             // MOV_IN_CH3_TO_THIRD_LZ // 99
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new DriveXAxis(120, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(189, 0),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(39, 0),
+            new DriveXAxis(150, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 42, 0, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_THIRD_LOZ // 100
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new DriveXAxis(120, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(169, 0),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(38, 0),
+            new DriveXAxis(67, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(9, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_THIRD_TZ // 101
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 85, 0, 0),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new DriveXAxis(120, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(169, 0),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(38, 0),
+            new DriveXAxis(67, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(9, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_THIRD_RZ // 102
         {
+            new DriveXAxis(10, 0),
             new DriveXAxis(0, 90),
-            new Align("sonic", 85, 0, 0),
+            new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, -90),
-            new Align("sharp", 20, 0, 0),
-            new DriveXAxis(0, 180),
-            new Align("sonic", 85, 0, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(149, 0),
-            new DriveXAxis(0, 90),
-            new DriveXAxis(39, 0),
+            new DriveXAxis(-50, 0),
+            new Align("sonic", 70, 0, 0),
+            new DriveXAxis(138, 90),
             new Transition()
         },
             // MOV_IN_CH3_TO_THIRD_UZL // 103
@@ -1348,12 +1312,7 @@ public class States {
         },
             // MOV_IN_CH2_TO_THIRD_LZ // 105
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 50, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sonic", 76, 0, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(15, 0),
+            new Align("sonic", 37, 0, 0),
             new Transition()
         },
             // MOV_IN_CH2_TO_THIRD_UZL // 106
@@ -1368,32 +1327,36 @@ public class States {
         },
             // MOV_IN_CH2_TO_THIRD_LOZ // 107 
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 50, 0, 0),
+            new Align("sonic", 25, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(88, 0),
+            new DriveXAxis(78, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(13, 0),
+            new DriveXAxis(12, 0),
             new Transition()
         },
             // MOV_IN_CH2_TO_THIRD_TZ // 108 
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 50, 0, 0),
+            new Align("sonic", 25, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(88, 0),
+            new DriveXAxis(78, 0),
             new DriveXAxis(0, -90),
             new DriveXAxis(12, 0),
             new Transition()
         },
             // MOV_IN_CH2_TO_THIRD_RZ // 109 
         {
-            new DriveXAxis(0, 180),
-            new Align("sonic", 50, 0, 0),
+            new Align("sonic", 25, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(108, 0),
+            new DriveXAxis(140, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(13, 0),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, -90),
             new Transition()
         },
             // MOV_IN_CH2_TO_THIRD_UZR // 110 
@@ -1483,6 +1446,703 @@ public class States {
             // END // 115
         {
             new End()
+        },
+            // MOV_IN_FRIST_LZ_TO_CON4 // 116
+        {
+            new DriveXAxis(-10, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(100, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(25, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_LZ_TO_CON1 // 117
+        {
+            new DriveXAxis(-30, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new Align("sonic", 7, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(80, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_LZ_TO_CON2 // 118
+        {       
+            new DriveXAxis(-30, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new Align("sonic", 25, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_LOZ_TO_CON1 // 119
+        {
+            new DriveXAxis(-42, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(150, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_TZ_TO_CON1 // 120
+        {
+            new DriveXAxis(-42, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(150, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_TZ_TO_CON2 // 121
+        {
+            new DriveXAxis(-11, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(70, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(52, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_LOZ_TO_CON2 // 122
+        {
+            new DriveXAxis(-11, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(70, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(52, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_LOZ_TO_CON4 // 123
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },  
+            // MOV_IN_FRIST_TZ_TO_CON4 // 124
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_TZ_TO_CON3 // 125
+        {
+            
+            new Transition()
+        },
+            // MOV_IN_FRIST_LOZ_TO_CON3 // 126
+        {
+            new DriveXAxis(-20, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(150, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_RZ_TO_CON1 // 127
+        {
+            new DriveXAxis(-42, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(177, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_RZ_TO_CON2 // 128
+        {
+            new DriveXAxis(-20, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(95, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(57, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_RZ_TO_CON4 // 129
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(52, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_RZ_TO_CON3 // 130
+        {
+            
+            new Transition()
+        },
+            // MOV_IN_FRIST_LZ_TO_CON3 // 131
+        {
+            new DriveXAxis(-10, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(208, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_LOZ_TO_CON3 // 132
+        {
+            new DriveXAxis(-30, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(156, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_TZ_TO_CON3 // 133
+        {
+            new DriveXAxis(-30, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(156, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_TZ_TO_CON4 // 134
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_RZ_TO_CON4 // 135
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_FRIST_RZ_TO_CON3 // 136
+        {
+            new DriveXAxis(-15, 0),
+            new DriveXAxis(0, 90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(137, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_RZ_TO_CON1 // 137
+        {
+            new DriveXAxis(-150, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new Align("sonic", 7, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(70, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_RZ_TO_CON4 // 138
+        {
+            new DriveXAxis(-94, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_RZ_TO_CON3 // 139
+        {
+            new DriveXAxis(-30, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(132, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_RZ_TO_CON2 // 140
+        {
+            new DriveXAxis(-150, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new Align("sonic", 70, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(35, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LOZ_TO_CON3 // 141
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(45, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_TZ_TO_CON3 // 142
+        {
+            new DriveXAxis(-100, 0),
+            new Align("sonic", 20, 0, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(45, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_TZ_TO_CON4 // 143
+        {
+            new DriveXAxis(-15, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(150, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LOZ_TO_CON4 // 144
+        {
+            new DriveXAxis(-15, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(150, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LOZ_TO_CON2 // 145
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(190, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(53, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_TZ_TO_CON2 // 146
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(190, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(53, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_TZ_TO_CON1 // 147
+        {
+            new DriveXAxis(-45, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(260, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LOZ_TO_CON1 // 148
+        {
+            new DriveXAxis(-45, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(260, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LZ_TO_CON3 // 149
+        {
+            new Align("sonic", 14, 0, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, -90),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LZ_TO_CON4 // 150
+        {
+            new Align("sonic", 14, 0, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(238, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LZ_TO_CON2 // 151
+        {   
+            new Align("sonic", 14, 0, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(282, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_THIRD_LZ_TO_CON1 // 152
+        {
+            new Align("sonic", 14, 0, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(100, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(31, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(250, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_RZ_TO_CON3 // 153
+        {
+            new DriveXAxis(-8, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new Align("sonic", 60, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_RZ_TO_CON2 // 154
+        {
+            new DriveXAxis(-8, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(281, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_RZ_TO_CON1 // 155
+        {
+            new DriveXAxis(-8, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(100, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(25, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(250, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_RZ_TO_CON4 // 156
+        {
+            new DriveXAxis(-8, 0),
+            new DriveXAxis(0, -90),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(240, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_RZ_TO_CON3 // 157
+        {
+            new DriveXAxis(-12, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_TZ_TO_CON3 // 158
+        {
+            new DriveXAxis(-12, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LOZ_TO_CON3 // 159
+        {
+            new DriveXAxis(-12, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_TZ_TO_CON4 // 160
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(180, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LOZ_TO_CON4 // 161
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(180, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LOZ_TO_CON1 // 162
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(287, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_TZ_TO_CON1 // 163
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(287, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_TZ_TO_CON2 // 164
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(220, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LOZ_TO_CON2 // 165
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(36, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(220, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LZ_TO_CON3 // 166
+        {
+            new DriveXAxis(-14, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LZ_TO_CON1 // 167
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(290, 0),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LZ_TO_CON2 // 168
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(219, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 18, 0, 0),
+            new DriveXAxis(0, -90),
+            new DriveXAxis(55, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // MOV_IN_SECOND_LZ_TO_CON4 // 169
+        {
+            new DriveXAxis(-40, 0),
+            new SetGripRotatePos("FOR DROP"),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(50, 0),
+            new DriveXAxis(0, 90),
+            new DriveXAxis(180, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 14, 0, 0),
+            new Transition()
+        },
+            // -45_1ST_SIDE_LINE (граб пос 1 и еще какой-то должен быть) // 170
+        {
+            new SetRotatePos(-61),
+            new SetGrabPos("OPEN", false),
+            new DriveXAxis(-4, 0),
+            new SetGlidePosition(11),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
+            new DriveXAxis(4, 0),
+            new Transition()
+        },
+            // -25_1ST_SIDE_LINE (граб пос 5 и еще наверное чото подойдет) // 171
+        {
+            new SetRotatePos(-35),
+            new SetGrabPos("OPEN", false),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // 25_1ST_SIDE_LINE (граб пос 12 и еще наверное чото подойдет) // 172
+        {
+            new SetRotatePos(25),
+            new SetGrabPos("OPEN", false),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // 45_1ST_SIDE_LINE (граб пос 19 и еще чото) // 173
+        {
+            new SetRotatePos(50),
+            new SetGrabPos("OPEN", false),
+            new DriveXAxis(-4, 0),
+            new SetGlidePosition(9),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
+            new DriveXAxis(4, 0),
+            new Transition()
+        },
+            // -45_2NS_SIDE_LINE (граб пос 2 и чото еще потом дополню) // 174
+        {
+            new SetRotatePos(-52),
+            new SetGrabPos("OPEN", false),
+            new SetGlidePosition(16),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // -25_2ND_SIDE_LINE (граб пос 6 и потмо еще чото) // 175
+        {
+            new SetRotatePos(-25),
+            new SetGrabPos("OPEN", false),
+            new SetGlidePosition(11),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // 25_2ND_SIDE_LINE (граб пос 13 и    еще чото) // 176
+        {
+            new SetRotatePos(10),
+            new SetGrabPos("OPEN", false),
+            new SetGlidePosition(11),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
+            new Transition()
+        },
+            // 45_2ND_SIDE_LINE (граб пос 20 ) // 177
+        {
+            new SetRotatePos(47),
+            new SetGrabPos("OPEN", false),
+            new SetGlidePosition(15),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(1),
+            new SetRotatePos(0),
+            new Transition()
         }
     };
 }

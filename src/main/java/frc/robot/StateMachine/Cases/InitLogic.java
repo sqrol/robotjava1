@@ -356,6 +356,150 @@ public class InitLogic implements IState {
                 case "END":
                     indexList.add(115);
                     break;
+                case "MOV_IN_FRIST_LZ_TO_CON4":
+                    indexList.add(116);
+                    break;
+                case "MOV_IN_FRIST_LZ_TO_CON1":
+                    indexList.add(117);
+                    break;
+                case "MOV_IN_FRIST_LZ_TO_CON2":
+                    indexList.add(118);
+                    break;
+                case "MOV_IN_FRIST_LOZ_TO_CON1":
+                    indexList.add(119);
+                    break;
+                case "MOV_IN_FRIST_TZ_TO_CON1":
+                    indexList.add(120);
+                    break;
+                case "MOV_IN_FRIST_LOZ_TO_CON2":
+                    indexList.add(122);
+                    break;
+                case "MOV_IN_FRIST_LOZ_TO_CON4":
+                    indexList.add(123);
+                    break;
+                case "MOV_IN_FRIST_TZ_TO_CON2":
+                    indexList.add(124);
+                    break;
+                case "MOV_IN_FRIST_RZ_TO_CON1":
+                    indexList.add(127);
+                    break;
+                case "MOV_IN_FRIST_RZ_TO_CON2":
+                    indexList.add(128);
+                    break; 
+                case "MOV_IN_FRIST_LZ_TO_CON3":
+                    indexList.add(131);
+                    break;
+                case "MOV_IN_FRIST_TZ_TO_CON3":
+                    indexList.add(132);
+                    break;
+                case "MOV_IN_FRIST_LOZ_TO_CON3":
+                    indexList.add(133);
+                    break;
+                case "MOV_IN_FRIST_TZ_TO_CON4":
+                    indexList.add(134);
+                    break;
+                case "MOV_IN_FRIST_RZ_TO_CON4":
+                    indexList.add(135);
+                    break;
+                case "MOV_IN_FRIST_RZ_TO_CON3":
+                    indexList.add(136);
+                    break;
+                case "MOV_IN_THIRD_RZ_TO_CON1":
+                    indexList.add(137);
+                    break;
+                case "MOV_IN_THIRD_RZ_TO_CON4":
+                    indexList.add(138);
+                    break;
+                case "MOV_IN_THIRD_RZ_TO_CON3":
+                    indexList.add(139);
+                    break;
+                case "MOV_IN_THIRD_RZ_TO_CON2":
+                    indexList.add(140);
+                    break;
+                case "MOV_IN_THIRD_LOZ_TO_CON3":
+                    indexList.add(141);
+                    break;
+                case "MOV_IN_THIRD_TZ_TO_CON3":
+                    indexList.add(142);
+                    break;
+                case "MOV_IN_THIRD_TZ_TO_CON4":
+                    indexList.add(143);
+                    break;
+                case "MOV_IN_THIRD_LOZ_TO_CON4":
+                    indexList.add(144);
+                    break; 
+                case "MOV_IN_THIRD_LOZ_TO_CON2":
+                    indexList.add(145);
+                    break;
+                case "MOV_IN_THIRD_TZ_TO_CON2":
+                    indexList.add(146);
+                    break;
+                case "MOV_IN_THIRD_TZ_TO_CON1":
+                    indexList.add(147);
+                    break;
+                case "MOV_IN_THIRD_LOZ_TO_CON1":
+                    indexList.add(148);
+                    break;
+                case "MOV_IN_THIRD_LZ_TO_CON3":
+                    indexList.add(149);
+                    break;
+                case "MOV_IN_THIRD_LZ_TO_CON4":
+                    indexList.add(150);
+                    break;
+                case "MOV_IN_THIRD_LZ_TO_CON2":
+                    indexList.add(151);
+                    break;
+                case "MOV_IN_THIRD_LZ_TO_CON1":
+                    indexList.add(152);
+                    break;
+                case "MOV_IN_SECOND_RZ_TO_CON2":
+                    indexList.add(154);
+                    break;
+                case "MOV_IN_SECOND_RZ_TO_CON1":
+                    indexList.add(155);
+                    break;
+                case "MOV_IN_SECOND_RZ_TO_CON4":
+                    indexList.add(156);
+                    break;
+                case "MOV_IN_SECOND_RZ_TO_CON3":
+                    indexList.add(157);
+                    break;
+                case "MOV_IN_SECOND_LOZ_TO_CON3":
+                    indexList.add(158);
+                    break;
+                case "MOV_IN_SECOND_TZ_TO_CON3":
+                    indexList.add(159);
+                    break;
+                case "MOV_IN_SECOND_TZ_TO_CON4":
+                    indexList.add(160);
+                    break; 
+                case "MOV_IN_SECOND_LOZ_TO_CON4":
+                    indexList.add(161);
+                    break;
+                case "MOV_IN_SECOND_LOZ_TO_CON1":
+                    indexList.add(162);
+                    break;
+                case "MOV_IN_SECOND_TZ_TO_CON1":
+                    indexList.add(163);
+                    break;
+                case "MOV_IN_SECOND_TZ_TO_CON2":
+                    indexList.add(164);
+                    break;
+                case "MOV_IN_SECOND_LOZ_TO_CON2":
+                    indexList.add(165);
+                    break;
+                case "MOV_IN_SECOND_LZ_TO_CON3":
+                    indexList.add(166);
+                    break;
+                case "MOV_IN_SECOND_LZ_TO_CON1":
+                    indexList.add(167);
+                    break;
+                case "MOV_IN_SECOND_LZ_TO_CON2":
+                    indexList.add(168);
+                    break;
+                case "MOV_IN_SECOND_LZ_TO_CON4":
+                    indexList.add(169);
+                    break;
             }
         }
         return true;

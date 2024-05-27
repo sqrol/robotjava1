@@ -152,7 +152,7 @@ public class Training extends SubsystemBase
 
         sharpRightFilter = new MedianFilter(5);
         sharpLeftFilter = new MedianFilter(5);
-
+        
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MeanFilter(10);
 
@@ -619,7 +619,6 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            // return startButton.get();
             return true;
         } catch (Exception e) {
             return false;

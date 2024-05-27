@@ -37,7 +37,7 @@ public class LogicCore {
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "AppleSmallRipe", "2", "null", "null", "null", "3", "4" },
+                    { "RottenBigApple", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
@@ -65,11 +65,11 @@ public class LogicCore {
                     //  1  | 2  |                      | 3  |  4
                     { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
-                    { "RottenPeer", "6", "7", "8", "9", "10", "11" },
+                    { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "RottenPeer", "24", "25" } };
+                    { "19", "20", "21", "22", "23", "24", "25" } };
 
 
     // Шаблон зоны с номерами
@@ -151,7 +151,7 @@ public class LogicCore {
         Map<String, String> grabPosMap = new HashMap<>();
 
         // For UZL
-        grabPosMap.put("GRAB_POS_1", "GRAB_POS_0_-45_LOWER_UZ");
+        grabPosMap.put("GRAB_POS_1", "GRAB_POS_1");
         grabPosMap.put("GRAB_POS_2", "GRAB_POS_0_20_LOWER");
 
         // For UZR
@@ -381,7 +381,7 @@ public class LogicCore {
         if (zoneName.equals("THIRD")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "RZ":
                     out = "CH1";
