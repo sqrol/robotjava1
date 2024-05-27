@@ -35,6 +35,9 @@ public class RotateAligToFruit implements IState {
     public boolean execute() {
         
         RobotContainer.train.nowTask = 2; 
+
+        train.setGripServoValue(130);
+        train.setGripRotateServoValue(260);
         
         if (train.centersForClass.isEmpty()) {
 

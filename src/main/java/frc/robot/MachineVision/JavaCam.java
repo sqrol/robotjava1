@@ -73,7 +73,7 @@ public class JavaCam implements Runnable
 
         // oustream1 = CameraServer.getInstance().putVideo("outstream1", HEIGHT, HEIGHT);
         // oustream2 = CameraServer.getInstance().putVideo("outstream2", HEIGHT, HEIGHT);
-        // oustream3 = CameraServer.getInstance().putVideo("outstream3", HEIGHT, HEIGHT);
+        oustream3 = CameraServer.getInstance().putVideo("outstream3", 640, 480);
 
         mask2 = CameraServer.getInstance().putVideo("mask2", 640, 480);
         mask3 = CameraServer.getInstance().putVideo("mask3", 640, 480);
@@ -121,9 +121,9 @@ public class JavaCam implements Runnable
         double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
         double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
 
-        Point greenPoint21 = new Point(0, 255);  
-        Point greenPoint22 = new Point(100, 255);
-        Point greenPoint23 = new Point(160, 255);
+        Point greenPoint21 = new Point(0, 200);  
+        Point greenPoint22 = new Point(0, 255);
+        Point greenPoint23 = new Point(250, 255);
 
         Mat blurMat = Viscad2.Blur(orig, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
@@ -132,25 +132,25 @@ public class JavaCam implements Runnable
 
         final Mat outPA = new Mat();
 
-        // List<Rect> currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
+        List<Rect> currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
 
         mask2.putFrame(maskRedApple);
 
         releaseMats(blurMat, hsvImage, maskRedApple, outPA);
         
-        return new ArrayList<>();
+        // return new ArrayList<>();
 
-        // if (currentCordinate.isEmpty()) {
+        if (currentCordinate.isEmpty()) {
 
-        //     SmartDashboard.putNumber("12121212212121", 1);
-        //     return new ArrayList<>();
+            SmartDashboard.putNumber("12121212212121", 1);
+            return new ArrayList<>();
             
-        // } else {
+        } else {
 
-        //     SmartDashboard.putNumber("12121212212121", 2);
-        //     return processRectangles(orig, currentCordinate);
+            SmartDashboard.putNumber("12121212212121", 2);
+            return processRectangles(orig, currentCordinate);
 
-        // }   
+        }   
     }
 
     // Ебать оно живое теперь он отмечает только ближайший объект к камере

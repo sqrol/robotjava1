@@ -17,7 +17,7 @@ public class testForNewCam implements IState {
     @Override
     public boolean execute() {
         
-        RobotContainer.train.nowTask = 1; 
+        RobotContainer.train.nowTask = 2; 
         train.setGripServoValue(130);
         train.setGripRotateServoValue(260);
         

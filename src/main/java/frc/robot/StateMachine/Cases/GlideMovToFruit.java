@@ -34,6 +34,7 @@ public class GlideMovToFruit implements IState {
     public boolean execute() {
         
         RobotContainer.train.nowTask = 2; 
+        train.setGripRotateServoValue(280);
 
         if (train.centersForClass.isEmpty()) {
 
@@ -52,21 +53,17 @@ public class GlideMovToFruit implements IState {
             objectFind = true;
         }
 
-        // if (Function.BooleanInRange(this.fruitPosY, 120, 150)) {
-        //     train.justMoveForGlide(false);
-        // } else {
-        //     train.justMoveForGlide(true);
-        // }
+        double glideServoSpeed = Function.TransitionFunction(230 - fruitPosY, speedForGlideServo);
+        glideStop = Function.BooleanInRange(230 - fruitPosY, -3, 3);
 
-        double glideServoSpeed = Function.TransitionFunction(fruitPosY - 256, speedForGlideServo);
-        glideStop = Function.BooleanInRange(fruitPosY - 256, -3, 3);
-        SmartDashboard.putNumber("diffGlideServo", fruitPosY - 256);
+        SmartDashboard.putNumber("diffGlideServo", 230 - fruitPosY);
         SmartDashboard.putBoolean("GlideMove.objectFind", objectFind);
         SmartDashboard.putNumber("GlideMov.glideServoSpeed", glideServoSpeed);
+
         if (objectFind) {
-            train.justMoveForGlide(-glideServoSpeed);
+            train.justMoveForGlide(glideServoSpeed);
         } else {
-            train.justMoveForGlide(0.4);
+            train.justMoveForGlide(0);
         }
 
         train.setAxisSpeed(0, 0);
