@@ -31,7 +31,16 @@ public class States {
             // new SetRotatePos(0),
             // new DriveXAxis(4, 0),
             
+            new DriveXAxis(0, -90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(-35, 0),
+            new DriveXAxis(0, -90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
+            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(0, 90),
 
+            new Align("sonic", 45, 0, 0),
             // new End(),
             // new SetRotatePos(-61),
             // new SetGrabPos("OPEN", false),
@@ -53,14 +62,9 @@ public class States {
             // new StartPos(),
             // new SonicCheck(),
 
-            // // Управление элементом
-            new DriveXAxis(0, -90),
-            new Align("sharp", 15, 0, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(-140, 0),
-            new Align("sonic", 70, 0, 0),
+            new End(),
             // // new StartPos(),
-            new DriveXAxis(141, 0),
+            
             // // new SharpCheck(),
             // // new StartPos(),
             // // new ObjectFinder(),
