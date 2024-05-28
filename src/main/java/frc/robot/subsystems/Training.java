@@ -156,8 +156,8 @@ public class Training extends SubsystemBase
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MeanFilter(10);
 
-        redLED = new DigitalOutput(21);
-        greenLED = new DigitalOutput(20);
+        redLED = new DigitalOutput(20);
+        greenLED = new DigitalOutput(21);
 
         // Инициализация концевого выключателя 
         limitSwitchLift = new DigitalInput(0);
@@ -232,9 +232,9 @@ public class Training extends SubsystemBase
                         setLiftMotorSpeed(0.0, true);
                         setRotateMotorSpeed(0.0, true);
                         try {
-                            // servoGlide.setDisabled();
-                            // gripRotate.setDisabled();
-                            // grip.setDisabled();
+                            servoGlide.setSpeed(0);
+                            servoTurnGrab.setDisabled();
+                            servoGrab.setDisabled();
                           } catch (Exception e) {
                               System.out.println("Pizdec Servakam ");
                               e.printStackTrace();
@@ -245,6 +245,7 @@ public class Training extends SubsystemBase
                         setRightMotorSpeed(rightMotorSpeedThread, usePIDForMotors);
                         setLiftMotorSpeed(liftMotorSpeedThread, usePIDForMotors);
                         setRotateMotorSpeed(rotateMotorSpeedThread, usePIDForMotors);
+                        
                       }
                     Thread.sleep(5);
                 } 

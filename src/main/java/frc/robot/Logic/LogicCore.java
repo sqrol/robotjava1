@@ -30,14 +30,14 @@ public class LogicCore {
 
     // Для сдачи модулей B отключает построение пути назад
     private final boolean autonomousMode = true; // если true, то едет до финиша,
-                                                 // если false, то до контейнера и прыгает в END
+    // если false, то до контейнера и прыгает в END
 
     // Зона 1
     private static final String[] firstTree = { "null", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "RottenBigApple", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
@@ -56,7 +56,7 @@ public class LogicCore {
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "24", "25" } };
+                    { "19", "20", "21", "22", "23", "24", "RottenBigApple" } };
 
     // Зона 3
     private static final String[] thirdTree = { "null", "null", "null"};
@@ -133,7 +133,7 @@ public class LogicCore {
         if(B1Flag) {
             outArray.add("B1");
         } else {
-        
+
             outArray.addAll(grabFromLowerZone(currentZone, zoneName));
             outArray.addAll(grabFromLeftZone(currentZone, zoneName));
             outArray.addAll(grabFromRightZone(currentZone, zoneName));
@@ -151,7 +151,7 @@ public class LogicCore {
         Map<String, String> grabPosMap = new HashMap<>();
 
         // For UZL
-        grabPosMap.put("GRAB_POS_1", "GRAB_POS_1");
+        grabPosMap.put("GRAB_POS_1", "GRAB_POS_0_-45_LOWER_UZ");
         grabPosMap.put("GRAB_POS_2", "GRAB_POS_0_20_LOWER");
 
         // For UZR
@@ -225,7 +225,7 @@ public class LogicCore {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LZ";
         int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 2}, {2, 0}, {2, 1},
-                                    {2, 2}, {3, 0}, {3, 1}, {3, 2} }; // Тут указываем индексы для 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21
+                {2, 2}, {3, 0}, {3, 1}, {3, 2} }; // Тут указываем индексы для 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
@@ -244,7 +244,7 @@ public class LogicCore {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
         int[][] indexes = { {0, 5}, {0, 6}, {1, 4}, {1, 5}, {1, 6}, {1, 6},
-                            {2, 4}, {2, 5}, {2, 6}, {3, 4}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25
+                {2, 4}, {2, 5}, {2, 6}, {3, 4}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
@@ -300,8 +300,8 @@ public class LogicCore {
                 }
 
                 outSubPathForDelivery.add(currentGrabPos);
-                outSubPathForDelivery.add("MOV_IN_" + currentZoneArea + "_TO_" + bestWayForCheck);
-                outSubPathForDelivery.add("MOV_IN_" + bestWayForCheck + "_TO_" + containersForFruits.get(currentFruit));
+//                outSubPathForDelivery.add("MOV_IN_" + currentZoneArea + "_TO_" + bestWayForCheck);
+                outSubPathForDelivery.add("MOV_IN_" + currentZoneArea + "_TO_" + containersForFruits.get(currentFruit));
                 outSubPathForDelivery.add("RESET_FRUIT");
 
                 if (CheckingLastElement(allFindFruits, i) && autonomousMode) { // Смотрим это последний фрукт для этой зоны или нет
@@ -381,7 +381,7 @@ public class LogicCore {
         if (zoneName.equals("THIRD")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH2";
+                    out = "CH1";
                     break;
                 case "RZ":
                     out = "CH1";
