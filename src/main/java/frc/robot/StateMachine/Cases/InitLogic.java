@@ -500,6 +500,120 @@ public class InitLogic implements IState {
                 case "MOV_IN_SECOND_LZ_TO_CON4":
                     indexList.add(169);
                     break;
+                case "-45_1ST_SIDE_LINE":
+                    indexList.add(170);
+                    break;
+                case "-25_1ST_SIDE_LINE":
+                    indexList.add(171);
+                    break;
+                case "25_1ST_SIDE_LINE":
+                    indexList.add(172);
+                    break; 
+                case "45_1ST_SIDE_LINE":
+                    indexList.add(173);
+                    break;
+                case "-45_2NS_SIDE_LINE":
+                    indexList.add(174);
+                    break;
+                case "-25_2ND_SIDE_LINE":
+                    indexList.add(175);
+                    break;
+                case "25_2ND_SIDE_LINE":
+                    indexList.add(176);
+                    break;
+                case "45_2ND_SIDE_LINE":
+                    indexList.add(177);
+                    break;
+                case "-45_3RD_SIDE_LINE":
+                    indexList.add(178);
+                    break;
+                case "GRAB_POS_14":
+                    indexList.add(179);
+                    break;
+                case "45_3RD_SIDE_LINE":
+                    indexList.add(180);
+                    break;
+                case "0_1ST_MAIN_LINE":
+                    indexList.add(181);
+                    break;
+                case "-45_1ST_MAIN_LINE":
+                    indexList.add(182);
+                    break;
+                case "0_2ND_MAIN_LINE":
+                    indexList.add(183);
+                    break;
+                case "-45_2ND_MAIN_LINE":
+                    indexList.add(184);
+                    break;
+                case "45_2ND_MAIN_LINE":
+                    indexList.add(185);
+                    break;
+                case "0_3RD_MAIN_LINE":
+                    indexList.add(186);
+                    break;
+                case "45_3RD_MAIN_LINE":
+                    indexList.add(187);
+                    break; 
+                case "-45_3RD_MAIN_LINE":
+                    indexList.add(188);
+                    break;
+                case "0_4TH_MAIN_LINE":
+                    indexList.add(189);
+                    break;
+                case "45_4TH_MAIN_LINE":
+                    indexList.add(190);
+                    break;
+                case "45_2ND_MAIN_LINE_SECOND_LZ":
+                    indexList.add(191);
+                    break;
+                case "0_3RD_MAIN_LINE_SECOND_LZ":
+                    indexList.add(192);
+                    break;
+                case "-45_3RD_MAIN_SECOND_LZ":
+                    indexList.add(193);
+                    break;
+                case "0_4TH_MAIN_LINE_SECOND_LZ":
+                    indexList.add(194);
+                    break;
+                case "-45_4TH_MAIN_LINE_SECOND_LZ":
+                    indexList.add(195);
+                    break;
+                case "45_3RD_MAIN_LINE_SECOND_LZ":
+                    indexList.add(196);
+                    break;
+                case "-45_1ST_SIDE_LINE_RZ":
+                    indexList.add(197);
+                    break;
+                case "-20_1ST_SIDE_LINE_RZ":
+                    indexList.add(198);
+                    break;
+                case "20_1ST_SIDE_LINE_RZ":
+                    indexList.add(199);
+                    break;
+                case "45_1ST_SIDE_LINE_RZ":
+                    indexList.add(200);
+                    break;
+                case "-45_2ND_SIDE_LINE_RZ":
+                    indexList.add(201);
+                    break;
+                case "-20_2ND_SIDE_LINE_RZ":
+                    indexList.add(202);
+                    break;
+                case "20_2ND_SIDE_LINE_RZ":
+                    indexList.add(203);
+                    break;
+                case "45_2ND_SIDE_LINE_RZ":
+                    indexList.add(204);
+                    break; 
+                case "-45_3RD_SIDE_LINE_RZ":
+                    indexList.add(205);
+                    break;
+                case "-20_3RD_SIDE_LINE_RZ":
+                    indexList.add(206);
+                    break;
+                case "20_3RD_SIDE_LINE_RZ":
+                    indexList.add(207);
+                    break;
             }
         }
         return true;

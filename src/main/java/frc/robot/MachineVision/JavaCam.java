@@ -135,7 +135,7 @@ public class JavaCam implements Runnable
         if (RobotContainer.train.resizeForGlide) {
             inImg = Viscad2.ExtractImage(orig, new Rect(140, 0, 240, 480));  // Обрезаем картинку по линии стрелы
         } else {
-            inImg = orig; 
+            inImg = orig;
         }
 
         Mat blurMat = Viscad2.Blur(inImg, 4);

@@ -12,7 +12,7 @@ public class SonicCheck implements IState {
     @Override
     public boolean execute() {
         
-        if(train.getBackSonicDistance() < 20) {
+        if(train.getBackSonicDistance() < 20 || train.getSideSonicDistance() < 20) {
             SmartDashboard.putBoolean("SONIC CHECK", true);
             train.setIndication("IN PROCESS");
             if(train.getStartButton()) {

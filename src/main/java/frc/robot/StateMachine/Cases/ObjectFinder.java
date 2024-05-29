@@ -15,7 +15,7 @@ public class ObjectFinder implements IState {
 
     @Override
     public boolean execute() {
-        
+        train.setAxisSpeed(0, 0);
         train.nowTask = 1; 
         SmartDashboard.putNumber("nowResult", RobotContainer.train.nowResult);
         train.setGripRotateServoValue(269);

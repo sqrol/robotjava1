@@ -5,34 +5,35 @@ import frc.robot.StateMachine.Cases.*;
 public class States {
     public static IState[][] mainStates = new IState[][] {
                                            // 0 
-        {
-            new StartPos(), 
+        { 
+            new StartPos(),
+            // new RotateAligToFruit(true),
+            // new GlideMovToFruit(),
+            // new SetLiftPosition(98),
+            // new SetGrabPos("SMALL APPLE", false),
+            // new SetLiftPosition(-1),
+            // new SetGlidePosition(0),
+            // new SetRotatePos(1),
+
+            // new RotateAligToFruit(true),
+            // new GlideMovToFruit(),
+            // new SetLiftPosition(98),
+            // new SetGrabPos("SMALL APPLE", false),
+            // new SetLiftPosition(-1),
+            // new SetGlidePosition(0),
+            // new SetRotatePos(1),
+            // new RotateAligToFruit(true),
+            // new GlideMovToFruit(),
+            // new SetLiftPosition(98),
+            // new SetGrabPos("SMALL APPLE", false),
+            // new SetLiftPosition(-1),
+            // new SetGlidePosition(0),
             
-            new RotateAligToFruit(true),
-            new GlideMovToFruit(),
-            new SetLiftPosition(98),
-            new SetGrabPos("SMALL APPLE", false),
-            new SetLiftPosition(-1),
-            new SetGlidePosition(0),
-            new SetRotatePos(1),
+            // new SetRotatePos(1),
+            
 
-            new RotateAligToFruit(true),
-            new GlideMovToFruit(),
-            new SetLiftPosition(98),
-            new SetGrabPos("SMALL APPLE", false),
-            new SetLiftPosition(-1),
-            new SetGlidePosition(0),
-            new SetRotatePos(1),
 
-            new RotateAligToFruit(true),
-            new GlideMovToFruit(),
-            new SetLiftPosition(98),
-            new SetGrabPos("SMALL APPLE", false),
-            new SetLiftPosition(-1),
-            new SetGlidePosition(0),
-            new SetRotatePos(1),
- 
-            new End(),
+            // new End(),
             
             // new testForNewCam(),
             // для маленького яблока new SetLiftPosition(98),
@@ -57,16 +58,7 @@ public class States {
             // new SetRotatePos(0),
             // new DriveXAxis(4, 0),
             
-            new DriveXAxis(0, -90),
-            new Align("sharp", 15, 0, 0),
-            new DriveXAxis(-35, 0),
-            new DriveXAxis(0, -90),
-            new Align("sharp", 15, 0, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 15, 0, 0),
-            new DriveXAxis(0, 90),
-
-            new Align("sonic", 45, 0, 0),
+            
             // new End(),
             // new SetRotatePos(-61),
             // new SetGrabPos("OPEN", false),
@@ -88,13 +80,13 @@ public class States {
             // new StartPos(),
             // new SonicCheck(),
 
-            new End(),
+            // new End(),
             // // new StartPos(),
             
             // // new SharpCheck(),
             // // new StartPos(),
             // // new ObjectFinder(),
-            // new InitLogic(),
+            new InitLogic(),
             
             new Transition(),
         },
@@ -835,7 +827,7 @@ public class States {
             new DriveXAxis(0, -90),
             new DriveXAxis(170, 0),
             new DriveXAxis(0, 90),
-            new DriveXAxis(60 , 0),
+            new DriveXAxis(55 , 0),
             new DriveXAxis(0, -90),
             new Align("sharp", 15, 0, 0),
             new DriveXAxis(0, 90),
@@ -988,7 +980,7 @@ public class States {
             // B1 // 80
         {
             new StartPos(),
-            new DriveXAxis(102, 0), // метр вперед
+            new DriveXAxis(104, 0), // метр вперед
             
             // змейка
             new StartPos(),
@@ -1001,10 +993,10 @@ public class States {
             new DriveXAxis(54, 0), // от красной к зеленой
             new DriveXAxis(0, 90),
 
-            new DriveXAxis(54, 0), // между красной и зеленой
+            new DriveXAxis(60, 0), // между красной и зеленой
             new DriveXAxis(0, -90),
 
-            new DriveXAxis(53, 0), // от предпоследней к последней
+            new DriveXAxis(60, 0), // от предпоследней к последней
             new DriveXAxis(0, -90),
             
             new DriveXAxis(71, 0), 
@@ -1016,7 +1008,8 @@ public class States {
             new StartPos(),
             new SharpCheck(),
             new StartPos(),
-            new ObjectFinder()
+            new ObjectFinder(),
+            new Transition()
         },
             // B2 // 81
         {
@@ -1081,9 +1074,9 @@ public class States {
         {
             new SetRotatePos(34),
             new SetGripRotatePos("BRANCH"),
-            new SetLiftPosition(2), // 5 для большого яблока
+            new SetLiftPosition(4), // 5 для большого яблока 4 для груши
             new SetGlidePosition(4),
-            new SetGrabPos("BIG APPLE", false),
+            new SetGrabPos("PEAR", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(1),
             new SetRotatePos(0),
@@ -1341,7 +1334,7 @@ public class States {
             new DriveXAxis(0, -90),
             new DriveXAxis(78, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(12, 0),
+            new DriveXAxis(10, 0),
             new Transition()
         },
             // MOV_IN_CH2_TO_THIRD_TZ // 108 
@@ -1350,9 +1343,9 @@ public class States {
             new DriveXAxis(0, 90),
             new Align("sonic", 45, 0, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(78, 0),
+            new DriveXAxis(75, 0),
             new DriveXAxis(0, -90),
-            new DriveXAxis(12, 0),
+            new DriveXAxis(8, 0),
             new Transition()
         },
             // MOV_IN_CH2_TO_THIRD_RZ // 109 
@@ -2199,8 +2192,8 @@ public class States {
             // 0_1ST_MAIN_LINE (граб пос 24, 22 и 20 для второго дерева LZ) // 181
         {
             new SetGrabPos("OPEN", false),
-            new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(98),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new Transition()
         },

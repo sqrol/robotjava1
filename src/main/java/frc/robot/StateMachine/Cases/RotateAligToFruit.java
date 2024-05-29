@@ -99,5 +99,4 @@ public class RotateAligToFruit implements IState {
 
         return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
     }
-    
 }

@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Encoder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +148,7 @@ public class Training extends SubsystemBase
         cobraGlide = new AnalogInput(2);
 
         rightSonicBack = new Ultrasonic(9, 8);
-        leftSonicBack = new Ultrasonic(6, 7);
+        leftSonicBack = new Ultrasonic(7, 6);
 
         sharpRightFilter = new MedianFilter(5);
         sharpLeftFilter = new MedianFilter(5);
@@ -622,7 +620,7 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return true;
+            return startButton.get();
         } catch (Exception e) {
             return false;
         }   
@@ -783,7 +781,7 @@ public class Training extends SubsystemBase
             leftSonicBack.ping();
             Timer.delay(0.005);
             // return sonicRightFilter.Filter(leftSonicBack.getRangeMM() / 10);
-            return leftSonicBack.getRangeMM();
+            return leftSonicBack.getRangeMM() / 10;
         }catch (Exception e){
             return 0;
         }

@@ -29,7 +29,7 @@ public class LogicCore {
     private final boolean B2Flag = false;
 
     // Для сдачи модулей B отключает построение пути назад
-    private final boolean autonomousMode = true; // если true, то едет до финиша,
+    private final boolean autonomousMode = false; // если true, то едет до финиша,
     // если false, то до контейнера и прыгает в END
 
     // Зона 1
@@ -56,7 +56,7 @@ public class LogicCore {
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "24", "RottenBigApple" } };
+                    { "19", "20", "RottenBigApple", "22", "23", "24", "25" } };
 
     // Зона 3
     private static final String[] thirdTree = { "null", "null", "null"};
@@ -130,13 +130,14 @@ public class LogicCore {
         String[][] currentZone = getZoneArray(zoneNum);
         String[] currentTree = getTreeArray(zoneNum);
         String zoneName = getZoneName(zoneNum);
+
         if(B1Flag) {
             outArray.add("B1");
         } else {
 
             outArray.addAll(grabFromLowerZone(currentZone, zoneName));
-            outArray.addAll(grabFromLeftZone(currentZone, zoneName));
-            outArray.addAll(grabFromRightZone(currentZone, zoneName));
+            outArray.addAll(grabFromLeftZone(currentZone, zoneName, zoneNum));
+            outArray.addAll(grabFromRightZone(currentZone, zoneName, zoneNum));
             outArray.addAll(grabFromTreeZone(currentTree, zoneName));
         }
         if(B2Flag) {
@@ -150,40 +151,76 @@ public class LogicCore {
     private String grabPosGenerate(String inGrabPos) {
         Map<String, String> grabPosMap = new HashMap<>();
 
-        // For UZL
-        grabPosMap.put("GRAB_POS_1", "GRAB_POS_0_-45_LOWER_UZ");
-        grabPosMap.put("GRAB_POS_2", "GRAB_POS_0_20_LOWER");
+      
+        grabPosMap.put("GRAB_POS_1", "-45_1ST_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_2", "-45_2NS_SIDE_LINE");
 
-        // For UZR
-        grabPosMap.put("GRAB_POS_3", "GRAB_POS_0_-45_LOWER_3");
-        grabPosMap.put("GRAB_POS_4", "GRAB_POS_0_0_LOWER");
+        
+        grabPosMap.put("GRAB_POS_3", "45_2ND_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_4", "45_1ST_SIDE_LINE_RZ");
 
-        // For LOZ
-        grabPosMap.put("GRAB_POS_7", "GRAB_POS_2_-45_MIDDLE");
+        
+        grabPosMap.put("GRAB_POS_7", "-45_3RD_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_8", "UNDER_TREE_8");
+        grabPosMap.put("GRAB_POS_9", "20_3RD_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_14", "GRAB_POS_14");
+        grabPosMap.put("GRAB_POS_15", "UNDER_TREE_15");
+        grabPosMap.put("GRAB_POS_16", "-20_3RD_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_21", "45_3RD_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_22", "0_1ST_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_23", "-45_3RD_SIDE_LINE_RZ");
+
+    
+        grabPosMap.put("GRAB_POS_25", "-45_1ST_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_24", "-45_2ND_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_18", "-20_1ST_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_17", "-20_2ND_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_11", "20_1ST_SIDE_LINE_RZ");
+        grabPosMap.put("GRAB_POS_10", "20_2ND_SIDE_LINE_RZ");
+
+    
+        grabPosMap.put("GRAB_POS_20", "45_2ND_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_19", "45_1ST_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_13", "25_2ND_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_12", "25_1ST_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_6", "-25_2ND_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_5", "-25_1ST_SIDE_LINE");
+
+        return grabPosMap.getOrDefault(inGrabPos, "none");
+    }
+
+    private String grabPosGenerate2(String inGrabPos) {
+        Map<String, String> grabPosMap = new HashMap<>();
+
+        grabPosMap.put("GRAB_POS_1", "-45_4TH_MAIN_LINE_SECOND_LZ");
+        grabPosMap.put("GRAB_POS_2", "0_4TH_MAIN_LINE_SECOND_LZ");
+
+        grabPosMap.put("GRAB_POS_3", "0_4TH_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_4", "45_4TH_MAIN_LINE");
+
+        grabPosMap.put("GRAB_POS_7", "45_3RD_MAIN_LINE_SECOND_LZ");
         grabPosMap.put("GRAB_POS_8", "UNDER_TREE_8");
         grabPosMap.put("GRAB_POS_9", "GRAB_POS_2_45_LOWER");
-        grabPosMap.put("GRAB_POS_14", "GRAB_POS_1_-45_LOWER_14");
+        grabPosMap.put("GRAB_POS_14", "45_2ND_MAIN_LINE_SECOND_LZ");
         grabPosMap.put("GRAB_POS_15", "UNDER_TREE_15");
-        grabPosMap.put("GRAB_POS_16", "GRAB_POS_1_45_LOWER");
-        grabPosMap.put("GRAB_POS_21", "GRAB_POS_0_-45_LOWER");
-        grabPosMap.put("GRAB_POS_22", "GRAB_POS_0_0_LOWER");
-        grabPosMap.put("GRAB_POS_23", "GRAB_POS_0_45_LOWER");
+        grabPosMap.put("GRAB_POS_16", "-45_2ND_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_21", "45_1ST_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_22", "0_1ST_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_23", "-45_1ST_MAIN_LINE");
 
-        // For RZ
-        grabPosMap.put("GRAB_POS_25", "GRAB_POS_0_45_LOWER");
-        grabPosMap.put("GRAB_POS_24", "GRAB_POS_0_0_LOWER");
-        grabPosMap.put("GRAB_POS_18", "GRAB_POS_1_45_LOWER");
-        grabPosMap.put("GRAB_POS_17", "GRAB_POS_1_0_LOWER");
-        grabPosMap.put("GRAB_POS_11", "GRAB_POS_2_45_MIDDLE");
-        grabPosMap.put("GRAB_POS_10", "GRAB_POS_2_0_MIDDLE");
+        grabPosMap.put("GRAB_POS_25", "45_1ST_SIDE_LINE");
+        grabPosMap.put("GRAB_POS_24", "0_1ST_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_18", "45_2ND_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_17", "0_2ND_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_11", "45_3RD_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_10", "-45_3RD_MAIN_LINE");
 
-        // For LZ
-        grabPosMap.put("GRAB_POS_20", "GRAB_POS_0_0_LOWER");
-        grabPosMap.put("GRAB_POS_19", "GRAB_POS_0_-45_LOWER");
-        grabPosMap.put("GRAB_POS_13", "GRAB_POS_1_0_LOWER");
-        grabPosMap.put("GRAB_POS_12", "GRAB_POS_1_-45_LOWER");
-        grabPosMap.put("GRAB_POS_6", "GRAB_POS_2_0_MIDDLE");
-        grabPosMap.put("GRAB_POS_5", "GRAB_POS_2_-45_MIDDLE");
+        grabPosMap.put("GRAB_POS_20", "0_1ST_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_19", "-45_1ST_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_13", "0_2ND_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_12", "-45_2ND_MAIN_LINE");
+        grabPosMap.put("GRAB_POS_6", "0_3RD_MAIN_LINE_SECOND_LZ");
+        grabPosMap.put("GRAB_POS_5", "-45_3RD_MAIN_SECOND_LZ");
 
         return grabPosMap.getOrDefault(inGrabPos, "none");
     }
@@ -221,17 +258,21 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21 для указанного дерева
      */
-    private ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName, int zoneNum) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LZ";
-        int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 2}, {2, 0}, {2, 1},
-                {2, 2}, {3, 0}, {3, 1}, {3, 2} }; // Тут указываем индексы для 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21
+        int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2} }; // Тут указываем индексы для 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+//                allFindFruits.add(grabPosGenerate("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+                if (zoneNum == 1 || zoneNum == 3) {
+                    allFindFruits.add(grabPosGenerate("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+                } else {
+                    allFindFruits.add(grabPosGenerate2("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+                }
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -240,7 +281,7 @@ public class LogicCore {
     /**
      * Захват фруктов с позиций 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25 для указанного дерева
      */
-    private ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName) {
+    private ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName, int zoneNum) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
         int[][] indexes = { {0, 5}, {0, 6}, {1, 4}, {1, 5}, {1, 6}, {1, 6},
@@ -250,7 +291,11 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                allFindFruits.add(grabPosGenerate("GRAB_POS_"+ zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+                if(zoneNum == 2 || zoneNum == 3) {
+                    allFindFruits.add(grabPosGenerate("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+                } else {
+                    allFindFruits.add(grabPosGenerate2("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
+                }
             }
         }
         return subPathForDelivery(allFindFruits, currentZoneName, zoneName);
@@ -280,6 +325,7 @@ public class LogicCore {
     private ArrayList<String> subPathForDelivery(ArrayList<String> allFindFruits, String currentZoneName, String zoneName) {
         ArrayList<String> outSubPathForDelivery = new ArrayList<String>();
         if (!allFindFruits.isEmpty()) {
+
             String currentZoneArea = zoneName + "_" + currentZoneName;
 
             for (int i = 0; i < allFindFruits.size(); i++) {
@@ -287,7 +333,7 @@ public class LogicCore {
                 String currentFruit = allFindFruits.get(i).split("/")[1]; // Получение фрукта который в GRAB_POS
                 String bestWayForCheck = choosingBestZoneForCheck(currentZoneName, zoneName);
 
-                if (firstCall) { // Первый запуск перемещение с зоны страта в превую назначенную зону
+                if (firstCall) { // Первый запуск перемещение с зоны страта в первую назначенную зону
                     outSubPathForDelivery.add("MOV_IN_START_TO_" + choosingBestZoneForCheck("START", zoneName));
                     outSubPathForDelivery.add("MOV_IN_" + choosingBestZoneForCheck("START", zoneName) +"_TO_" + currentZoneArea);
                     firstCall = false;

@@ -88,7 +88,7 @@ public class SetGrabPos implements IState {
             if (smooth) {
                 endMovement = smoothServoMovement(164.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(164.0, 0.01);
+                endMovement = smoothServoMovement(164.0, 0.003);
             }
         }
         if (fruit.equals("OPEN")) {

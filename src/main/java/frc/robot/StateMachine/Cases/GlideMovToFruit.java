@@ -62,8 +62,6 @@ public class GlideMovToFruit implements IState {
         SmartDashboard.putBoolean("GlideMove.objectFind", objectFind);
         SmartDashboard.putNumber("GlideMov.glideServoSpeed", glideServoSpeed);
 
-
-
         train.setAxisSpeed(0, 0);
 
         SmartDashboard.putBoolean("GlideMov.glideStop", glideStop);
