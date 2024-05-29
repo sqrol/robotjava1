@@ -24,6 +24,7 @@ public class StartPos implements IState{
         train.setAxisSpeed(0, 0);
 
         train.resetGyro();
+
         
         // train.setAxisSpeed(0.0f, 30.0f);
 

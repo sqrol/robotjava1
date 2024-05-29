@@ -78,8 +78,10 @@ public class Training extends SubsystemBase
     // private final PID rightPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     // private final PID leftPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
 
+    // Переменные для JavaCamera
     public int nowResult = 0;
     public int nowTask = 0; 
+    public boolean resizeForGlide = false; 
 
     public boolean firstInitForGlide = false; 
     public boolean firstInitForLift = false; 
@@ -98,7 +100,7 @@ public class Training extends SubsystemBase
     // Glide
     private boolean blackLineFlag = false; 
     private boolean direction = false; 
-    private int currentGlidePosition = 0;
+    public int currentGlidePosition = 0;
     public boolean glideExit = false;
 
     private double encRightResetValue = 0;

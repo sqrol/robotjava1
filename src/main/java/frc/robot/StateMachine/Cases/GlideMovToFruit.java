@@ -34,6 +34,8 @@ public class GlideMovToFruit implements IState {
     public boolean execute() {
         
         RobotContainer.train.nowTask = 2; 
+        RobotContainer.train.resizeForGlide = true;
+
         train.setGripRotateServoValue(280);
 
         if (train.centersForClass.isEmpty()) {
@@ -60,18 +62,35 @@ public class GlideMovToFruit implements IState {
         SmartDashboard.putBoolean("GlideMove.objectFind", objectFind);
         SmartDashboard.putNumber("GlideMov.glideServoSpeed", glideServoSpeed);
 
-        if (objectFind) {
-            train.justMoveForGlide(glideServoSpeed);
-        } else {
-            train.justMoveForGlide(0);
-        }
+
 
         train.setAxisSpeed(0, 0);
 
         SmartDashboard.putBoolean("GlideMov.glideStop", glideStop);
+
+        if (objectFind) {
+            train.justMoveForGlide(glideServoSpeed);
+        } else {
+            train.justMoveForGlide(0.5);
+        }
+
+
+        // if (train.currentGlidePosition <= 16) {
+        //     if (objectFind) {
+        //         train.justMoveForGlide(glideServoSpeed);
+        //     } else {
+        //         train.justMoveForGlide(0.5);
+        //     }
+        // } else {
+        //     train.justMoveForGlide(0);
+        // }
+
         if (glideStop) {
 
             train.rotateMotorSpeedThread = 0;
+
+            RobotContainer.train.resizeForGlide = false;
+
             return Timer.getFPGATimestamp() - stopTimer > 1;
         } else {
             

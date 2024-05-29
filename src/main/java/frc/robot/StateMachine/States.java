@@ -8,6 +8,32 @@ public class States {
         {
             new StartPos(), 
             
+            new RotateAligToFruit(true),
+            new GlideMovToFruit(),
+            new SetLiftPosition(98),
+            new SetGrabPos("SMALL APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(1),
+
+            new RotateAligToFruit(true),
+            new GlideMovToFruit(),
+            new SetLiftPosition(98),
+            new SetGrabPos("SMALL APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(1),
+
+            new RotateAligToFruit(true),
+            new GlideMovToFruit(),
+            new SetLiftPosition(98),
+            new SetGrabPos("SMALL APPLE", false),
+            new SetLiftPosition(-1),
+            new SetGlidePosition(0),
+            new SetRotatePos(1),
+ 
+            new End(),
+            
             // new testForNewCam(),
             // для маленького яблока new SetLiftPosition(98),
             // для большого яблока new SetLiftPosition(85),

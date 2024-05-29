@@ -21,14 +21,26 @@ public class RotateAligToFruit implements IState {
 
     private boolean objectFind = false;
 
+    private boolean objectDetectionFlag = true;
+
+    private double currentTargetDegree = 0; 
+
     private double stopTimer;
+
+    private boolean oneObject = true;
 
     private static final double[][] speedForRotate =  { { 0, 50, 100, 150, 200 }, { 0, 12, 18, 25, 30} };
 
     private double[][] startKoefSpeedForX = { { 0, 333, 666, 1000 }, { 0, 0.33, 0.66, 1 } };
 
+    private static final double[][] arrForLift = { { 0, 290, 640} , { -60, 0, 60} };
+
     public RotateAligToFruit() {
          
+    }
+
+    public RotateAligToFruit(boolean oneObject) {
+         this.oneObject = oneObject; 
     }
 
     @Override
@@ -37,7 +49,7 @@ public class RotateAligToFruit implements IState {
         RobotContainer.train.nowTask = 2; 
 
         train.setGripServoValue(130);
-        train.setGripRotateServoValue(260);
+        train.setGripRotateServoValue(270);
         
         if (train.centersForClass.isEmpty()) {
 
@@ -46,42 +58,46 @@ public class RotateAligToFruit implements IState {
 
         } else {
 
-            for (Point center : train.centersForClass) {
+            if (objectDetectionFlag) {
+                for (Point center : train.centersForClass) {
 
-                fruitPosX  = center.x; 
-    
+                    fruitPosX  = center.x; 
+        
+                }
+                if (!oneObject) {
+                    objectDetectionFlag = false;
+                }
             }
 
             objectFind = true;
         }
 
-        this.startKoef = Function.TransitionFunction(System.currentTimeMillis() - StateMachine.iterationTime, startKoefSpeedForX);
-        this.diffSpeed = Function.TransitionFunction(this.fruitPosX - 290, speedForRotate);
-        this.rotateStop = Function.BooleanInRange(this.diffSpeed, -3, 3);
-
-        SmartDashboard.putNumber("diffSpeed: ", this.fruitPosX - 290);
-
-        if (objectFind) {
-
-            train.rotateMotorSpeedThread = diffSpeed * startKoef;
-
+        if (oneObject) {
+            if (objectFind) {
+                this.startKoef = Function.TransitionFunction(System.currentTimeMillis() - StateMachine.iterationTime, startKoefSpeedForX);
+                this.diffSpeed = Function.TransitionFunction(this.fruitPosX - 290, speedForRotate);
+                this.rotateStop = Function.BooleanInRange(this.diffSpeed, -3, 3);
+                train.rotateMotorSpeedThread = diffSpeed * startKoef;
+            } else {
+                train.rotateMotorSpeedThread = 0;
+            }
         } else {
-
-            train.rotateMotorSpeedThread = 0;
-
+            currentTargetDegree = Function.TransitionFunction(fruitPosX, arrForLift);
+            SmartDashboard.putNumber("diffSpeed: ", currentTargetDegree);
+            this.rotateStop = train.rotateToPos(currentTargetDegree); 
         }
 
         train.setAxisSpeed(0, 0);
-        SmartDashboard.putBoolean("RotateAlig.rotateStop", rotateStop);
+
         if (rotateStop) {
-
             train.rotateMotorSpeedThread = 0;
-            return Timer.getFPGATimestamp() - stopTimer > 2;
+            
+            return this.rotateStop && Timer.getFPGATimestamp() - StateMachine.startTime > 1.5; 
         } else {
-
             stopTimer = Timer.getFPGATimestamp();
-            return Timer.getFPGATimestamp() - StateMachine.startTime > 1.5 && this.rotateStop ;
-        }      
+        }
+
+        return Timer.getFPGATimestamp() - StateMachine.startTime > 10;
     }
     
 }

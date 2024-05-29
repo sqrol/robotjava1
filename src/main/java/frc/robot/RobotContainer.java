@@ -2,7 +2,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Training;
 import frc.robot.Logic.LogicCore;
-import frc.robot.StateMachine.Drive;
+import frc.robot.StateMachine.StateMachine;
 import frc.robot.MachineVision.JavaCam;;
 
 public class RobotContainer {
@@ -13,9 +13,8 @@ public class RobotContainer {
   public static int checkAppleResult;
   public static LogicCore logic; 
 
-  private RobotContainer() {
+  public RobotContainer() {
     train = new Training();
-
     logic = new LogicCore();
 
     Runnable runnableJavaCam = new JavaCam();
@@ -23,13 +22,6 @@ public class RobotContainer {
     threadJavaCam.setDaemon(true);
     threadJavaCam.start();
 
-    train.setDefaultCommand(new Drive());
-  }
-  
-  public static RobotContainer getRobotContainer() {
-    if(m_robotContainer == null) {
-      m_robotContainer = new RobotContainer();
-    }
-    return m_robotContainer;
+    train.setDefaultCommand(new StateMachine());
   }
 }

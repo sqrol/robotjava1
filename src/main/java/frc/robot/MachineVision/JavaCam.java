@@ -29,7 +29,7 @@ public class JavaCam implements Runnable
     private static UsbCamera camera;
     private CvSink cvSink;
     private static CvSource outStream, outBlur, outHSV, mask, oustream1, oustream2, 
-    oustream3, mask2, mask3, cut2Out, redOut, greenOut, yellowOut;
+    oustream3, mask2, mask3, cut2Out, redOut, greenOut, yellowOut, resizeGlide1;
 
     public int nowTask = 1;
     
@@ -82,6 +82,8 @@ public class JavaCam implements Runnable
         greenOut = CameraServer.getInstance().putVideo("greenOut", 640, 480);
         yellowOut = CameraServer.getInstance().putVideo("yellowOut", 640, 480);
 
+        resizeGlide1 = CameraServer.getInstance().putVideo("resizeGlide", 640, 480);
+
         while (true) {
             try {
                 Mat source = new Mat();
@@ -110,7 +112,9 @@ public class JavaCam implements Runnable
         }
     }
 
-    public static List<Point> getFruitPosition(final Mat orig) {
+    public static List<Point> getFruitPosition(Mat orig) {
+
+        List<Rect> currentCordinate = new ArrayList<>();
 
         double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
         double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
@@ -125,18 +129,28 @@ public class JavaCam implements Runnable
         Point greenPoint22 = new Point(0, 255);
         Point greenPoint23 = new Point(250, 255);
 
-        Mat blurMat = Viscad2.Blur(orig, 4);
+        Mat inImg = new Mat();
+
+        // Пока не успел доделать
+        if (RobotContainer.train.resizeForGlide) {
+            inImg = Viscad2.ExtractImage(orig, new Rect(140, 0, 240, 480));  // Обрезаем картинку по линии стрелы
+        } else {
+            inImg = orig; 
+        }
+
+        Mat blurMat = Viscad2.Blur(inImg, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
         Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
 
         final Mat outPA = new Mat();
 
-        List<Rect> currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
-
+        currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
+        
+        resizeGlide1.putFrame(inImg);
         mask2.putFrame(maskRedApple);
 
-        releaseMats(blurMat, hsvImage, maskRedApple, outPA);
+        releaseMats(blurMat, hsvImage, maskRedApple, outPA, inImg);
         
         // return new ArrayList<>();
 
@@ -148,12 +162,11 @@ public class JavaCam implements Runnable
         } else {
 
             SmartDashboard.putNumber("12121212212121", 2);
-            return processRectangles(orig, currentCordinate);
+            return processRectangles(inImg, currentCordinate);
 
         }   
     }
 
-    // Ебать оно живое теперь он отмечает только ближайший объект к камере
     public static List<Point> processRectangles(Mat image, List<Rect> currentCoordinate) {
         List<Point> centers = new ArrayList<>();
         
@@ -181,7 +194,7 @@ public class JavaCam implements Runnable
             int height = nearestRect.height;
             
             // Рисуем прямоугольник на изображении
-            Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0, 255, 0), 2);
+            Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0,255, 0), 2);
             
             // Выводим информацию о прямоугольнике
             System.out.println("Rectangle: ");
