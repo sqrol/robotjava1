@@ -57,18 +57,14 @@ public class RotateAligToFruit implements IState {
             objectFind = false;
 
         } else {
-
             if (objectDetectionFlag) {
                 for (Point center : train.centersForClass) {
-
                     fruitPosX  = center.x; 
-        
                 }
                 if (!oneObject) {
                     objectDetectionFlag = false;
                 }
             }
-
             objectFind = true;
         }
 

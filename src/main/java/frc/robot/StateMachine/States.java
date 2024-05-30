@@ -7,6 +7,10 @@ public class States {
                                            // 0 
         { 
             new StartPos(),
+
+            new Transition(),
+
+            
             // new RotateAligToFruit(true),
             // new GlideMovToFruit(),
             // new SetLiftPosition(98),
