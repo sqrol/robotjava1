@@ -221,7 +221,6 @@ public class Training extends SubsystemBase
             }
         }).start();
 
-        
         new Thread( () -> {
             while(!Thread.interrupted())
             {
@@ -255,7 +254,6 @@ public class Training extends SubsystemBase
             }
         }).start();
 
-
         new Thread( () -> {
             while(!Thread.interrupted()) {
                 try {
@@ -283,7 +281,6 @@ public class Training extends SubsystemBase
             }
         }).start();
     }
-
     public void setIndication(String RobotState) {
         this.indication = RobotState;
     }
@@ -620,7 +617,7 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return startButton.get();
+            return true;
         } catch (Exception e) {
             return false;
         }   
@@ -958,6 +955,7 @@ public class Training extends SubsystemBase
         if (!blackLineDetect && this.blackLineFlag) {
             this.blackLineFlag = false;
         }
+        
     }
 
     @Override
@@ -992,5 +990,7 @@ public class Training extends SubsystemBase
         // test
         SmartDashboard.putBoolean("end", finish);
         SmartDashboard.putNumber("iterationTime", StateMachine.iterationTime);
+        SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
+
     }
 }

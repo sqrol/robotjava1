@@ -29,11 +29,11 @@ public class LogicCore {
     private final boolean B2Flag = false;
 
     // Для сдачи модулей B отключает построение пути назад
-    private final boolean autonomousMode = false; // если true, то едет до финиша,
+    private final boolean autonomousMode = true; // если true, то едет до финиша,
     // если false, то до контейнера и прыгает в END
 
     // Зона 1
-    private static final String[] firstTree = { "null", "null", "null"};
+    private static final String[] firstTree = { "RottenBigApple", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
@@ -43,7 +43,7 @@ public class LogicCore {
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "24", "25" } };
+                    { "AppleBigRipe", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 2
     private static final String[] secondTree = { "null", "null", "null"};
@@ -54,9 +54,9 @@ public class LogicCore {
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     {   "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
-                    { "12", "13", "14", "15", "16", "17", "18" },
+                    { "12", "13", "14", "15", "16", "PeerRipe", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "RottenBigApple", "22", "23", "24", "25" } };
+                    { "19", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 3
     private static final String[] thirdTree = { "null", "null", "null"};
@@ -69,7 +69,7 @@ public class LogicCore {
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "24", "25" } };
+                    { "19", "20", "21", "AppleSmallRipe", "23", "24", "25" } };
 
 
     // Шаблон зоны с номерами
@@ -150,7 +150,7 @@ public class LogicCore {
     // GRAB_POS_(GLIDEPOS, ROT-DEGREE, SUBGRABPOS)
     private String grabPosGenerate(String inGrabPos) {
         Map<String, String> grabPosMap = new HashMap<>();
-
+        // нормальные захваты
       
         grabPosMap.put("GRAB_POS_1", "-45_1ST_SIDE_LINE");
         grabPosMap.put("GRAB_POS_2", "-45_2NS_SIDE_LINE");
@@ -191,7 +191,7 @@ public class LogicCore {
 
     private String grabPosGenerate2(String inGrabPos) {
         Map<String, String> grabPosMap = new HashMap<>();
-
+        // ненормальные захваты
         grabPosMap.put("GRAB_POS_1", "-45_4TH_MAIN_LINE_SECOND_LZ");
         grabPosMap.put("GRAB_POS_2", "0_4TH_MAIN_LINE_SECOND_LZ");
 

@@ -19,7 +19,6 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Main;
 import frc.robot.RobotContainer;
 import frc.robot.functions.Function;
 
@@ -29,7 +28,7 @@ public class JavaCam implements Runnable
     private static UsbCamera camera;
     private CvSink cvSink;
     private static CvSource outStream, outBlur, outHSV, mask, oustream1, oustream2, 
-    oustream3, mask2, mask3, cut2Out, redOut, greenOut, yellowOut, resizeGlide1;
+    oustream3, mask2, mask3, cut2Out, redOut, greenOut, yellowOut, resizeGlide1, noWheels;
 
     public int nowTask = 1;
     
@@ -81,7 +80,7 @@ public class JavaCam implements Runnable
         redOut = CameraServer.getInstance().putVideo("redOut", 640, 480);
         greenOut = CameraServer.getInstance().putVideo("greenOut", 640, 480);
         yellowOut = CameraServer.getInstance().putVideo("yellowOut", 640, 480);
-
+        noWheels = CameraServer.getInstance().putVideo("noWheels", 640, 480);
         resizeGlide1 = CameraServer.getInstance().putVideo("resizeGlide", 640, 480);
 
         while (true) {
@@ -102,6 +101,9 @@ public class JavaCam implements Runnable
                 }
                 if(RobotContainer.train.nowTask == 228) {
                     RobotContainer.train.nowResult = CheckRotten(source);
+                }
+                if(RobotContainer.train.nowTask == 3) {
+                    RobotContainer.train.nowResult = detectFruitInGripper(source);
                 }
 
                 source.release();
@@ -133,7 +135,7 @@ public class JavaCam implements Runnable
 
         // Пока не успел доделать
         if (RobotContainer.train.resizeForGlide) {
-            inImg = Viscad2.ExtractImage(orig, new Rect(140, 0, 240, 480));  // Обрезаем картинку по линии стрелы
+            inImg = Viscad2.ExtractImage(orig, new Rect(140, 0, 240, 440));  // Обрезаем картинку по линии стрелы
         } else {
             inImg = orig;
         }
@@ -150,8 +152,8 @@ public class JavaCam implements Runnable
         resizeGlide1.putFrame(inImg);
         mask2.putFrame(maskRedApple);
 
-        releaseMats(blurMat, hsvImage, maskRedApple, outPA, inImg);
         
+        releaseMats(blurMat, hsvImage, maskRedApple, outPA, inImg, orig);
         // return new ArrayList<>();
 
         if (currentCordinate.isEmpty()) {
@@ -165,11 +167,12 @@ public class JavaCam implements Runnable
             return processRectangles(inImg, currentCordinate);
 
         }   
+        
     }
 
     public static List<Point> processRectangles(Mat image, List<Rect> currentCoordinate) {
         List<Point> centers = new ArrayList<>();
-        
+    
         if (currentCoordinate.isEmpty()) {
             return centers;
         } else {
@@ -194,7 +197,7 @@ public class JavaCam implements Runnable
             int height = nearestRect.height;
             
             // Рисуем прямоугольник на изображении
-            Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0,255, 0), 2);
+            Imgproc.rectangle(image, new Point(x, y), new Point(x + width, y + height), new Scalar(0, 255, 0), 2);
             
             // Выводим информацию о прямоугольнике
             System.out.println("Rectangle: ");
@@ -214,10 +217,12 @@ public class JavaCam implements Runnable
             SmartDashboard.putNumber("centerY", centerY);
             
             System.out.println("Center: (" + centerX + ", " + centerY + ")");
+            
         }
-    
+        // oustream3.putFrame(temp);
         // Сохраняем изображение с нарисованными прямоугольниками
-        oustream3.putFrame(image);
+        
+        releaseMats(image);
         return centers;
     }
 
@@ -263,9 +268,9 @@ public class JavaCam implements Runnable
         Point greenPoint2 = new Point(50, 220);
         Point greenPoint3 = new Point(190, 255);
 
-        Point greenPointPear1 = new Point(50, 255);
-        Point greenPointPear2 = new Point(100, 220);
-        Point greenPointPear3 = new Point(200, 255);
+        Point greenPointPear1 = new Point(4, 40);
+        Point greenPointPear2 = new Point(137, 251);
+        Point greenPointPear3 = new Point(123, 255);
 
         // Point greenPoint21 = new Point(38, 189);  
         // Point greenPoint22 = new Point(201, 229);
@@ -287,6 +292,7 @@ public class JavaCam implements Runnable
         Mat maskGreenApple = thresholdAndProcess(hsvImage, greenPoint1, greenPoint2, greenPoint3, 1, 1);
         Mat maskYellowPear = thresholdAndProcess(hsvImage, yellowPoint1, yellowPoint2, yellowPoint3, 1, 1);
         Mat maskGreenPear = thresholdAndProcess(hsvImage, greenPoint1, greenPoint2, greenPoint3, 3, 2);
+        Mat maskAllWithoutWheels = thresholdAndProcess(hsvImage, greenPointPear1, greenPointPear2, greenPointPear3, 1, 1);
         Mat fillHolesGreenPear = Viscad2.FillHolesCAD(maskGreenPear);
 
         int imageAreaRedApple = Viscad2.ImageTrueArea(maskRedApple); 
@@ -302,7 +308,7 @@ public class JavaCam implements Runnable
         redOut.putFrame(maskRedApple);
         greenOut.putFrame(maskGreenApple);
         yellowOut.putFrame(maskYellowPear);
-
+        noWheels.putFrame(maskAllWithoutWheels);
         mask3.putFrame(blurMat);
         // outStream.putFrame(maskRedApple);
         // outBlur.putFrame(maskGreenApple);
@@ -313,7 +319,7 @@ public class JavaCam implements Runnable
         // oustream2.putFrame(maskGreenApple);
 
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
-                        maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate);
+                        maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
 
         if(Function.BooleanInRange(imageAreaRedApple,       1000, 30000)) { return 1; }  // BigRed
         if(Function.BooleanInRange(imageAreaGreenApple,     15000, 24000)) { return 2; } // BigGreen
@@ -367,7 +373,6 @@ public class JavaCam implements Runnable
 
         eroded.release();
         mask.release();
-
         return dilated;
     }
 
@@ -376,7 +381,13 @@ public class JavaCam implements Runnable
             mat.release();
         }
     }
-
+    // Пока не доделал. Потом она будет выдавать строку о фрукте который в захвате
+    private static int detectFruitInGripper(Mat orig) {
+        Mat cutInGripper = Viscad2.ExtractImage(orig, new Rect(80, 180, 300, 300));
+        noWheels.putFrame(cutInGripper);
+        cutInGripper.release();
+        return 1;
+    }
     // С этим нужно поиграться не могу сказать что 100% работает!
     public static void settingCameraParameters(final boolean mode) {
         if (mode) {

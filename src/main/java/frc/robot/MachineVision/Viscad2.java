@@ -250,8 +250,7 @@ public class Viscad2 {
 
         Mat out = new Mat();
         Core.merge(new ArrayList<Mat>(Arrays.asList(new Mat[]{dstOut.get(0), dstOut.get(1), bright})), out);
-        if (outBGR)
-        {
+        if (outBGR) {
             Mat newOut = new Mat();
             Imgproc.cvtColor(out, newOut, Imgproc.COLOR_HSV2BGR);
             hsvCut.release();
@@ -271,8 +270,7 @@ public class Viscad2 {
     {
         List<MatOfPoint2f> newContours = new ArrayList<MatOfPoint2f>();
         
-        for (MatOfPoint con : contours)
-        {
+        for (MatOfPoint con : contours) {
             MatOfPoint2f c2f = new MatOfPoint2f(con.toArray());
             double conPerimeter = Imgproc.arcLength(c2f, true);
             float epsilon = k * (float)conPerimeter; // 0.023
@@ -280,8 +278,8 @@ public class Viscad2 {
             Imgproc.approxPolyDP(c2f, newCon, epsilon, true);
             newContours.add(newCon);
             c2f.release();
+            newCon.release();
         }
-
         return newContours;
     }
 }
