@@ -33,20 +33,20 @@ public class LogicCore {
     // если false, то до контейнера и прыгает в END
 
     // Зона 1
-    private static final String[] firstTree = { "RottenBigApple", "null", "null"};
+    private static final String[] firstTree = { "null", "null", "RottenBigApple"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "3", "AppleBigRipe" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "AppleBigRipe", "20", "21", "22", "23", "24", "25" } };
+                    { "19", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 2
-    private static final String[] secondTree = { "null", "null", "null"};
+    private static final String[] secondTree = { "null", "PeerRipe", "null"};
     private static final String[][] secondTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
@@ -54,7 +54,7 @@ public class LogicCore {
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     {   "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
-                    { "12", "13", "14", "15", "16", "PeerRipe", "18" },
+                    { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
                     { "19", "20", "21", "22", "23", "24", "25" } };
 
@@ -69,7 +69,7 @@ public class LogicCore {
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "1", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "AppleSmallRipe", "23", "24", "25" } };
+                    { "AppleSmallRipe", "20", "21", "22", "23", "24", "25" } };
 
 
     // Шаблон зоны с номерами

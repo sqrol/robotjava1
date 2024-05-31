@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.ArrayList;
 import java.util.List;
-
+import frc.robot.StateMachine.Cases.*;
 //Vendor imports
 import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.Servo;
@@ -80,7 +80,8 @@ public class Training extends SubsystemBase
     public int nowResult = 0;
     public int nowTask = 0; 
     public boolean resizeForGlide = false; 
-
+    public String detectionResult = "";
+    
     public boolean firstInitForGlide = false; 
     public boolean firstInitForLift = false; 
 
@@ -120,6 +121,8 @@ public class Training extends SubsystemBase
 
     private static final double[][] arrOfPosForLift = { { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 }, { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 } };
 
+    private static final double[][] arrOfpercentForLift = { { 0, 600, 900, 1200, 1500, 1800, 2100, 2400, 2900, 3200 }, { -1, 0, 15, 30, 40, 55, 70, 80, 90, 100 } };
+    
     private static final double[][] arrOfPosForRotate = { { 0, 500, 1500 }, { 0, 45, 90 } };
 
     private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54 }, { 0, 5, 10, 25, 35 } };
@@ -322,10 +325,10 @@ public class Training extends SubsystemBase
         boolean rotateStop = Function.BooleanInRange(degree - rotateDegree, -2, 2);
 
         SmartDashboard.putNumber("currentRotatePos", -getEncRotateThread());
-        SmartDashboard.putNumber("rotateDegree", rotateDegree);
-        SmartDashboard.putNumber("rotateDiff", rotateDegree - degree);
-        SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut);
-        SmartDashboard.putBoolean("rotateStop", rotateStop);
+        SmartDashboard.putNumber("currentRotatePosition", rotateDegree);
+        // SmartDashboard.putNumber("rotateDiff", rotateDegree - degree);
+        // SmartDashboard.putNumber("rotateSpeedOut", rotateSpeedOut);
+        // SmartDashboard.putBoolean("rotateStop", rotateStop);
 
         if (rotateStop) {
             rotateMotorSpeedThread = 0;
@@ -479,12 +482,13 @@ public class Training extends SubsystemBase
     public boolean liftToMovePos(double pos) {
 
         double nowPos = -getLiftEncoder();
+        double percentPos = Function.TransitionFunction(nowPos, arrOfpercentForLift);
         double encPos = Function.TransitionFunction(pos, arrOfPosForLift); 
         double speed = Function.TransitionFunction(nowPos - encPos, arrForLift); 
         boolean liftStop = Function.BooleanInRange(nowPos - encPos, -5, 5);
-        
-        SmartDashboard.putNumber("LiftSpeed", speed); 
-        SmartDashboard.putNumber("DiffForLift", encPos - nowPos); 
+        SmartDashboard.putNumber("currentLiftPosition", percentPos);
+        // SmartDashboard.putNumber("LiftSpeed", speed); 
+        // SmartDashboard.putNumber("DiffForLift", encPos - nowPos); 
         
         if (getLimitSwitchLift() && speed > 0) {
             liftMotorSpeedThread = 0;
@@ -590,9 +594,7 @@ public class Training extends SubsystemBase
      */
     public boolean getLimitSwitchLift(){
         try {
-            boolean out = limitSwitchLift.get(); 
-            SmartDashboard.putBoolean("LimitSwitchLift", out);
-            return out;
+            return limitSwitchLift.get();
         } catch (Exception e) {
             return false;
         }  
@@ -886,7 +888,7 @@ public class Training extends SubsystemBase
 
         if (glideServoSpeed != 0) {
 
-            SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
+            // SmartDashboard.putNumber("glideServoSpeed", glideServoSpeed);
 
             if (this.direction) {
                 servoGlide.setSpeed(glideServoSpeed); 
@@ -967,29 +969,28 @@ public class Training extends SubsystemBase
         SmartDashboard.putNumber("rotateEnc", getRotateEncoder());
         SmartDashboard.putNumber("liftEnc", getLiftEncoder());
 
-        SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
-        SmartDashboard.putNumber("speedLeftMotor", leftEnc.getSpeed());
-        SmartDashboard.putNumber("speedLiftotor", liftEnc.getSpeed());
-        SmartDashboard.putNumber("speedRotateMotor", -rotateEnc.getSpeed());
+        // SmartDashboard.putNumber("speedRightMotor", rightEnc.getSpeed());
+        // SmartDashboard.putNumber("speedLeftMotor", leftEnc.getSpeed());
+        // SmartDashboard.putNumber("speedLiftotor", liftEnc.getSpeed());
+        // SmartDashboard.putNumber("speedRotateMotor", -rotateEnc.getSpeed());
 
         SmartDashboard.putNumber("posZ", getLongYaw());
-
+        
         // SENSORS -------------------------------------------------------
         SmartDashboard.putNumber("sharpRight", getRightSharpDistance());
         SmartDashboard.putNumber("sharpLeft", getLeftSharpDistance());
         SmartDashboard.putNumber("sonicRight", getSideSonicDistance());
-        SmartDashboard.putNumber("sonicBack", getBackSonicDistance());
-        SmartDashboard.putNumber("GlideCobra", getCobraVoltage()); 
+        SmartDashboard.putNumber("sonicLeft", getBackSonicDistance());
+        SmartDashboard.putNumber("glideCobra", getCobraVoltage()); 
     
         // BUTTONS -------------------------------------------------------
         SmartDashboard.putBoolean("startButton", getStartButton());
         SmartDashboard.putBoolean("EMS", getEMSButton());
-        SmartDashboard.putBoolean("initlift", initLift);
+        // SmartDashboard.putBoolean("initlift", initLift);
         SmartDashboard.putBoolean("limitLift", getLimitSwitchLift());
 
         // test
-        SmartDashboard.putBoolean("end", finish);
-        SmartDashboard.putNumber("iterationTime", StateMachine.iterationTime);
+        SmartDashboard.putBoolean("END", finish);
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
 
     }

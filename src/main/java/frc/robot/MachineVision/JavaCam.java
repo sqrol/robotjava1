@@ -21,10 +21,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.functions.Function;
+import frc.robot.subsystems.Training;
 
 
 public class JavaCam implements Runnable
 {
+    Training train = RobotContainer.train;
     private static UsbCamera camera;
     private CvSink cvSink;
     private static CvSource outStream, outBlur, outHSV, mask, oustream1, oustream2, 
@@ -45,19 +47,19 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("BLUE1 YP", 0.0);
         SmartDashboard.putNumber("BLUE2 YP", 0.0);
 
-        SmartDashboard.putNumber("RED1 RA", 0.0);
-        SmartDashboard.putNumber("RED2 RA", 0.0);
-        SmartDashboard.putNumber("GREEN1 RA", 0.0);
-        SmartDashboard.putNumber("GREEN2 RA", 0.0);
-        SmartDashboard.putNumber("BLUE1 RA", 0.0);
-        SmartDashboard.putNumber("BLUE2 RA", 0.0);
+        // SmartDashboard.putNumber("RED1 RA", 0.0);
+        // SmartDashboard.putNumber("RED2 RA", 0.0);
+        // SmartDashboard.putNumber("GREEN1 RA", 0.0);
+        // SmartDashboard.putNumber("GREEN2 RA", 0.0);
+        // SmartDashboard.putNumber("BLUE1 RA", 0.0);
+        // SmartDashboard.putNumber("BLUE2 RA", 0.0);
 
-        SmartDashboard.putNumber("RED1 GP", 0.0);
-        SmartDashboard.putNumber("RED2 GP", 0.0);
-        SmartDashboard.putNumber("GREEN1 GP", 0.0);
-        SmartDashboard.putNumber("GREEN2 GP", 0.0);
-        SmartDashboard.putNumber("BLUE1 GP", 0.0);
-        SmartDashboard.putNumber("BLUE2 GP", 0.0);
+        // SmartDashboard.putNumber("RED1 GP", 0.0);
+        // SmartDashboard.putNumber("RED2 GP", 0.0);
+        // SmartDashboard.putNumber("GREEN1 GP", 0.0);
+        // SmartDashboard.putNumber("GREEN2 GP", 0.0);
+        // SmartDashboard.putNumber("BLUE1 GP", 0.0);
+        // SmartDashboard.putNumber("BLUE2 GP", 0.0);
         
         camera = CameraServer.getInstance().startAutomaticCapture(); // Находим доступные камеры и подсасывам его
         camera.setResolution(640, 480); // Разрешение
@@ -98,6 +100,7 @@ public class JavaCam implements Runnable
 
                 if (RobotContainer.train.nowTask == 2) {
                     RobotContainer.train.centersForClass = getFruitPosition(source);
+                    
                 }
                 if(RobotContainer.train.nowTask == 228) {
                     RobotContainer.train.nowResult = CheckRotten(source);
@@ -107,6 +110,7 @@ public class JavaCam implements Runnable
                 }
 
                 source.release();
+                
             } catch (final Exception e) {
                 DriverStation.reportError("An error occurred in JavaCam: " + e.getMessage(), false);
                 e.printStackTrace();
@@ -118,14 +122,14 @@ public class JavaCam implements Runnable
 
         List<Rect> currentCordinate = new ArrayList<>();
 
-        double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
-        double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+        // double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+        // double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
 
-        double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
-        double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+        // double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+        // double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
 
-        double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
-        double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+        // double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+        // double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
 
         Point greenPoint21 = new Point(0, 200);  
         Point greenPoint22 = new Point(0, 255);
@@ -228,6 +232,7 @@ public class JavaCam implements Runnable
 
     public static int CheckFruit(final Mat orig) // Распознавание яблока
     {
+        Training train = RobotContainer.train;
         // Нужно заменить массивом
         double red1YP = SmartDashboard.getNumber("RED1 YP", 0);
         double red2YP = SmartDashboard.getNumber("RED2 YP", 0);
@@ -283,7 +288,7 @@ public class JavaCam implements Runnable
         Mat imgTemplate = Viscad2.ExtractImage(orig, new Rect(0, 0, 200, 180));
 
         // Это штука должна подгонять яркость то есть она всегда будет одинаковая
-        Mat autoImage = Viscad2.AutoBrightnessCAD(imgTemplate, orig, 150, true);
+        Mat autoImage = Viscad2.AutoBrightnessCAD(imgTemplate, cut, 150, true);
 
         Mat blurMat = Viscad2.Blur(autoImage, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
@@ -320,28 +325,45 @@ public class JavaCam implements Runnable
 
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
                         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
-
-        if(Function.BooleanInRange(imageAreaRedApple,       1000, 30000)) { return 1; }  // BigRed
-        if(Function.BooleanInRange(imageAreaGreenApple,     15000, 24000)) { return 2; } // BigGreen
-        if(Function.BooleanInRange(imageAreaYellowPear,     5000, 20000)) { return 3; } // YellowPear
-        if(Function.BooleanInRange(imageAreaGreenPear,      10000, 20000)) { return 4; } // GreenPear
-        
-        if(Function.BooleanInRange(imageAreaRedApple,       2000, 4000)) { return 6; }   // SmallRed
-        if(Function.BooleanInRange(imageAreaGreenApple,     2000, 3000)) { return 7; }   // SmallGreen
+        if(Function.BooleanInRange(imageAreaRedApple,       2000, 4000)) {  // SmallRed
+            train.detectionResult = "SMALL RED APPLE";
+            return 6;
+        } 
+        if(Function.BooleanInRange(imageAreaGreenApple,     2000, 3000)) { // SmallGreen
+            train.detectionResult = "SMALL GREEN APPLE";
+            return 7;
+        }  
+        if(Function.BooleanInRange(imageAreaRedApple,       1000, 30000)) { // BigRed
+            train.detectionResult = "BIG RED APPLE";
+            return 1;
+        } 
+        if(Function.BooleanInRange(imageAreaGreenPear,      10000, 20000)) { // GreenPear
+            train.detectionResult = "GREEN PEAR";
+            return 4;
+        } 
+        if(Function.BooleanInRange(imageAreaGreenApple,     15000, 24000)) { // BigGreen
+            train.detectionResult = "BIG GREEN APPLE";
+            return 2; 
+        } 
+        if(Function.BooleanInRange(imageAreaYellowPear,     5000, 20000)) { // YellowPear
+            train.detectionResult = "YELLOW PEAR";
+            return 3;
+        } 
         return 0;
     }
+    
 
     public static int CheckRotten(final Mat orig) {
 
 
-        double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
-        double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
+        // double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
+        // double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
 
-        double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
-        double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
+        // double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
+        // double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
 
-        double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
-        double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
+        // double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
+        // double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
 
         Point greenPointPear1 = new Point(145, 255);
         Point greenPointPear2 = new Point(78, 255);
@@ -383,9 +405,24 @@ public class JavaCam implements Runnable
     }
     // Пока не доделал. Потом она будет выдавать строку о фрукте который в захвате
     private static int detectFruitInGripper(Mat orig) {
+        double red1 = SmartDashboard.getNumber("RED1 YP", 0);
+        double red2 = SmartDashboard.getNumber("RED2 YP", 0);
+
+        double green1 = SmartDashboard.getNumber("GREEN1 YP", 0);
+        double green2 = SmartDashboard.getNumber("GREEN2 YP", 0);
+
+        double blue1 = SmartDashboard.getNumber("BLUE1 YP", 0);
+        double blue2 = SmartDashboard.getNumber("BLUE2 YP", 0);
+        
         Mat cutInGripper = Viscad2.ExtractImage(orig, new Rect(80, 180, 300, 300));
-        noWheels.putFrame(cutInGripper);
-        cutInGripper.release();
+        
+        Point greenPointPear1 = new Point(red1, red2);
+        Point greenPointPear2 = new Point(green1, green2);
+        Point greenPointPear3 = new Point(blue1, blue2);
+        Mat hsvGrip = Viscad2.ConvertBGR2HSV(cutInGripper);
+        Mat thresholdGrip = thresholdAndProcess(hsvGrip, greenPointPear1, greenPointPear2, greenPointPear3, 1, 1);
+        noWheels.putFrame(thresholdGrip);
+        releaseMats(hsvGrip, thresholdGrip, cutInGripper);
         return 1;
     }
     // С этим нужно поиграться не могу сказать что 100% работает!

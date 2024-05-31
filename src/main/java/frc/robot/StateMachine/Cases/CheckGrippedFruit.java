@@ -2,13 +2,16 @@ package frc.robot.StateMachine.Cases;
 
 import frc.robot.RobotContainer;
 import frc.robot.StateMachine.IState;
+import frc.robot.subsystems.Training;
 
 public class CheckGrippedFruit implements IState{
 
+    private Training train = RobotContainer.train;
     @Override
     public boolean execute() {
-        RobotContainer.train.nowTask = 3;
-        RobotContainer.train.setGripServoValue(177);
+        train.nowTask = 3;
+        train.setGripServoValue(177);
+        
         return false;
     }
     

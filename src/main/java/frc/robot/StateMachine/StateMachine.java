@@ -39,8 +39,7 @@ public class StateMachine extends CommandBase {
             first = true;
             currentIndex++;
             SmartDashboard.putNumber("Index", currentIndex);
-            SmartDashboard.putNumber("Array", currentArray);
-            SmartDashboard.putBoolean("First", first); 
+            SmartDashboard.putNumber("Array", currentArray); 
             iterationTime = Timer.getFPGATimestamp() - startTime;
         }
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());

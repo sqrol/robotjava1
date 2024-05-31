@@ -1,9 +1,7 @@
 package frc.robot.StateMachine.Cases;
 
-import java.util.Arrays;
-
+import java.util.HashMap;
 import org.opencv.core.Point;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
@@ -15,6 +13,28 @@ public class AutoGrab implements IState{
 
     private Training train = RobotContainer.train;
     public int nowStep = 0;
+        
+    private static HashMap<String, Double> mapForLift = new HashMap<String, Double>() {
+        {
+            put("BIG RED APPLE", 85.0);
+            put("BIG GREEN APPLE", 85.0);
+            put("YELLOW PEAR", 85.0);
+            put("GREEN PEAR", 85.0);
+            put("SMALL RED APPLE", 95.0);
+            put("SMALL GREEN APPLE", 95.0);
+        } 
+    };
+
+    private static HashMap<String, Double> mapForGrip = new HashMap<String, Double>() {
+        {
+            put("BIG RED APPLE", 165.0);
+            put("BIG GREEN APPLE", 165.0);
+            put("YELLOW PEAR", 164.0);
+            put("GREEN PEAR", 164.0);
+            put("SMALL RED APPLE", 177.0);
+            put("SMALL GREEN APPLE", 177.0);
+        }
+    };
 
     // Переменные для вращающегося механизма
     private double startKoef, diffSpeed, fruitPosX = 0; 
@@ -42,9 +62,6 @@ public class AutoGrab implements IState{
 
     private static final double[][] speedForGlideServo = { { 0, 10, 20, 40, 60, 80, 100 } ,
                                                      { 0, 0.15, 0.2, 0.25, 0.3, 0.4, 0.4} };
-
-                                                     
-    // Данный метод не тестировал не знаю как себя поведет
     
     public AutoGrab() {
         this.nowStep = 0; 
@@ -57,20 +74,18 @@ public class AutoGrab implements IState{
 
     @Override
     public boolean execute() {
-
+        
         RobotContainer.train.nowTask = 2; 
-
+        
         switch (nowStep) {
             case 0: // Выравнивание вращающегося механизма на объекте
-            SmartDashboard.putNumber("current case AutoGrab", 0);
+                
                 servoController(123, 251); // 130 270
-                SmartDashboard.putBoolean("objDetectFlag", objectDetectionFlag);
+                SmartDashboard.putString("detectionResult", train.detectionResult);
                 if (train.centersForClass.isEmpty()) {
-                    SmartDashboard.putString("centersForClass.isEmpty", "Empty");
                     fruitPosX = 0; 
                     objectFind = false;
                 } else {
-                    SmartDashboard.putString("centersForClass.isEmpty", "else");
                     if (!objectDetectionFlag) {
                         
                         for (Point center : train.centersForClass) {
@@ -87,8 +102,6 @@ public class AutoGrab implements IState{
                 objectFind = true;
                 
                 if (oneObject) {
-                    SmartDashboard.putNumber("oneObject", 123123123);
-                    SmartDashboard.putNumber("fruitPosX", fruitPosX);
                     if (objectFind) {
                         this.startKoef = Function.TransitionFunction(System.currentTimeMillis() - StateMachine.iterationTime, startKoefSpeedForX);
                         this.diffSpeed = Function.TransitionFunction(this.fruitPosX - 290, speedForRotate);
@@ -99,68 +112,72 @@ public class AutoGrab implements IState{
                     }
                 } else {
                     currentTargetDegree = Function.TransitionFunction(fruitPosX, arrForLift);
-                    SmartDashboard.putNumber("diffSpeed: ", currentTargetDegree);
+                    // SmartDashboard.putNumber("diffSpeed: ", currentTargetDegree);
                     this.rotateStop = train.rotateToPos(currentTargetDegree); 
                 }
                 
             if (rotateStop) {
-                    train.rotateMotorSpeedThread = 0;
-                    
+                train.rotateMotorSpeedThread = 0;
+                train.nowTask = 1;
                 if (this.rotateStop && Timer.getFPGATimestamp() - stopTimer > 2) {
                     
                     localTimer = Timer.getFPGATimestamp();
                     nowStep++;
-                    }
-                } else {
-                    stopTimer = Timer.getFPGATimestamp();
                 } 
+            } else {
+                
+                stopTimer = Timer.getFPGATimestamp();
+            } 
 
-                objectNotFound = Timer.getFPGATimestamp() - StateMachine.startTime > 10; // Ничего не нашли выходим из данной команды
+                    objectNotFound = Timer.getFPGATimestamp() - StateMachine.startTime > 10; // Ничего не нашли выходим из данной команды
                 break;
             case 1: 
-            // train.liftToMovePos(60);
-            train.setGripRotateServoValue(279);
-            SmartDashboard.putNumber("current case AutoGrab", 1);
-                RobotContainer.train.resizeForGlide = true; // Обрезаем изображение по линии выдвижения
-                if (train.centersForClass.isEmpty()) {
-                    fruitPosY = 0; 
-                    objectFind = false;
-                } else {
-                    for (Point center : train.centersForClass) {
-                        fruitPosY  = center.y; 
-                        SmartDashboard.putNumber("center.y: ", center.y);
-                    }
-                    objectFind = true;
-                }
                 
-                double glideServoSpeed = Function.TransitionFunction(270 - fruitPosY, speedForGlideServo);
-                glideStop = Function.BooleanInRange(270 - fruitPosY, -3, 3);
-
-                if (objectFind) {
-                    train.justMoveForGlide(glideServoSpeed);
-                } else {
-                    train.justMoveForGlide(0.5);
-                }
-
-                if (glideStop) {
-                    train.justMoveForGlide(0);
-                    RobotContainer.train.resizeForGlide = false;
-                    if (Timer.getFPGATimestamp() - stopTimer > 1) {
-                        localTimer = Timer.getFPGATimestamp();
-                        nowStep++;
+                if(train.liftToMovePos(70)) {
+                    train.setGripRotateServoValue(279);
+                    
+                    RobotContainer.train.resizeForGlide = true; // Обрезаем изображение по линии выдвижения
+                    if (train.centersForClass.isEmpty()) {
+                        fruitPosY = 0; 
+                        objectFind = false;
+                    } else {
+                        train.nowTask = 2;
+                        for (Point center : train.centersForClass) {
+                            fruitPosY  = center.y; 
+                            
+                        }
+                        objectFind = true;
                     }
-                } else {
-                    stopTimer = Timer.getFPGATimestamp();
-                } 
+                    
+                    double glideServoSpeed = Function.TransitionFunction(270 - fruitPosY, speedForGlideServo);
+                    glideStop = Function.BooleanInRange(270 - fruitPosY, -5, 5);
+    
+                    if (objectFind) {
+                        train.justMoveForGlide(glideServoSpeed);
+                    } else {
+                        train.justMoveForGlide(0.5);
+                    }
+    
+                    if (glideStop) {
+                        train.justMoveForGlide(0);
+                        RobotContainer.train.resizeForGlide = false;
+                        if (Timer.getFPGATimestamp() - stopTimer > 1) {
+                            localTimer = Timer.getFPGATimestamp();
+                            nowStep++;
+                        }
+                    } else {
+                        stopTimer = Timer.getFPGATimestamp();
+                    }
+                }
                 break;
             case 2: // Опускаем лифт для захвата
-                if (train.liftToMovePos(95) && Timer.getFPGATimestamp() - localTimer > 1) {
+                if (train.liftToMovePos(mapForLift.get(train.detectionResult)) && Timer.getFPGATimestamp() - localTimer > 1) {
                     localTimer = Timer.getFPGATimestamp();
                     nowStep++;
                 }
                 break;
             case 3: // Захват 
-                if (smoothServoMovement(177.0, 0.01) && Timer.getFPGATimestamp() - localTimer > 1) {
+                if (smoothServoMovement(mapForGrip.get(train.detectionResult), 0.01) && Timer.getFPGATimestamp() - localTimer > 1) {
                     localTimer = Timer.getFPGATimestamp();
                     nowStep++;
                 }
@@ -175,6 +192,7 @@ public class AutoGrab implements IState{
                 break;
             default:
                 nowStep = 0;
+                train.detectionResult = "";
                 return true;
         }
 

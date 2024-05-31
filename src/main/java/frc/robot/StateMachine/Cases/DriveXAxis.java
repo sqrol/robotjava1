@@ -110,7 +110,8 @@ public class DriveXAxis implements IState {
 
     private double XPosition, ZPosition = 0; 
     private boolean finishX, finishZ = false;
-    private double currentAxisX, outSpeedForX, outSpeedForZ  = 0; 
+    private double outSpeedForX, outSpeedForZ  = 0; 
+    public double currentAxisX = 0;
     private double lastRightEnc = 0; 
     private double lastLeftEnc = 0; 
 
@@ -164,14 +165,14 @@ public class DriveXAxis implements IState {
 
         if (XPosition != 0) {
 
-            SmartDashboard.putNumber("lastRightEnc", lastRightEnc); 
-            SmartDashboard.putNumber("lastLeftEnc", lastLeftEnc); 
+            // SmartDashboard.putNumber("lastRightEnc", lastRightEnc); 
+            // SmartDashboard.putNumber("lastLeftEnc", lastLeftEnc); 
             
             double currentRight = train.getRightEncoder() - lastRightEnc;
             double currentLeft = train.getLeftEncoder() - lastLeftEnc;
 
-            SmartDashboard.putNumber("currentRight", currentRight); 
-            SmartDashboard.putNumber("currentLeft", currentLeft); 
+            // SmartDashboard.putNumber("currentRight", currentRight); 
+            // SmartDashboard.putNumber("currentLeft", currentLeft); 
     
             currentAxisX = -((currentRight + currentLeft) / 2) / 48;
     
@@ -188,7 +189,7 @@ public class DriveXAxis implements IState {
     
         } else {
             outSpeedForX = 0;
-            SmartDashboard.putNumber("diffZ", ZPosition - gyro);
+            // SmartDashboard.putNumber("diffZ", ZPosition - gyro);
             outSpeedForZ = Function.TransitionFunction(ZPosition - gyro, speedZArrayJustTurn);
             finishX = true;
             finishZ = Function.BooleanInRange(outSpeedForZ, -0.3, 0.3); 
