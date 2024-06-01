@@ -288,7 +288,7 @@ public class JavaCam implements Runnable
         Mat imgTemplate = Viscad2.ExtractImage(orig, new Rect(0, 0, 200, 180));
 
         // Это штука должна подгонять яркость то есть она всегда будет одинаковая
-        Mat autoImage = Viscad2.AutoBrightnessCAD(imgTemplate, cut, 150, true);
+        Mat autoImage = Viscad2.AutoBrightnessCAD(imgTemplate, orig, 150, true);
 
         Mat blurMat = Viscad2.Blur(autoImage, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
@@ -325,6 +325,7 @@ public class JavaCam implements Runnable
 
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
                         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
+
         if(Function.BooleanInRange(imageAreaRedApple,       2000, 4000)) {  // SmallRed
             train.detectionResult = "SMALL RED APPLE";
             return 6;

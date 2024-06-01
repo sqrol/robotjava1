@@ -33,11 +33,11 @@ public class LogicCore {
     // если false, то до контейнера и прыгает в END
 
     // Зона 1
-    private static final String[] firstTree = { "null", "null", "RottenBigApple"};
+    private static final String[] firstTree = { "null", "null", "4"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "AppleBigRipe" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
