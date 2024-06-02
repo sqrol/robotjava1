@@ -72,38 +72,43 @@ public class SetGrabPos implements IState {
         
         if (fruit.equals("BIG APPLE")) {
             if (smooth) {
-                endMovement = smoothServoMovement(165.0, 0.05);
+                endMovement = smoothServoMovement(55.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(165.0, 0.01);
+                // endMovement = smoothServoMovement(55.0, 0.01);
+                train.setGripServoValue(55);
+                return true;
             }
         }
         if (fruit.equals("SMALL APPLE")) {
             if (smooth) {
-                endMovement = smoothServoMovement(177.0, 0.05);
+                endMovement = smoothServoMovement(65.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(177.0, 0.01);
+                train.setGripServoValue(65);
+                return true;
             }
         }
         if (fruit.equals("PEAR")) {
             if (smooth) {
-                endMovement = smoothServoMovement(164.0, 0.05);
+                endMovement = smoothServoMovement(54.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(164.0, 0.003);
+                train.setGripServoValue(54);
+                return true;
             }
         }
         if (fruit.equals("OPEN")) {
             if (smooth) {
-                endMovement = smoothServoMovement(144.0, 0.05);
+                endMovement = smoothServoMovement(15.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(144.0, 0.01);
+                train.setGripServoValue(15);
+                return true;
             }
         
         }
         if (fruit.equals("OPEN SMALL APPLE")) {
             if (smooth) {
-                endMovement = smoothServoMovement(151.0, 0.05);
+                endMovement = smoothServoMovement(49.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(151.0, 0.01);
+                endMovement = smoothServoMovement(49.0, 0.01);
             }
         }
         return Timer.getFPGATimestamp() - StateMachine.iterationTime > 1 && endMovement;
@@ -121,8 +126,7 @@ public class SetGrabPos implements IState {
                 train.setGripServoValue(currentPosition); // Устанавливаем новое положение серво
                 lastUpdateTime = currentTime; // Обновляем время последнего обновления
             }
-        }     
-
+        }
         return Function.BooleanInRange(Math.abs(targetPosition - currentPosition), -1, 1); 
     }
 

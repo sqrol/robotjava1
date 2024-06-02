@@ -17,19 +17,19 @@ public class SetGripRotatePos implements IState {
         
         switch(pos) {
             case "FLOOR":
-                train.setGripRotateServoValue(279);
+                train.setGripRotateServoValue(105); // 279
                 break;
             case "BRANCH":
-                train.setGripRotateServoValue(190);
+                train.setGripRotateServoValue(15);
                 break;
             case "ANGLE":
-                train.setGripRotateServoValue(246);
+                train.setGripRotateServoValue(70);
                 break;
             case "FOR DROP":
-                train.setGripRotateServoValue(190);
+                train.setGripRotateServoValue(15);
                 break;
             case "SMALL ANGLE":
-                train.setGripRotateServoValue(235);
+                train.setGripRotateServoValue(52);
                 break;
             
         }

@@ -7,7 +7,11 @@ public class States {
                                            // 0 
         { 
             new StartPos(),
-
+            new DriveXAxis(-100, 0),
+            // new SetGripRotatePos("FLOOR"),
+            // new SetGrabPos("BIG APPLE", false),
+            // new OMS("check"),
+            // new SetGlidePosition(28),
             // для маленького яблока new SetLiftPosition(98),
             // для большого яблока new SetLiftPosition(85),
             // с нижней ветки для маленького яблока new SetLiftPosition(41)
@@ -25,14 +29,12 @@ public class States {
             // new SetGlidePosition(11),
             // new SetLiftPosition(85),
             // new SetGrabPos("BIG APPLE", false),
-            // new SetLiftPosition(-1),
+            
             // new SetGlidePosition(1),
             // new SetRotatePos(0),
             // new DriveXAxis(4, 0),
             
-            
-            new End(),
-            
+                    
             // new SetRotatePos(-90),
             // new StartPos(),
             
@@ -47,8 +49,9 @@ public class States {
             
             // // new SharpCheck(),
             // // new StartPos(),
-            // // new ObjectFinder(),
+            // new ObjectFinder(),
             // new InitLogic(),
+            // new End(),
             
             new Transition(),
         },
