@@ -8,9 +8,12 @@ public class States {
         { 
             new StartPos(),
             new DriveXAxis(-100, 0),
+            new End(),
+            // new Transition2(),
             // new SetGripRotatePos("FLOOR"),
             // new SetGrabPos("BIG APPLE", false),
             // new OMS("check"),
+            
             // new SetGlidePosition(28),
             // для маленького яблока new SetLiftPosition(98),
             // для большого яблока new SetLiftPosition(85),
@@ -34,7 +37,7 @@ public class States {
             // new SetRotatePos(0),
             // new DriveXAxis(4, 0),
             
-                    
+            // new SetRotatePos(45),
             // new SetRotatePos(-90),
             // new StartPos(),
             
@@ -43,16 +46,16 @@ public class States {
             // new End(),
             // new StartPos(),
             // new SonicCheck(),
-
+            
             // new End(),
             // // new StartPos(),
-            
+            // new ObjectFinder(),
             // // new SharpCheck(),
             // // new StartPos(),
             // new ObjectFinder(),
             // new InitLogic(),
             // new End(),
-            
+            // new End(),
             new Transition(),
         },
         
@@ -284,7 +287,7 @@ public class States {
         {
             new DriveXAxis(92, 0),
             new DriveXAxis(0, 90),
-            new Align("sharp", 15, 0, 0),
+            new Align("sharp", 14, 0, 0),
             new DriveXAxis(0, 90),
             new DriveXAxis(-50, 0),
             new Align("sonic", 70, 0, 0),
@@ -292,7 +295,7 @@ public class States {
         },
             // MOV_IN_CH3_TO_FRIST_LZ // 25
         {
-            new DriveXAxis(32, 0),
+            new DriveXAxis(26, 0),
             new Transition()
         },   
             // MOV_IN_FRIST_LZ_TO_CH3 // 26
@@ -1999,7 +2002,7 @@ public class States {
         },
             // -45_1ST_SIDE_LINE (граб пос 1 и еще какой-то должен быть) // 170
         {
-            new SetRotatePos(-61),
+            new SetRotatePos(-58),
             new SetGrabPos("OPEN", false),
             new DriveXAxis(-4, 0),
             new SetGlidePosition(11),
@@ -2033,12 +2036,12 @@ public class States {
         },
             // 45_1ST_SIDE_LINE (граб пос 19 и 25 и 21 для второго дерева LZ) // 173
         {
-            new SetRotatePos(50),
+            new SetRotatePos(48),
             new SetGrabPos("OPEN", false),
             new DriveXAxis(-4, 0),
-            new SetGlidePosition(6),
-            new SetLiftPosition(95),
-            new SetGrabPos("SMALL APPLE", false),
+            new SetGlidePosition(7),
+            new SetLiftPosition(85),
+            new SetGrabPos("BIG APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(1),
             new SetRotatePos(0),

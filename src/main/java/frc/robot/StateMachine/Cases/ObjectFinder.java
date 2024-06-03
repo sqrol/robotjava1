@@ -18,62 +18,62 @@ public class ObjectFinder implements IState {
         train.setAxisSpeed(0, 0);
         train.nowTask = 1; 
         SmartDashboard.putNumber("nowResult", RobotContainer.train.nowResult);
-        train.setGripRotateServoValue(269);
+        train.setGripRotateServoValue(95);
         
-        // if(train.nowResult == 1) {
-        //     train.setAxisSpeed(0, 0);
-        //     train.setIndication("IN PROCESS");
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        if(train.nowResult == 1) {
+            train.setAxisSpeed(0, 0);
+            train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else if(train.nowResult == 2){ 
-        //     train.setAxisSpeed(0, 0);
-        //     train.setIndication("IN PROCESS");
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        } else if(train.nowResult == 2){ 
+            train.setAxisSpeed(0, 0);
+            train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else if(train.nowResult == 3){
-        //     train.setAxisSpeed(0, 0);
-        //     train.setIndication("IN PROCESS");
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        } else if(train.nowResult == 3){
+            train.setAxisSpeed(0, 0);
+            train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else if(train.nowResult == 4){
-        //     train.setAxisSpeed(0, 0);
-        //     train.setIndication("IN PROCESS");
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        } else if(train.nowResult == 4){
+            train.setAxisSpeed(0, 0);
+            train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else if(train.nowResult == 5) {
-        //     train.setAxisSpeed(0, 0);  
-        //     train.setIndication("IN PROCESS");
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        } else if(train.nowResult == 5) {
+            train.setAxisSpeed(0, 0);  
+            train.setIndication("IN PROCESS");
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else if(train.nowResult == 6) {
-        //     train.setIndication("IN PROCESS");
-        //     train.setAxisSpeed(0, 0);
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        } else if(train.nowResult == 6) {
+            train.setIndication("IN PROCESS");
+            train.setAxisSpeed(0, 0);
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else if(train.nowResult == 7) {
-        //     train.setIndication("IN PROCESS");
-        //     train.setAxisSpeed(0, 0);
-        //     if(train.getStartButton()) {
-        //         return true;
-        //     }
+        } else if(train.nowResult == 7) {
+            train.setIndication("IN PROCESS");
+            train.setAxisSpeed(0, 0);
+            if(train.getStartButton()) {
+                return true;
+            }
 
-        // } else {
-        //     train.setIndication("WAITING");
+        } else {
+            train.setIndication("WAITING");
             
-        //     train.nowResult = 0;
-        // }
+            train.nowResult = 0;
+        }
 
         return false;
     }

@@ -67,13 +67,17 @@ public class Training extends SubsystemBase
     // Подключение ПИДов
     public boolean usePIDForMotors = true; 
 
-    private final PID rightPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
-    private final PID leftPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
+    private final PID rightPID = new PID(0.051, 0.43, 0.0, -100, 100); // Настройка ПИДа правого мотора 
+    private final PID leftPID = new PID(0.051, 0.43, 0.0, -100, 100); // Настройка ПИДа левого мотора
     private final PID liftPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа лифта
     private final PID rotatePID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа 
+
+                                         // 0.037, 0.3, 0.0004, -100, 100
                                          // 0.15, 0.095, 0.0001, -100, 100
                                          // 0.215, 0.095, 0.0001, -100, 100 слишком медленно
                                          // 0.35, 0.065, 0.0001, -100, 100 default pid
+                                         // 0.245, 0.044, 0.0002, -100, 100
+                                         // 0.05, 0.12, 0.0, -100, 100
     // private final PID rightPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа правого мотора 
     // private final PID leftPID = new PID(0.15, 0.095, 0.0001, -100, 100); // Настройка ПИДа левого мотора
 
@@ -135,10 +139,10 @@ public class Training extends SubsystemBase
     {                                   // почему не константы
         // rightMotor = new TitanQuad(42, 1); 
         // leftMotor = new TitanQuad(42, 3); 
-        rightMotor = new TitanQuad(42, 3); 
-        leftMotor = new TitanQuad(42, 1); 
-        rotateMotor = new TitanQuad(42, 0); 
-        liftMotor = new TitanQuad(42, 2); 
+        rightMotor = new TitanQuad(42, 3);
+        leftMotor = new TitanQuad(42, 1);
+        rotateMotor = new TitanQuad(42, 0);
+        liftMotor = new TitanQuad(42, 2);
 
         // rightEnc = new TitanQuadEncoder(rightMotor, 1, 1);
         rightEnc = new TitanQuadEncoder(rightMotor, 3, 1);
@@ -171,7 +175,7 @@ public class Training extends SubsystemBase
 
         // Инициализация концевого выключателя 
         limitSwitchLift = new DigitalInput(0);
-
+        SmartDashboard.putNumber("PID SPEED", 0);
         // Инициализация сервоприводов
         servoGrab = new Servo(0);
         // 177 закрыть 
@@ -250,6 +254,8 @@ public class Training extends SubsystemBase
                         } 
                   
                       } else {
+                        
+                        // setMotorsSpeedPID();
                         setLeftMotorSpeed(leftMotorSpeedThread, usePIDForMotors);
                         setRightMotorSpeed(rightMotorSpeedThread, usePIDForMotors);
                         setLiftMotorSpeed(liftMotorSpeedThread, usePIDForMotors);
@@ -628,7 +634,7 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return startButton.get();
+            return true;
             // return true;
         } catch (Exception e) {
             return false;
@@ -656,19 +662,24 @@ public class Training extends SubsystemBase
      * @param speed - скорость в диапазоне от -100 до 100
      * @param withPID - подключает ПИДы к левому мотору
      */
-    public void setLeftMotorSpeed(double speed, boolean withPID) {
-        if (speed == 0.0) {
+    public void setLeftMotorSpeed(double speedL, boolean withPID) {
+        if (speedL == 0.0) {
             leftPID.reset();
             leftMotor.set(0);
         } else {
-            leftPID.calculate(-leftEnc.getSpeed(), speed);
+            
+            leftPID.calculate(-leftEnc.getSpeed() / 2.3, speedL);
             if (withPID) {
-                leftMotor.set(leftPID.getOutput());
+                double val = leftPID.getOutput();
+                SmartDashboard.putNumber("outLeftMotorSpeedPID", val); 
+                SmartDashboard.putNumber("outLeftMotorSpeedPID_P", leftPID.errorP); 
+                SmartDashboard.putNumber("outLeftMotorSpeedPID_I", leftPID.errorI); 
+                leftMotor.set(val);
             } else {
-                leftMotor.set(speed/100);
+                leftMotor.set(speedL/100);
             }
         }
-        SmartDashboard.putNumber("outLeftMotorSpeed", speed); 
+        SmartDashboard.putNumber("outLeftMotorSpeed", speedL); 
     }
 
     /**
@@ -681,7 +692,7 @@ public class Training extends SubsystemBase
             rightPID.reset();
             rightMotor.set(0);
         } else {
-            rightPID.calculate(-rightEnc.getSpeed(), speed);
+            rightPID.calculate(-rightEnc.getSpeed() / 2.3, speed);
             if (withPID) {
                 rightMotor.set(rightPID.getOutput());
             } else {
@@ -887,8 +898,6 @@ public class Training extends SubsystemBase
         return cobraGlide.getAverageVoltage();
     }
 
-    
-
     public boolean justMoveForGlide(double glideServoSpeed) {
         boolean blackLineDetect = getCobraVoltage() > 2.0;
 
@@ -926,6 +935,13 @@ public class Training extends SubsystemBase
         
         return currentGlidePosition > 16; 
 
+    }
+
+    public void setMotorsSpeedPID() {
+        double speed = SmartDashboard.getNumber("PID SPEED", 0.0);
+        setLeftMotorSpeed(speed, true);
+        setRightMotorSpeed(speed, true);
+        
     }
 
     /**
@@ -1001,6 +1017,7 @@ public class Training extends SubsystemBase
         SmartDashboard.putBoolean("limitLift", getLimitSwitchLift());
 
         // test
+        // SmartDashboard.putNumber("PID SPEED", 25);
         SmartDashboard.putBoolean("END", finish);
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
 

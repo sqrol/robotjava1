@@ -16,11 +16,11 @@ public class Transition2 implements IState {
     @Override
     public boolean execute() {
 
-        StateMachine.currentArray = Training.indexList.get(this.indexArray);
-        this.indexArray++;
-        StateMachine.currentIndex = -1;
-        RobotContainer.train.setAxisSpeed(0, 0);
+        // StateMachine.currentArray = Training.indexList.get(this.indexArray);
+        // this.indexArray++;
+        // StateMachine.currentIndex = -1;
+        // RobotContainer.train.setAxisSpeed(0, 0);
 
-        return true;
+        return false;
     }
 }

@@ -313,15 +313,8 @@ public class JavaCam implements Runnable
         redOut.putFrame(maskRedApple);
         greenOut.putFrame(maskGreenApple);
         yellowOut.putFrame(maskYellowPear);
-        noWheels.putFrame(maskAllWithoutWheels);
+        noWheels.putFrame(autoImage);
         mask3.putFrame(blurMat);
-        // outStream.putFrame(maskRedApple);
-        // outBlur.putFrame(maskGreenApple);
-
-        // mask.putFrame(fillHolesGreenPear);
-        // oustream1.putFrame(maskRedApple);
-        // oustream3.putFrame(maskYellowPear);
-        // oustream2.putFrame(maskGreenApple);
 
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
                         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
@@ -450,7 +443,7 @@ public class JavaCam implements Runnable
             camera.getProperty("focus_auto").set(0); 
             // camera.getProperty("exposure_auto").set(4);
             camera.getProperty("saturation").set(49);
-            camera.getProperty("brightness").set(0);
+            camera.getProperty("brightness").set(7);
             // camera.getProperty("exposure_absolute").set(100);
         }
     }

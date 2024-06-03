@@ -62,7 +62,7 @@ public class StartPos implements IState{
             
             train.setGripServoValue(15); 
             train.setGripRotateServoValue(105); 
-            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 ){
+            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
                 train.setIndication("IN PROCESS");
                 return true;
             }

@@ -34,15 +34,17 @@ public class TreeTraverse {
     private static String findFruitName = "PeerRipe";
     private static boolean fruitFind = true; // Для отладки установлено в true
 
-    private static boolean stopLoop = true;
-
     private static boolean firstCall = true;
     private static boolean lastAutoGrab, lastStepChange, firstItter, treeNumberChange = true;
     private static int currentTreeNumber, currentTreeZoneNumber, currentTreeZoneSteps, deliverySteps, endSteps, lastCurrentTreeNumber, lastCurrentTreeZoneNumber = 0;
     private static String lastCheckpoint = "";
     private static String treeZone = "";
 
-    public static void execute() {
+    public TreeTraverse() {
+
+    }
+
+    public String execute() {
         String outIndex = "none";
 
         if (firstCall) {
@@ -72,19 +74,19 @@ public class TreeTraverse {
                 if (endSteps < 2) {
                     outIndex = processEnd(endSteps);
                     endSteps++;
-                } else {
-                    stopLoop = false;
-                }
+                } 
             }
         }
 
         treeNumberChange = checkChangeTreeNumber();
         lastCurrentTreeNumber = currentTreeNumber;
-
+        
         System.out.println(outIndex);
+
+        return outIndex; 
     }
 
-    private static String processEnd(Integer step) {
+    private String processEnd(Integer step) {
         String outIndex = "none";
         if (step == 0) {
             outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getBestWayForCheckForZone(getLastTreeZone());
@@ -97,7 +99,7 @@ public class TreeTraverse {
         return outIndex;
     }
 
-    private static String processCurrentTreeZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Integer currentTreeZoneSteps, Boolean ChangeTreeNumber) {
+    private String processCurrentTreeZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Integer currentTreeZoneSteps, Boolean ChangeTreeNumber) {
         String outIndex = "none";
 
             if (firstItter) {
@@ -172,7 +174,7 @@ public class TreeTraverse {
         return outIndex;
     }
 
-    private static String createPathForZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Integer stepForZone) {
+    private String createPathForZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Integer stepForZone) {
         String outIndex = "none";
 
         if (currentTreeZoneSteps == 0) {
@@ -201,55 +203,55 @@ public class TreeTraverse {
     /**
      * Узнаем в какой контейнер нужно вести найденный фрукт
      */
-    private static String getConForFruit(String fruitName) {
+    private String getConForFruit(String fruitName) {
         return containersForFruits.getOrDefault(fruitName, "none");
     }
 
-    private static String getBestWayForCheckForZone(String getLastTreeZone) {
+    private String getBestWayForCheckForZone(String getLastTreeZone) {
         String[] replaceZone = getLastTreeZone.split("_");
         return choosingBestZoneForCheck(replaceZone[1], replaceZone[0]);
     }
 
-    private static boolean checkChangeTreeNumber() {
+    private boolean checkChangeTreeNumber() {
         return currentTreeNumber != lastCurrentTreeNumber;
     }
 
     /**
      * Узнаем какой тип распознавания нужно использовать для заданной зоны
      */
-    private static String getGrabModeInArray(String zoneName) {
+    private String getGrabModeInArray(String zoneName) {
         return grabTypeForZones.getOrDefault(zoneName, "none");
     }
 
     /**
      * Установка последней Checkpoint
      */
-    private static void setLastCheckpoint(String lastCheckpoint) {
+    private void setLastCheckpoint(String lastCheckpoint) {
         TreeTraverse.lastCheckpoint = lastCheckpoint;
     }
 
     /**
      * Установка последней зоны в который мы были у дерева
      */
-    private static void setLastTreeZone(String treeZone) {
+    private void setLastTreeZone(String treeZone) {
         TreeTraverse.treeZone = treeZone;
     }
 
     /**
      * Получение последней зоны в который мы были у дерева
      */
-    private static String getLastTreeZone() {
+    private String getLastTreeZone() {
         return TreeTraverse.treeZone;
     }
 
     /**
      * Получение последней точки робота
      */
-    private static String getLastCheckpoint() {
+    private String getLastCheckpoint() {
         return lastCheckpoint;
     }
 
-    private static String choosingBestZoneForCheck(String currentZoneName, String zoneName) {
+    private String choosingBestZoneForCheck(String currentZoneName, String zoneName) {
         String out = "";
         if (zoneName.equals("FRIST")) {
             switch (currentZoneName) {

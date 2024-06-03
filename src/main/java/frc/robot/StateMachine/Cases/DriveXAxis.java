@@ -119,8 +119,8 @@ public class DriveXAxis implements IState {
 
     private boolean isFirst = true;
 
-    // private double[][] speedXArray = { { 0, 5, 10, 12, 14, 18, 35, 50, 100}, 
-    //                                    { 0, 12, 15, 25, 35, 50, 75, 85, 95} };
+    private double[][] speedXArray = { { 0, 5, 10, 12, 14, 18, 35, 50, 100}, 
+                                       { 0, 4, 12, 25, 35, 50, 75, 85, 95} };
 
     // private double[][] speedXArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
     //                                     { 0, 7, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
@@ -131,12 +131,12 @@ public class DriveXAxis implements IState {
     private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 26, 41, 60, 90 }, 
                                                  { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };
 
-
     // Sage
-    private double[][] speedXArray = { { 0f, 2f, 7f, 12, 21, 35, 52, 67, 90 }, { 0f, 7.7f, 14.5f, 31, 45, 59, 76, 81, 98 } };
+    // private double[][] speedXArray = { { 0, 2, 12, 35, 52, 67, 90 }, 
+    //                                     { 0, 4, 15, , 45, 59, 76, 81, 98 } };
     
 
-    private double[][] startKoefSpeedForX = { { 0, 0.33, 0.66, 1 }, { 0, 0.33, 0.66, 1 } };
+    private double[][] startKoefSpeedForX = { { 1 }, { 1 } };
 
     public DriveXAxis(double XPosition, double ZPosition){
         this.XPosition = XPosition;

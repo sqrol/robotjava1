@@ -27,12 +27,12 @@ public class AutoGrab implements IState{
 
     private static HashMap<String, Double> mapForGrip = new HashMap<String, Double>() {
         {
-            put("BIG RED APPLE", 165.0);
-            put("BIG GREEN APPLE", 165.0);
-            put("YELLOW PEAR", 164.0);
-            put("GREEN PEAR", 164.0);
-            put("SMALL RED APPLE", 177.0);
-            put("SMALL GREEN APPLE", 177.0);
+            put("BIG RED APPLE", 55.0);
+            put("BIG GREEN APPLE", 55.0);
+            put("YELLOW PEAR", 54.0);
+            put("GREEN PEAR", 54.0);
+            put("SMALL RED APPLE", 65.0);
+            put("SMALL GREEN APPLE", 65.0);
         }
     };
 
@@ -80,7 +80,7 @@ public class AutoGrab implements IState{
         switch (nowStep) {
             case 0: // Выравнивание вращающегося механизма на объекте
                 
-                servoController(123, 251); // 130 270
+                servoController(15, 87); // 130 270
                 SmartDashboard.putString("detectionResult", train.detectionResult);
                 if (train.centersForClass.isEmpty()) {
                     fruitPosX = 0; 
@@ -133,8 +133,8 @@ public class AutoGrab implements IState{
                 break;
             case 1: 
                 
-                if(train.liftToMovePos(70)) {
-                    train.setGripRotateServoValue(279);
+                
+                    train.setGripRotateServoValue(105);
                     
                     RobotContainer.train.resizeForGlide = true; // Обрезаем изображение по линии выдвижения
                     if (train.centersForClass.isEmpty()) {
@@ -151,7 +151,7 @@ public class AutoGrab implements IState{
                     
                     double glideServoSpeed = Function.TransitionFunction(270 - fruitPosY, speedForGlideServo);
                     glideStop = Function.BooleanInRange(270 - fruitPosY, -5, 5);
-    
+                    SmartDashboard.putNumber("270 - fruitPosY", 270 - fruitPosY);
                     if (objectFind) {
                         train.justMoveForGlide(glideServoSpeed);
                     } else {
@@ -168,7 +168,7 @@ public class AutoGrab implements IState{
                     } else {
                         stopTimer = Timer.getFPGATimestamp();
                     }
-                }
+                
                 break;
             case 2: // Опускаем лифт для захвата
                 if (train.liftToMovePos(mapForLift.get(train.detectionResult)) && Timer.getFPGATimestamp() - localTimer > 1) {

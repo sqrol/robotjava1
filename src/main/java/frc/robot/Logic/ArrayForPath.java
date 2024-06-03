@@ -28,8 +28,6 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOVE_IN_CH2_TO_FINISH", 11);
             put("MOV_IN_CH1_TO_THIRD_LZ", 12);
 
-            put("SecondZonaInFirstZona", 15);
-
             put("AUTO_GRAB_UPPER", 16);
             put("AUTO_GRAB_FRONT_LOWER_BRANCH", 17);
             put("AUTO_GRAB_FRONT_MIDDLE_BRANCH", 18);

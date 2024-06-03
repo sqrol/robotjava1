@@ -12,8 +12,8 @@ public class PID {
         this.upperLimit = upperLimit;
     }
 
-    private double errorP;
-    private double errorI;
+    public double errorP;
+    public double errorI;
     private double errorD;
 
     private double output;
@@ -27,7 +27,7 @@ public class PID {
         } else {
             errorP = (setPoint - input)*kP;
             errorI += errorP*kI;
-            errorD += -errorI*kD;
+            errorD += errorP*kD;
         }
         output = Function.getLimitedValue((errorP + errorI + errorD), lowerLimit, upperLimit) / 100;
     }
@@ -37,6 +37,8 @@ public class PID {
     }
     public void reset() {
         this.isFirstCall = true; 
+        errorP = 0;
+        errorI = 0;
     }
 
 }
