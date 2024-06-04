@@ -36,22 +36,15 @@ public class StateMachine extends CommandBase {
     static void update(){
         first = false;
         
-        if(States.mainStates[currentArray][currentIndex].execute()){
-            
+        if(States.mainStates[currentArray][currentIndex].execute())
+        {
             first = true;
             currentIndex++;
-
             SmartDashboard.putNumber("Index", currentIndex);
             SmartDashboard.putNumber("Array", currentArray); 
-
-            iterationTime = Timer.getFPGATimestamp() - startTime;
-
+            iterationTime = Timer.getFPGATimestamp(); 
         }
+        
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
-    }
-
-    public static void Change(final int array, final int index){
-        currentArray = array;
-        currentIndex = index;
     }
 }

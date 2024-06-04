@@ -26,9 +26,6 @@ public class StartPos implements IState{
 
         train.resetGyro();
 
-        double limitTime = Timer.getFPGATimestamp(); 
-
-        
         // train.setAxisSpeed(0.0f, 30.0f);
 
         if (train.getLimitSwitchLift()) {
@@ -37,6 +34,8 @@ public class StartPos implements IState{
         } else {
             train.liftMotorSpeedThread = -50;
         }
+
+        SmartDashboard.putNumber("iter: ", Timer.getFPGATimestamp() - StateMachine.iterationTime);
         
         // double speed = -35; 
         // train.setAxisSpeed(50, 0);
@@ -66,7 +65,7 @@ public class StartPos implements IState{
             
             train.setGripServoValue(15); 
             train.setGripRotateServoValue(105); 
-            if(limitTime - StateMachine.iterationTime > 8 && train.getStartButton()){
+            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 5 && train.getStartButton()){
                 
                 train.setIndication("IN PROCESS");
                 return true;
