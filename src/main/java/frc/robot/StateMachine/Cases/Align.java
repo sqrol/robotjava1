@@ -26,8 +26,8 @@ public class Align implements IState {
 
     Training train = RobotContainer.train;
  
-    private static double[][] XArray = { { 0, 0.1, 0.8, 1.5, 2.5, 5, 10, 15, 25, 30 },
-                                          { 0, 0.4, 2, 6, 13, 24, 30, 60, 85, 95 } };
+    private static double[][] XArray = { { 0, 0.1, 2.5, 5, 10, 15, 25, 30 },
+                                          { 0, 0.4, 5, 12, 20, 36, 60, 80 } };
 
     private double[][] sonicArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
                                           { 0, 3, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
@@ -79,7 +79,7 @@ public class Align implements IState {
      */
     private boolean alignIR(double X) {
         if(isFirstIter) {
-            lastGyro = RobotContainer.train.getLongYaw();
+            lastGyro = train.newGyroThread;
             train.resetEncLeft();
             train.resetEncRight();
             isFirstIter = false;
@@ -97,7 +97,7 @@ public class Align implements IState {
             diffSharp = leftSharp - rightSharp;
             speedZ = Function.TransitionFunction(diffSharp, degFunction);
         } else {
-            speedZ = lastGyro - RobotContainer.train.getLongYaw();
+            speedZ = lastGyro - train.newGyroThread;
         }
 
         RobotContainer.train.setAxisSpeed(-speedX * coefForTime, speedZ);
@@ -106,13 +106,17 @@ public class Align implements IState {
         finishX = Function.BooleanInRange(speedX, -0.5, 0.5);
 
         if(finishZ && finishX) {
+
+            train.resetGyroValue = 0;
+            train.resetGyroThreadOnce = true;
+
             train.setAxisSpeed(0, 0);
             isFirstIter = true;
             lastGyro = 0;
             diffZ = 0;
             train.resetEncLeft();
             train.resetEncRight();
-            train.resetGyro();
+            // train.resetGyro();
             return true;
         }
         return finishX && finishZ;
@@ -125,7 +129,7 @@ public class Align implements IState {
     private boolean travelSonic(double X) {
 
         if(isFirstIter) {
-            lastGyro = train.getLongYaw();
+            lastGyro = train.newGyroThread;
             isFirstIter = false;
         }
 
@@ -134,7 +138,7 @@ public class Align implements IState {
         double backSonicDist = train.getBackSonicDistance();
 
         diffX = X - backSonicDist;
-        diffZ = lastGyro - train.getLongYaw();
+        diffZ = lastGyro - train.newGyroThread;
 
         SmartDashboard.putNumber("diffSonic", diffX);
 
@@ -151,19 +155,22 @@ public class Align implements IState {
         //     }
         // }
         finishX = Function.BooleanInRange(X - backSonicDist, -0.5, 0.5);
-        finishZ = Function.BooleanInRange(lastGyro - train.getLongYaw(), -0.5, 0.5);
+        finishZ = Function.BooleanInRange(lastGyro - train.newGyroThread, -0.5, 0.5);
 
 
         if(finishX && finishZ) {
+
+            train.resetGyroValue = 0;
+            train.resetGyroThreadOnce = true;
+
             train.setAxisSpeed(0, 0);
             isFirstIter = true;
             lastGyro = 0;
             diffZ = 0;
             train.resetEncLeft();
             train.resetEncRight();
-            train.resetGyro();
+            // train.resetGyro();
             return true;
-            
         }
         return false;
     }

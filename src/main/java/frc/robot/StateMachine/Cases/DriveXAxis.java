@@ -119,14 +119,20 @@ public class DriveXAxis implements IState {
 
     private boolean isFirst = true;
 
-    private double[][] speedXArray = { { 0, 5, 10, 12, 14, 18, 35, 50, 100}, 
-                                       { 0, 4, 12, 25, 35, 50, 75, 85, 95} };
+    // private double[][] speedXArray = { { 0, 0.7, 1.4, 3, 5, 10, 12, 14, 18, 35, 50, 100}, 
+    //                                    { 0, 1, 2, 3, 4, 12, 25, 35, 50, 75, 85, 95} };
+
+    private double[][] speedXArray = { { 0, 0.7, 1.4, 3, 5, 10, 12, 14, 18, 35, 50, 100}, 
+                                       { 0, 1, 2, 3, 8, 15, 30, 45, 50, 65, 75, 95} };
 
     // private double[][] speedXArray = { { 0, 1, 2.5, 5, 10, 12, 14, 18, 35, 50, 100}, 
     //                                     { 0, 7, 10, 12, 18, 25, 35, 50, 75, 85, 95} };
 
-    private double[][] speedZArray = { { 0.1, 0.5, 1.5, 2, 3, 6, 12, 26, 32, 50 }, 
-                                       { 6, 11, 17, 20, 25, 30, 40, 53, 60, 70 } };
+    // private double[][] speedZArray = { { 0.1, 0.5, 1.5, 2, 3, 6, 12, 26, 32, 50 }, 
+    //                                    { 6, 11, 17, 20, 25, 30, 40, 53, 60, 70 } };
+
+   private double[][] speedZArray = { { 0.1, 0.5, 1.5, 2, 3, 6, 12, 26, 32, 50 }, 
+                                       { 10, 15, 17, 20, 25, 30, 40, 53, 60, 70 } };
 
     private double[][] speedZArrayJustTurn = { { 0, 1, 5, 8, 10, 26, 41, 60, 90 }, 
                                                  { 0, 2, 5, 10, 15, 20, 35, 45, 70 } };
@@ -156,7 +162,9 @@ public class DriveXAxis implements IState {
             lastRightEnc = train.getRightEncoder(); 
             lastLeftEnc = train.getLeftEncoder(); 
             
-            train.resetGyro();
+            train.resetGyroValue = 0;
+            train.resetGyroThreadOnce = true;
+            
             isFirst = false;
         }
 
@@ -184,15 +192,17 @@ public class DriveXAxis implements IState {
             outSpeedForX = Function.TransitionFunction(diffX, speedXArray);
             outSpeedForZ = Function.TransitionFunction(-gyro, speedZArray);
 
-            finishX = Function.BooleanInRange(outSpeedForX, -2, 2); 
+            finishX = Function.BooleanInRange(diffX, -0.5, 0.5); 
             finishZ = Function.BooleanInRange(outSpeedForZ, -0.2, 0.2); 
     
         } else {
+
             outSpeedForX = 0;
             // SmartDashboard.putNumber("diffZ", ZPosition - gyro);
             outSpeedForZ = Function.TransitionFunction(ZPosition - gyro, speedZArrayJustTurn);
             finishX = true;
             finishZ = Function.BooleanInRange(outSpeedForZ, -0.3, 0.3); 
+
         }
 
         train.setAxisSpeed(outSpeedForX * startKoef, outSpeedForZ);
@@ -200,8 +210,11 @@ public class DriveXAxis implements IState {
         SmartDashboard.putNumber("posX", currentAxisX);
         SmartDashboard.putNumber("posZ", outSpeedForZ);
         if(finishX && finishZ) {
-            train.resetGyro();
-            
+            // train.resetGyro();
+
+            train.resetGyroValue = 0;
+            train.resetGyroThreadOnce = true;
+
             return true;
         }
         return false;

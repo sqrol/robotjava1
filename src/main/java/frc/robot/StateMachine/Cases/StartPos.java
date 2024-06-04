@@ -17,6 +17,7 @@ public class StartPos implements IState{
 
     @Override
     public boolean execute() {
+
         train.setIndication("WAITING");
         train.reset2Motors();
 
@@ -24,6 +25,8 @@ public class StartPos implements IState{
         train.setAxisSpeed(0, 0);
 
         train.resetGyro();
+
+        double limitTime = Timer.getFPGATimestamp(); 
 
         
         // train.setAxisSpeed(0.0f, 30.0f);
@@ -56,15 +59,19 @@ public class StartPos implements IState{
         // }
         // train.rotateMotorSpeedThread = 10;
 
+
         if(train.successInit) {
             train.resetLiftEncoder();
             train.resetEncRotate();
             
             train.setGripServoValue(15); 
             train.setGripRotateServoValue(105); 
-            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 8 && train.getStartButton()){
+            if(limitTime - StateMachine.iterationTime > 8 && train.getStartButton()){
+                
                 train.setIndication("IN PROCESS");
                 return true;
+            } else {
+                return false;
             }
         }
         return false;

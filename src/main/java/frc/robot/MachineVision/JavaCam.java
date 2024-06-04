@@ -261,25 +261,25 @@ public class JavaCam implements Runnable
         double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
         double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
 
-        Point yellowPoint1 = new Point(30, 36);      // Point(0, 200);
-        Point yellowPoint2 = new Point(100, 255);  // Point(160, 255);
-        Point yellowPoint3 = new Point(140, 255);    // Point(200, 255);
+        Point yellowPoint1 = new Point(red1YP, red2YP);      //30, 36);  
+        Point yellowPoint2 = new Point(green1YP, green2YP);   // 100, 255);
+        Point yellowPoint3 = new Point(blue1YP, blue2YP);    //140, 255);
 
         Point redPoint1 = new Point(0, 30);      // Point(34, 255);
         Point redPoint2 = new Point(100, 230);    // Point(70, 255);
         Point redPoint3 = new Point(170, 255);    // Point(200, 255);
 
-        Point greenPoint1 = new Point(43, 70);
-        Point greenPoint2 = new Point(50, 220);
-        Point greenPoint3 = new Point(190, 255);
+        Point greenPoint1 = new Point(55, 255);    //  43, 70);
+        Point greenPoint2  = new Point(89, 255);    // 50, 220)
+        Point greenPoint3 = new Point(222, 255);  // 190, 255
 
         Point greenPointPear1 = new Point(4, 40);
         Point greenPointPear2 = new Point(137, 251);
         Point greenPointPear3 = new Point(123, 255);
 
-        // Point greenPoint21 = new Point(38, 189);  
-        // Point greenPoint22 = new Point(201, 229);
-        // Point greenPoint23 = new Point(95, 247);
+        Point greenPoint21 = new Point(41, 52);   //(38, 189);   44 48 
+        Point greenPoint22 = new Point(123, 251); //(201, 229); 34 255
+        Point greenPoint23 = new Point(201, 255); //(95, 247); 45 255
 
         // Обрезаю изображение чтобы увеличить число кадров избавиться от лишнего шума
         Mat cut = Viscad2.ExtractImage(orig, new Rect(180, 150, 240, 200));
@@ -296,7 +296,7 @@ public class JavaCam implements Runnable
         Mat maskRedApple = thresholdAndProcess(hsvImage, redPoint1, redPoint2, redPoint3, 1, 1);
         Mat maskGreenApple = thresholdAndProcess(hsvImage, greenPoint1, greenPoint2, greenPoint3, 1, 1);
         Mat maskYellowPear = thresholdAndProcess(hsvImage, yellowPoint1, yellowPoint2, yellowPoint3, 1, 1);
-        Mat maskGreenPear = thresholdAndProcess(hsvImage, greenPoint1, greenPoint2, greenPoint3, 3, 2);
+        Mat maskGreenPear = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 3, 2);
         Mat maskAllWithoutWheels = thresholdAndProcess(hsvImage, greenPointPear1, greenPointPear2, greenPointPear3, 1, 1);
         Mat fillHolesGreenPear = Viscad2.FillHolesCAD(maskGreenPear);
 
@@ -311,7 +311,7 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("ImageAreaGreenPear", imageAreaGreenPear);
 
         redOut.putFrame(maskRedApple);
-        greenOut.putFrame(maskGreenApple);
+        greenOut.putFrame(maskGreenPear);
         yellowOut.putFrame(maskYellowPear);
         noWheels.putFrame(autoImage);
         mask3.putFrame(blurMat);
@@ -323,7 +323,7 @@ public class JavaCam implements Runnable
             train.detectionResult = "SMALL RED APPLE";
             return 6;
         } 
-        if(Function.BooleanInRange(imageAreaGreenApple,     2000, 3000)) { // SmallGreen
+        if(Function.BooleanInRange(imageAreaGreenApple,     2000, 5000)) { // SmallGreen
             train.detectionResult = "SMALL GREEN APPLE";
             return 7;
         }  
@@ -331,15 +331,15 @@ public class JavaCam implements Runnable
             train.detectionResult = "BIG RED APPLE";
             return 1;
         } 
-        if(Function.BooleanInRange(imageAreaGreenPear,      10000, 20000)) { // GreenPear
+        if(imageAreaGreenPear > 15000) { // GreenPear
             train.detectionResult = "GREEN PEAR";
             return 4;
         } 
-        if(Function.BooleanInRange(imageAreaGreenApple,     15000, 24000)) { // BigGreen
+        if(imageAreaGreenApple > 20000) { // BigGreen
             train.detectionResult = "BIG GREEN APPLE";
             return 2; 
         } 
-        if(Function.BooleanInRange(imageAreaYellowPear,     5000, 20000)) { // YellowPear
+        if(imageAreaYellowPear > 10000) { // YellowPear
             train.detectionResult = "YELLOW PEAR";
             return 3;
         } 

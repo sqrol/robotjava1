@@ -26,24 +26,24 @@ public class LogicCore {
     private boolean firstCallForSubPath = false;
 
     private final boolean B1Flag = false;
-    private final boolean B2Flag = false;
+    private final boolean B2Flag = true;
 
     // Для сдачи модулей B отключает построение пути назад
     private final boolean autonomousMode = true; // если true, то едет до финиша,
     // если false, то до контейнера и прыгает в END
 
     // Зона 1
-    private static final String[] firstTree = { "AppleBigRipe", "null", "null"};
+    private static final String[] firstTree = { "AppleSmallRipe", "AppleBigRipe", "RottenPeer"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "4" },
+                    { "1", "2", "null", "null", "null", "3", "PeerRipe" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "RottenBigApple", "20", "21", "22", "23", "24", "25" } };
+                    { "19", "20", "21", "22", "23", "AppleBigRipe", "25" } };
 
     // Зона 2
     private static final String[] secondTree = { "null", "null", "null"};
@@ -151,15 +151,15 @@ public class LogicCore {
     private String grabPosGenerate(String inGrabPos) {
         Map<String, String> grabPosMap = new HashMap<>();
         // нормальные захваты
-      
+
         grabPosMap.put("GRAB_POS_1", "-45_1ST_SIDE_LINE");
         grabPosMap.put("GRAB_POS_2", "-45_2NS_SIDE_LINE");
 
-        
+
         grabPosMap.put("GRAB_POS_3", "45_2ND_SIDE_LINE_RZ");
         grabPosMap.put("GRAB_POS_4", "45_1ST_SIDE_LINE_RZ");
 
-        
+
         grabPosMap.put("GRAB_POS_7", "-45_3RD_SIDE_LINE");
         grabPosMap.put("GRAB_POS_8", "UNDER_TREE_8");
         grabPosMap.put("GRAB_POS_9", "20_3RD_SIDE_LINE_RZ");
@@ -170,7 +170,7 @@ public class LogicCore {
         grabPosMap.put("GRAB_POS_22", "0_1ST_MAIN_LINE");
         grabPosMap.put("GRAB_POS_23", "-45_3RD_SIDE_LINE_RZ");
 
-    
+
         grabPosMap.put("GRAB_POS_25", "-45_1ST_SIDE_LINE_RZ");
         grabPosMap.put("GRAB_POS_24", "-45_2ND_SIDE_LINE_RZ");
         grabPosMap.put("GRAB_POS_18", "-20_1ST_SIDE_LINE_RZ");
@@ -178,7 +178,7 @@ public class LogicCore {
         grabPosMap.put("GRAB_POS_11", "20_1ST_SIDE_LINE_RZ");
         grabPosMap.put("GRAB_POS_10", "20_2ND_SIDE_LINE_RZ");
 
-    
+
         grabPosMap.put("GRAB_POS_20", "45_2ND_SIDE_LINE");
         grabPosMap.put("GRAB_POS_19", "45_1ST_SIDE_LINE");
         grabPosMap.put("GRAB_POS_13", "25_2ND_SIDE_LINE");
@@ -191,7 +191,7 @@ public class LogicCore {
 
     private String grabPosGenerate2(String inGrabPos) {
         Map<String, String> grabPosMap = new HashMap<>();
-        // ненормальные захваты
+        // неформальные захваты
         grabPosMap.put("GRAB_POS_1", "-45_4TH_MAIN_LINE_SECOND_LZ");
         grabPosMap.put("GRAB_POS_2", "0_4TH_MAIN_LINE_SECOND_LZ");
 
@@ -284,8 +284,8 @@ public class LogicCore {
     private ArrayList<String> grabFromRightZone(String[][] currentZone, String zoneName, int zoneNum) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
-        int[][] indexes = { {0, 5}, {0, 6}, {1, 4}, {1, 5}, {1, 6}, {1, 6},
-                {2, 4}, {2, 5}, {2, 6}, {3, 4}, {3, 5}, {3, 6} }; // Тут указываем индексы для 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25
+        int[][] indexes = { {3, 6}, {3, 5}, {3, 4}, {2, 6}, {2, 5}, {2, 4},
+                            {1, 6}, {1, 6}, {1, 5}, {1, 4}, {0, 6}, {0, 5} }; // Тут указываем индексы для 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть

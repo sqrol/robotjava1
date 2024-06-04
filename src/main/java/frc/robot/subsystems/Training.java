@@ -106,6 +106,7 @@ public class Training extends SubsystemBase
     private boolean direction = false; 
     public int currentGlidePosition = 0;
     public boolean glideExit = false;
+    public int currentGlidePositionForTest = 0;
 
     private double encRightResetValue = 0;
     private double encLeftResetValue = 0;
@@ -170,15 +171,15 @@ public class Training extends SubsystemBase
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MeanFilter(10);
 
-        redLED = new DigitalOutput(20);
-        greenLED = new DigitalOutput(21);
+        redLED = new DigitalOutput(21);
+        greenLED = new DigitalOutput(20);
 
         // Инициализация концевого выключателя 
         limitSwitchLift = new DigitalInput(0);
         SmartDashboard.putNumber("PID SPEED", 0);
         // Инициализация сервоприводов
         servoGrab = new Servo(0);
-        // 177 закрыть 
+        // 177 закрыть
         // 110 открыть
         // для фруктов:
         // большое яблоко - 160
@@ -634,7 +635,7 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return true;
+            return startButton.get();
             // return true;
         } catch (Exception e) {
             return false;
@@ -986,6 +987,26 @@ public class Training extends SubsystemBase
         
     }
 
+    
+    private void checkGlide() {
+        boolean blackLineDetect = getCobraVoltage() > 2.0;
+
+        SmartDashboard.putNumber("getCobraVoltage(): ", getCobraVoltage()); 
+
+        SmartDashboard.putNumber("currentGlidePosition2: ", currentGlidePosition); 
+
+        if (blackLineDetect && !this.blackLineFlag) {
+            this.currentGlidePosition++; 
+            this.blackLineFlag = true;
+        }
+
+        if (!blackLineDetect && this.blackLineFlag) {
+            this.blackLineFlag = false;
+        }
+
+    }
+
+
     @Override
     public void periodic()
     {
@@ -1020,6 +1041,6 @@ public class Training extends SubsystemBase
         // SmartDashboard.putNumber("PID SPEED", 25);
         SmartDashboard.putBoolean("END", finish);
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
-
+        // checkGlide();
     }
 }

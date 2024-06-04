@@ -74,41 +74,44 @@ public class SetGrabPos implements IState {
             if (smooth) {
                 endMovement = smoothServoMovement(55.0, 0.05);
             } else {
-                // endMovement = smoothServoMovement(55.0, 0.01);
-                train.setGripServoValue(55);
-                return true;
+                endMovement = smoothServoMovement(55.0, 0.01);
+                // train.setGripServoValue(55);
+                // return true;
             }
         }
         if (fruit.equals("SMALL APPLE")) {
             if (smooth) {
                 endMovement = smoothServoMovement(65.0, 0.05);
             } else {
-                train.setGripServoValue(65);
-                return true;
+                endMovement = smoothServoMovement(65.0, 0.01);
+                // train.setGripServoValue(65);
+                // return true;
             }
         }
         if (fruit.equals("PEAR")) {
             if (smooth) {
                 endMovement = smoothServoMovement(54.0, 0.05);
             } else {
-                train.setGripServoValue(54);
-                return true;
+                endMovement = smoothServoMovement(54.0, 0.01);
+                // train.setGripServoValue(54);
+                // return true;
             }
         }
         if (fruit.equals("OPEN")) {
             if (smooth) {
                 endMovement = smoothServoMovement(15.0, 0.05);
             } else {
-                train.setGripServoValue(15);
-                return true;
+                endMovement = smoothServoMovement(15.0, 0.01);
+                // train.setGripServoValue(15);
+                // return true;
             }
         
         }
         if (fruit.equals("OPEN SMALL APPLE")) {
             if (smooth) {
-                endMovement = smoothServoMovement(49.0, 0.05);
+                endMovement = smoothServoMovement(29.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(49.0, 0.01);
+                endMovement = smoothServoMovement(29.0, 0.01);
             }
         }
         return Timer.getFPGATimestamp() - StateMachine.iterationTime > 1 && endMovement;

@@ -24,9 +24,8 @@ public class Drive extends CommandBase {
 
     @Override
     public void end(boolean interrupted){
-        train.setRightMotorSpeed(0.0, true);
-        train.setLeftMotorSpeed(0.0, true);
-
+        // train.setRightMotorSpeed(0.0, true);
+        // train.setLeftMotorSpeed(0.0, true);
     }
 
     @Override

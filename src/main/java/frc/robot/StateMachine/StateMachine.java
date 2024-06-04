@@ -11,7 +11,8 @@ public class StateMachine extends CommandBase {
     private static final Training train = RobotContainer.train;
     public static int currentArray = 0;
     public static int currentIndex = 0;
-    public static double startTime, iterationTime = 0;
+    public static double startTime = 0; 
+    public static double iterationTime = 0;
     public static boolean first = false;
 
     public StateMachine(){
@@ -20,6 +21,7 @@ public class StateMachine extends CommandBase {
 
     @Override
     public void initialize(){
+        startTime = Timer.getFPGATimestamp();
     }
 
     @Override
@@ -35,12 +37,15 @@ public class StateMachine extends CommandBase {
         first = false;
         
         if(States.mainStates[currentArray][currentIndex].execute()){
-            startTime = Timer.getFPGATimestamp();
+            
             first = true;
             currentIndex++;
+
             SmartDashboard.putNumber("Index", currentIndex);
             SmartDashboard.putNumber("Array", currentArray); 
+
             iterationTime = Timer.getFPGATimestamp() - startTime;
+
         }
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
     }
