@@ -13,7 +13,7 @@ public class RottenDetection implements IState {
     @Override
     public boolean execute() {
 
-        train.nowTask = 228; 
+        train.nowTask = 4; 
         SmartDashboard.putNumber("nowResult", train.nowResult);
 
         train.setGripRotateServoValue(95);
@@ -21,11 +21,12 @@ public class RottenDetection implements IState {
         if(train.nowResult == 5) {
             train.setAxisSpeed(0, 0);
             train.setIndication("IN PROCESS");
+            SmartDashboard.putString("Identification", "Rotten fruit");
             if(train.getStartButton() && Timer.getFPGATimestamp() - StateMachine.iterationTime > 2) {
                 return true;
             }
         } else {
-            
+            SmartDashboard.putString("Identification", "none");
             train.setAxisSpeed(0, 0);
             train.setIndication("WAITING");
             train.nowResult = 0;

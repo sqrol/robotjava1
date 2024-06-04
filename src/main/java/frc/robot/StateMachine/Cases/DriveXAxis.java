@@ -164,7 +164,7 @@ public class DriveXAxis implements IState {
             
             train.resetGyroValue = 0;
             train.resetGyroThreadOnce = true;
-            
+
             isFirst = false;
         }
 

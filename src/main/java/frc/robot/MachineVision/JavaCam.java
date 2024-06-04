@@ -40,19 +40,19 @@ public class JavaCam implements Runnable
     @Override
     public void run() {
 
-        SmartDashboard.putNumber("RED1 YP", 0.0);
-        SmartDashboard.putNumber("RED2 YP", 0.0);
-        SmartDashboard.putNumber("GREEN1 YP", 0.0);
-        SmartDashboard.putNumber("GREEN2 YP", 0.0);
-        SmartDashboard.putNumber("BLUE1 YP", 0.0);
-        SmartDashboard.putNumber("BLUE2 YP", 0.0);
+        // SmartDashboard.putNumber("RED1 YP", 0.0);
+        // SmartDashboard.putNumber("RED2 YP", 0.0);
+        // SmartDashboard.putNumber("GREEN1 YP", 0.0);
+        // SmartDashboard.putNumber("GREEN2 YP", 0.0);
+        // SmartDashboard.putNumber("BLUE1 YP", 0.0);
+        // SmartDashboard.putNumber("BLUE2 YP", 0.0);
 
-        // SmartDashboard.putNumber("RED1 RA", 0.0);
-        // SmartDashboard.putNumber("RED2 RA", 0.0);
-        // SmartDashboard.putNumber("GREEN1 RA", 0.0);
-        // SmartDashboard.putNumber("GREEN2 RA", 0.0);
-        // SmartDashboard.putNumber("BLUE1 RA", 0.0);
-        // SmartDashboard.putNumber("BLUE2 RA", 0.0);
+        SmartDashboard.putNumber("RED1 RA", 0.0);
+        SmartDashboard.putNumber("RED2 RA", 0.0);
+        SmartDashboard.putNumber("GREEN1 RA", 0.0);
+        SmartDashboard.putNumber("GREEN2 RA", 0.0);
+        SmartDashboard.putNumber("BLUE1 RA", 0.0);
+        SmartDashboard.putNumber("BLUE2 RA", 0.0);
 
         // SmartDashboard.putNumber("RED1 GP", 0.0);
         // SmartDashboard.putNumber("RED2 GP", 0.0);
@@ -102,7 +102,7 @@ public class JavaCam implements Runnable
                     RobotContainer.train.centersForClass = getFruitPosition(source);
                     
                 }
-                if(RobotContainer.train.nowTask == 228) {
+                if(RobotContainer.train.nowTask == 4) {
                     RobotContainer.train.nowResult = CheckRotten(source);
                 }
                 if(RobotContainer.train.nowTask == 3) {
@@ -122,18 +122,18 @@ public class JavaCam implements Runnable
 
         List<Rect> currentCordinate = new ArrayList<>();
 
-        // double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
-        // double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+        double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+        double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
 
-        // double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
-        // double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+        double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+        double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
 
-        // double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
-        // double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+        double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+        double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
 
-        Point greenPoint21 = new Point(0, 200);  
-        Point greenPoint22 = new Point(0, 255);
-        Point greenPoint23 = new Point(250, 255);
+        Point greenPoint21 = new Point(0, 255);   
+        Point greenPoint22 = new Point(122, 255);
+        Point greenPoint23 = new Point(127, 255);
 
         Mat inImg = new Mat();
 
@@ -156,7 +156,6 @@ public class JavaCam implements Runnable
         resizeGlide1.putFrame(inImg);
         mask2.putFrame(maskRedApple);
 
-        
         releaseMats(blurMat, hsvImage, maskRedApple, outPA, inImg, orig);
         // return new ArrayList<>();
 

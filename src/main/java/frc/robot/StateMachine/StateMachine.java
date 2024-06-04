@@ -47,4 +47,6 @@ public class StateMachine extends CommandBase {
         
         SmartDashboard.putString("StateName", States.mainStates[currentArray][currentIndex].getClass().getSimpleName());
     }
+
+    
 }

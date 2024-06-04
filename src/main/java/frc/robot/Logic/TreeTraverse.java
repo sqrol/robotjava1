@@ -5,8 +5,8 @@ import java.util.HashMap;
 public class TreeTraverse {
 
     // Данные и конфигурации
-    private static final String[] TREE_ZONE_NAMES = {"RZ", "TZ", "LZ"};
-    private static final String[] TREE_NAMES = {"SECOND"};
+    private static final String[] TREE_ZONE_NAMES = {"LZ", "TZ", "RZ"};
+    private static final String[] TREE_NAMES = {"FRIST", "SECOND", "THIRD"};
 
     private static final HashMap<String, String> containersForFruits = new HashMap<String, String>() {
         {

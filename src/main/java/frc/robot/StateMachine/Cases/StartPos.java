@@ -23,7 +23,7 @@ public class StartPos implements IState{
 
         // train.OdometryReset(0, 0);
         train.setAxisSpeed(0, 0);
-
+        
         train.resetGyro();
 
         // train.setAxisSpeed(0.0f, 30.0f);
@@ -65,8 +65,7 @@ public class StartPos implements IState{
             
             train.setGripServoValue(15); 
             train.setGripRotateServoValue(105); 
-            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 5 && train.getStartButton()){
-                
+            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 1 && train.getStartButton()){
                 train.setIndication("IN PROCESS");
                 return true;
             } else {

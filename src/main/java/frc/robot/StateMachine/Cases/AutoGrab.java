@@ -80,7 +80,7 @@ public class AutoGrab implements IState{
         switch (nowStep) {
             case 0: // Выравнивание вращающегося механизма на объекте
                 
-                servoController(15, 87); // 130 270
+                servoController(15, 96); // 130 270
                 SmartDashboard.putString("detectionResult", train.detectionResult);
                 if (train.centersForClass.isEmpty()) {
                     fruitPosX = 0; 
@@ -97,14 +97,15 @@ public class AutoGrab implements IState{
                             objectDetectionFlag = false;
                         }
                     }
+                    objectFind = true;
                 }
                 
-                objectFind = true;
+                
                 
                 if (oneObject) {
                     if (objectFind) {
                         this.startKoef = Function.TransitionFunction(System.currentTimeMillis() - StateMachine.iterationTime, startKoefSpeedForX);
-                        this.diffSpeed = Function.TransitionFunction(this.fruitPosX - 290, speedForRotate);
+                        this.diffSpeed = Function.TransitionFunction(this.fruitPosX - 324, speedForRotate);
                         this.rotateStop = Function.BooleanInRange(this.diffSpeed, -3, 3);
                         train.rotateMotorSpeedThread = diffSpeed * startKoef;
                     } else {

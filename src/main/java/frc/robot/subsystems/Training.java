@@ -635,7 +635,7 @@ public class Training extends SubsystemBase
     public boolean getStartButton(){
         try {
             // boolean out = startButton.getDistance() == 2 || startButton.getDistance() == -1; 
-            return startButton.get();
+            return true;
             // return true;
         } catch (Exception e) {
             return false;

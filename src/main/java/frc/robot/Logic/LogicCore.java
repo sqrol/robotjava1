@@ -26,24 +26,24 @@ public class LogicCore {
     private boolean firstCallForSubPath = false;
 
     private final boolean B1Flag = false;
-    private final boolean B2Flag = true;
+    private final boolean B2Flag = false;
 
     // Для сдачи модулей B отключает построение пути назад
-    private final boolean autonomousMode = true; // если true, то едет до финиша,
+    private final boolean autonomousMode = false; // если true, то едет до финиша,
     // если false, то до контейнера и прыгает в END
 
     // Зона 1
-    private static final String[] firstTree = { "AppleSmallRipe", "AppleBigRipe", "RottenPeer"};
+    private static final String[] firstTree = { "null", "null", "null"};
     private static final String[][] firstTreeZone =
             {
                     //  1  | 2  |                      | 3  |  4
-                    { "1", "2", "null", "null", "null", "3", "PeerRipe" },
+                    { "1", "2", "null", "null", "null", "3", "4" },
                     //   5  |   6   |   7   |   8   |   9   |   10  |   11
                     { "5", "6", "7", "8", "9", "10", "11" },
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "AppleBigRipe", "25" } };
+                    { "19", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 2
     private static final String[] secondTree = { "null", "null", "null"};
@@ -261,7 +261,7 @@ public class LogicCore {
     private ArrayList<String> grabFromLeftZone(String[][] currentZone, String zoneName, int zoneNum) {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "LZ";
-        int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2} }; // Тут указываем индексы для 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21
+        int[][] indexes = { {0, 0}, {0, 1}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}, {3, 0}, {3, 1}, {3, 2} }; // Тут указываем индексы для 1, 2, 5, 6, 7, 12, 13, 14, 19, 20, 21
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
@@ -285,7 +285,7 @@ public class LogicCore {
         ArrayList<String> allFindFruits = new ArrayList<String>();
         String currentZoneName = "RZ";
         int[][] indexes = { {3, 6}, {3, 5}, {3, 4}, {2, 6}, {2, 5}, {2, 4},
-                            {1, 6}, {1, 6}, {1, 5}, {1, 4}, {0, 6}, {0, 5} }; // Тут указываем индексы для 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25
+                {1, 6}, {1, 6}, {1, 5}, {1, 4}, {0, 6}, {0, 5} }; // Тут указываем индексы для 3, 4, 9, 10, 11, 16, 17, 18, 23, 24, 25
 
         // Проход по каждому индексу в массиве и вывод соответствующего значения
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть

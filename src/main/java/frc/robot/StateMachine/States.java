@@ -7,8 +7,10 @@ public class States {
     public static IState[][] mainStates = new IState[][] {
                                            // 0 
         { 
-            // new StartPos(),
-            
+            new StartPos(),
+            // new AutoGrab(),
+            new Transition(),
+            // new End(),
             // new DriveXAxis(100, 0),
             // new RottenDetection(),
             // new End(),
@@ -16,7 +18,25 @@ public class States {
             // new SetGripRotatePos("FLOOR"),
             // new SetGrabPos("BIG APPLE", false),
             // new OMS("check"),
+            // new DriveXAxis(62, 0),  // прямо со старта
+            // new DriveXAxis(0, -90),
+
+            // new DriveXAxis(75, 0), // между зеленой и красной
+            // new DriveXAxis(0, 90),
             
+            // new DriveXAxis(60, 0), // от красной к зеленой
+            // new DriveXAxis(0, 90),
+
+            // new DriveXAxis(60, 0), // между красной и зеленой
+            // new DriveXAxis(0, -90),
+
+            // new DriveXAxis(64, 0), // от предпоследней к последней
+            // new DriveXAxis(0, -90),
+            
+            // new DriveXAxis(71, 0), 
+            // new DriveXAxis(0, 90), // между предпоследней и последней
+            // new DriveXAxis(50, 0),
+            // new End(),
             // new SetGlidePosition(28),
             // для маленького яблока new SetLiftPosition(98),
             // для большого яблока new SetLiftPosition(85),
@@ -38,20 +58,8 @@ public class States {
             
             // new SetGlidePosition(1),
             // new SetRotatePos(0),
-            // new DriveXAxis(4, 0),
-            new StartPos(),
-            // new ObjectFinder(),
-            // new StartPos(),
-            new RottenDetection(),
-            // new Start(),
-            // Управление элементом
-            new StartPos(),
-            new SetGripRotatePos("FLOOR"),
-            new SetGrabPos("OPEN", false),
-            new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE", false),
-            new SetLiftPosition(-1),
-            new End(),
+   
+    
             // new SetRotatePos(45),
             // new SetRotatePos(-90),
             // new StartPos(),
@@ -68,7 +76,7 @@ public class States {
             // // new SharpCheck(),
             // // new StartPos(),
             // new ObjectFinder(),
-            new InitLogic(),
+            // new InitLogic(),
             // new End(),
             // new End(),
             new Transition(),
@@ -946,7 +954,7 @@ public class States {
             // B1 // 80
         {
             // new StartPos(),
-            // new DriveXAxis(104, 0), // метр вперед
+            new DriveXAxis(104, 0), // метр вперед
             
             // // змейка
             new StartPos(),
@@ -985,7 +993,7 @@ public class States {
             new RottenDetection(),
             new StartPos(),
             // Управление элементом
-            new StartPos(),
+            
             new SetGripRotatePos("FLOOR"),
             new SetGrabPos("OPEN", false),
             new SetLiftPosition(85),
@@ -2640,5 +2648,10 @@ public class States {
             new DriveXAxis(32, 0),
             new Transition()
         },
+            // AUTOGRAB_UPPER // 214
+        {
+            new AutoGrab(),
+            new Transition()
+        }
     };
 }
