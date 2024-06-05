@@ -10,7 +10,9 @@ import frc.robot.subsystems.Training;
 
 public class Transition implements IState {
     private static int indexArray = 0; 
+    private Boolean autoMode = true; // 123123123123123
     private TreeTraverse auto = RobotContainer.traverse;
+    private static int countStep = 0; 
 
     // private static int index = 0;
     // public static Change change = RobotContainer.change;
@@ -20,7 +22,8 @@ public class Transition implements IState {
 
     // @Override
     public boolean execute() {
-        // StateMachine.currentArray = indexArray;
+        if (autoMode) {
+                    // StateMachine.currentArray = indexArray;
         // StateMachine.currentIndex = -1;
 
         String currentStrOut = auto.execute(); 
@@ -34,6 +37,16 @@ public class Transition implements IState {
         Transition.indexArray++;
         StateMachine.currentIndex = -1;
         RobotContainer.train.setAxisSpeed(0, 0);
+
+        countStep++;
+        SmartDashboard.putNumber("CountStepForTrans: ", countStep);
+
         return true;
+
+        } else {
+
+            return false;
+        }
+
     }
 }

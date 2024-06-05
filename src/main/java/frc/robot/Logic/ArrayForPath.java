@@ -40,7 +40,7 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_CH3_TO_CON3", 33);
             put("MOV_IN_CON3_TO_CH3", 34);
             put("MOV_IN_CH3_TO_CON2", 35);
-            put("MOV_IN_CON2_TO_CH3", 36);
+            
             put("MOV_IN_FRIST_LOZ_TO_CH3", 37);
             put("MOV_IN_CH3_TO_CON1", 38);
             put("MOV_IN_CH3_TO_CON1", 40);
@@ -48,7 +48,7 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_CH2_TO_CON1", 42);
             put("MOV_IN_FRIST_LOZ_TO_CH3", 37);
             put("MOV_IN_CH3_TO_CON1", 38);
-            put("MOV_IN_CON3_TO_CH3", 34);
+            
             put("MOV_IN_CH3_TO_CON2", 35);
             put("MOV_IN_CON2_TO_CH3", 36);
             put("MOV_IN_FRIST_LOZ_TO_CH3", 37);
