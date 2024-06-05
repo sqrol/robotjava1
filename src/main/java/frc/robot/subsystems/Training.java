@@ -86,7 +86,8 @@ public class Training extends SubsystemBase
     public int nowTask = 0; 
     public boolean resizeForGlide = false; 
     public String detectionResult = "";
-    
+    public boolean fruitFind = false;
+
     public boolean firstInitForGlide = false; 
     public boolean firstInitForLift = false; 
 

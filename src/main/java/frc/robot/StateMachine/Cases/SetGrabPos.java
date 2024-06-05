@@ -72,9 +72,9 @@ public class SetGrabPos implements IState {
         
         if (fruit.equals("BIG APPLE")) {
             if (smooth) {
-                endMovement = smoothServoMovement(55.0, 0.05);
+                endMovement = smoothServoMovement(60.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(55.0, 0.01);
+                endMovement = smoothServoMovement(60.0, 0.01);
                 // train.setGripServoValue(55);
                 // return true;
             }
@@ -83,7 +83,7 @@ public class SetGrabPos implements IState {
             if (smooth) {
                 endMovement = smoothServoMovement(65.0, 0.05);
             } else {
-                endMovement = smoothServoMovement(65.0, 0.01);
+                endMovement = smoothServoMovement(75.0, 0.01);
                 // train.setGripServoValue(65);
                 // return true;
             }

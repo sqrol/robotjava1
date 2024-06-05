@@ -139,7 +139,7 @@ public class JavaCam implements Runnable
 
         // Пока не успел доделать
         if (RobotContainer.train.resizeForGlide) {
-            inImg = Viscad2.ExtractImage(orig, new Rect(140, 0, 240, 440));  // Обрезаем картинку по линии стрелы
+            inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360));  // Обрезаем картинку по линии стрелы
         } else {
             inImg = orig;
         }
@@ -148,7 +148,7 @@ public class JavaCam implements Runnable
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
         Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
-
+        
         final Mat outPA = new Mat();
 
         currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
@@ -319,27 +319,33 @@ public class JavaCam implements Runnable
                         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
 
         if(Function.BooleanInRange(imageAreaRedApple,       2000, 4000)) {  // SmallRed
-            train.detectionResult = "SMALL RED APPLE";
+            train.detectionResult = "AppleSmallRipe";
+            train.fruitFind = true; 
             return 6;
         } 
         if(Function.BooleanInRange(imageAreaGreenApple,     2000, 5000)) { // SmallGreen
             train.detectionResult = "SMALL GREEN APPLE";
+            train.fruitFind = true; 
             return 7;
         }  
         if(Function.BooleanInRange(imageAreaRedApple,       1000, 30000)) { // BigRed
-            train.detectionResult = "BIG RED APPLE";
+            train.detectionResult = "AppleBigRipe";
+            train.fruitFind = true; 
             return 1;
         } 
         if(imageAreaGreenPear > 15000) { // GreenPear
             train.detectionResult = "GREEN PEAR";
+            train.fruitFind = true; 
             return 4;
         } 
         if(imageAreaGreenApple > 20000) { // BigGreen
             train.detectionResult = "BIG GREEN APPLE";
+            train.fruitFind = true; 
             return 2; 
         } 
         if(imageAreaYellowPear > 10000) { // YellowPear
-            train.detectionResult = "YELLOW PEAR";
+            train.detectionResult = "PeerRipe";
+            train.fruitFind = true; 
             return 3;
         } 
         return 0;

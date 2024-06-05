@@ -13,7 +13,7 @@ public class Grab implements IState {
     public boolean execute() {
         
         RobotContainer.train.setGripServoValue(pos);
-        return Timer.getFPGATimestamp() - StateMachine.startTime > 1.5;
+        return false;
     }
     
 }

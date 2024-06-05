@@ -2,11 +2,17 @@ package frc.robot.Logic;
 
 import java.util.HashMap;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Training;
+
 public class TreeTraverse {
 
     // Данные и конфигурации
-    private static final String[] TREE_ZONE_NAMES = {"LZ", "TZ", "RZ"};
+    private static final String[] TREE_ZONE_NAMES = {"RZ", "TZ", "LZ"};
     private static final String[] TREE_NAMES = {"FRIST", "SECOND", "THIRD"};
+
+    private Training train = RobotContainer.train;
 
     private static final HashMap<String, String> containersForFruits = new HashMap<String, String>() {
         {
@@ -14,7 +20,7 @@ public class TreeTraverse {
             put("RottenBigApple", "CON1");
             put("RottenPeer", "CON1");
             put("AppleSmallRipe", "CON2");
-            put("AppleBigRipe", "CON5");
+            put("AppleBigRipe", "CON3");
             put("PeerRipe", "CON4");
         }
     };
@@ -31,25 +37,27 @@ public class TreeTraverse {
     };
 
     // Вот эти переменные необходимо изменить при нахождении фрукта AutoGrab'ом
-    private static String findFruitName = "PeerRipe";
-    private static boolean fruitFind = true; // Для отладки установлено в true
+    private String findFruitName = "";
+    private boolean fruitFind = false; // Для отладки установлено в true
 
-    private static boolean firstCall = true;
-    private static boolean lastAutoGrab, lastStepChange, firstItter, treeNumberChange = true;
-    private static int currentTreeNumber, currentTreeZoneNumber, currentTreeZoneSteps, deliverySteps, endSteps, lastCurrentTreeNumber, lastCurrentTreeZoneNumber = 0;
-    private static String lastCheckpoint = "";
-    private static String treeZone = "";
-
-    public TreeTraverse() {
-
-    }
+    private boolean firstCall = true;
+    private boolean lastAutoGrab, lastStepChange, firstItter, treeNumberChange = true;
+    private int currentTreeNumber, currentTreeZoneNumber, currentTreeZoneSteps, deliverySteps, endSteps, lastCurrentTreeNumber, lastCurrentTreeZoneNumber = 0;
+    private String lastCheckpoint = "";
+    private String treeZone = "";
 
     public String execute() {
         String outIndex = "none";
 
+        findFruitName = train.detectionResult;
+        fruitFind = train.fruitFind;
+
+        SmartDashboard.putBoolean("FruitHui: ", fruitFind); 
+        SmartDashboard.putString("FruitHuiName: ", findFruitName); 
+
         if (firstCall) {
-            outIndex = "MOV_IN_START_TO_" + choosingBestZoneForCheck(TREE_ZONE_NAMES[currentTreeZoneNumber], TREE_NAMES[currentTreeNumber]);
-            setLastCheckpoint(choosingBestZoneForCheck(TREE_ZONE_NAMES[currentTreeZoneNumber], TREE_NAMES[currentTreeNumber]));
+            outIndex = "MOV_IN_START_TO_CH3";
+            setLastCheckpoint("CH3");
             firstItter = true;
             firstCall = false;
         } else {
@@ -57,7 +65,7 @@ public class TreeTraverse {
                 if (currentTreeZoneNumber < TREE_ZONE_NAMES.length) {
                     if (currentTreeZoneSteps < 2) {
 
-                        outIndex = processCurrentTreeZone(currentTreeNumber, currentTreeZoneNumber, currentTreeZoneSteps, treeNumberChange);
+                        outIndex = processCurrentTreeZone(currentTreeNumber, currentTreeZoneNumber, treeNumberChange);
                         currentTreeZoneSteps++;
 
                         if (currentTreeZoneSteps + 1 == 3) {
@@ -80,10 +88,8 @@ public class TreeTraverse {
 
         treeNumberChange = checkChangeTreeNumber();
         lastCurrentTreeNumber = currentTreeNumber;
-        
-        System.out.println(outIndex);
 
-        return outIndex; 
+        return outIndex;
     }
 
     private String processEnd(Integer step) {
@@ -99,14 +105,14 @@ public class TreeTraverse {
         return outIndex;
     }
 
-    private String processCurrentTreeZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Integer currentTreeZoneSteps, Boolean ChangeTreeNumber) {
+    private String processCurrentTreeZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Boolean ChangeTreeNumber) {
         String outIndex = "none";
 
             if (firstItter) {
 
                 outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
                 setLastTreeZone(TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber]);
-                TreeTraverse.currentTreeZoneSteps = 0;
+                currentTreeZoneSteps = 0;
                 firstItter = false;
 
             } else {
@@ -115,44 +121,33 @@ public class TreeTraverse {
                     if (deliverySteps < 5) {
 
                         if (deliverySteps == 0) {
-                            outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getBestWayForCheckForZone(getLastTreeZone());
+                            outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getConForFruit(findFruitName);
                             setLastCheckpoint(getBestWayForCheckForZone(getLastTreeZone()));
 
-                            TreeTraverse.currentTreeZoneNumber =lastCurrentTreeZoneNumber;
-                            TreeTraverse.currentTreeZoneSteps = -1;
+                            currentTreeZoneNumber =lastCurrentTreeZoneNumber;
+                            currentTreeZoneSteps = -1;
                         }
 
                         if (deliverySteps == 1) {
-                            outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + getConForFruit(findFruitName);
+                            outIndex = "RESET_FRUIT";
 
-                            TreeTraverse.currentTreeZoneNumber =lastCurrentTreeZoneNumber;
-                            TreeTraverse.currentTreeZoneSteps = -1;
+                            train.fruitFind = false; 
+                            train.detectionResult = "";
+
+                            currentTreeZoneNumber = lastCurrentTreeZoneNumber;
+                            currentTreeZoneSteps = -1;
                         }
 
                         if (deliverySteps == 2) {
-                            outIndex = "RESET_FRUIT";
-
-                            TreeTraverse.currentTreeZoneNumber =lastCurrentTreeZoneNumber;
-                            TreeTraverse.currentTreeZoneSteps = -1;
-                        }
-
-                        if (deliverySteps == 3) {
                             outIndex = "MOV_IN_" + getConForFruit(findFruitName) + "_TO_" + getLastCheckpoint();
 
-                            TreeTraverse.currentTreeZoneNumber =lastCurrentTreeZoneNumber;
-                            TreeTraverse.currentTreeZoneSteps = -1;
-                        }
-
-                        if (deliverySteps == 4) {
-                            outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + getLastTreeZone();
-
-                            TreeTraverse.currentTreeZoneNumber =lastCurrentTreeZoneNumber;
-                            TreeTraverse.currentTreeZoneSteps = 0;
+                            currentTreeZoneNumber = lastCurrentTreeZoneNumber;
+                            currentTreeZoneSteps = -1;
                         }
 
                         deliverySteps++;
 
-                        if (deliverySteps == 5) {
+                        if (deliverySteps == 3) {
 
                             fruitFind = false;
                             lastAutoGrab = false;
@@ -161,12 +156,11 @@ public class TreeTraverse {
 
                 } else {
                     if (ChangeTreeNumber) {
-                        outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getBestWayForCheckForZone(getLastTreeZone());
-                        setLastCheckpoint(getBestWayForCheckForZone(getLastTreeZone()));
+                        outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getLastCheckpoint();
                         lastStepChange = true;
-                        TreeTraverse.currentTreeZoneSteps = -1;
+                        currentTreeZoneSteps = -1;
                     } else {
-                        outIndex = createPathForZone(currentTreeNumber, currentTreeZoneNumber, currentTreeZoneSteps);
+                        outIndex = createPathForZone(currentTreeNumber, currentTreeZoneNumber);
                     }
                 }
             }
@@ -174,7 +168,7 @@ public class TreeTraverse {
         return outIndex;
     }
 
-    private String createPathForZone(Integer currentTreeNumber, Integer currentTreeZoneNumber, Integer stepForZone) {
+    private String createPathForZone(Integer currentTreeNumber, Integer currentTreeZoneNumber) {
         String outIndex = "none";
 
         if (currentTreeZoneSteps == 0) {
@@ -182,16 +176,22 @@ public class TreeTraverse {
                 outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
                 lastStepChange = false;
             } else {
-                outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
-                setLastTreeZone(TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber]);
-                lastAutoGrab = false;
+                if (!lastAutoGrab) {
+                    outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
+                    setLastTreeZone(TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber]);
+                    lastAutoGrab = false;
+                } else {
+                    outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
+                    setLastTreeZone(TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber]);
+                    lastAutoGrab = false;
+                }
             }
         }
 
         if (currentTreeZoneSteps == 1) {
             outIndex = getGrabModeInArray(TREE_ZONE_NAMES[currentTreeZoneNumber]);
             setLastTreeZone(TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber]);
-            lastCurrentTreeZoneNumber = TreeTraverse.currentTreeZoneNumber;
+            lastCurrentTreeZoneNumber = currentTreeZoneNumber;
             deliverySteps = 0;
             lastAutoGrab = true;
         }
@@ -227,27 +227,27 @@ public class TreeTraverse {
      * Установка последней Checkpoint
      */
     private void setLastCheckpoint(String lastCheckpoint) {
-        TreeTraverse.lastCheckpoint = lastCheckpoint;
+        this.lastCheckpoint = lastCheckpoint;
     }
 
     /**
      * Установка последней зоны в который мы были у дерева
      */
     private void setLastTreeZone(String treeZone) {
-        TreeTraverse.treeZone = treeZone;
+        this.treeZone = treeZone;
     }
 
     /**
      * Получение последней зоны в который мы были у дерева
      */
     private String getLastTreeZone() {
-        return TreeTraverse.treeZone;
+        return treeZone;
     }
 
     /**
      * Получение последней точки робота
      */
-    private String getLastCheckpoint() {
+    private  String getLastCheckpoint() {
         return lastCheckpoint;
     }
 
@@ -312,7 +312,7 @@ public class TreeTraverse {
         if (zoneName.equals("THIRD")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "RZ":
                     out = "CH1";

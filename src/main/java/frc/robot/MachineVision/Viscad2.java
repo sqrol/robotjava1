@@ -256,6 +256,7 @@ public class Viscad2 {
             hsvCut.release();
             hsvOut.release();
             bright.release();
+            out.release();
             return newOut;
         } 
 

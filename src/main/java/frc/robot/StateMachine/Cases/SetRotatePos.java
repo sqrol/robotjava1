@@ -21,7 +21,7 @@ public class SetRotatePos implements IState {
         train.setAxisSpeed(0, 0);
         train.resetEncLeft();
         train.resetEncRight();
-        return train.rotateToPos(angle) && System.currentTimeMillis() - StateMachine.iterationTime > 2000;
+        return train.rotateToPos(angle) && Timer.getFPGATimestamp() - StateMachine.iterationTime > 2;
     }
     
 }
