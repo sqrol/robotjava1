@@ -117,6 +117,8 @@ public class DriveXAxis implements IState {
 
     private double lastGyro = 0; 
 
+    private boolean isReset = allReset();
+
     private boolean isFirst = true;
 
     // private double[][] speedXArray = { { 0, 0.7, 1.4, 3, 5, 10, 12, 14, 18, 35, 50, 100}, 
@@ -148,39 +150,45 @@ public class DriveXAxis implements IState {
         this.XPosition = XPosition;
         this.ZPosition = ZPosition;
         this.isFirst = true;
+        currentAxisX = 0;
         // allReset();
     }
 
     @Override
     public boolean execute() {
-        
-        if (isFirst) {
-            // allReset();
-            // train.resetLeftEnc();
-            // train.resetRightEnc();
-            currentAxisX = 0;
-            lastRightEnc = train.getRightEncoder(); 
-            lastLeftEnc = train.getLeftEncoder(); 
-            
-            train.resetGyroValue = 0;
-            train.resetGyroThreadOnce = true;
 
-            isFirst = false;
+        if (isReset) {
+            if (isFirst) {
+
+                
+    
+                train.resetEncRight();
+                train.resetEncLeft();
+                currentAxisX = 0;
+                train.resetGyroValue = 0;
+                train.resetGyroThreadOnce = true;
+    
+                isFirst = false;
+    
+            }
+            isReset = false;
         }
+        
+        
 
         double startKoef = Function.TransitionFunction(Timer.getFPGATimestamp() - StateMachine.iterationTime, startKoefSpeedForX);
         double gyro = train.newGyroThread; 
 
-        if (XPosition != 0) {
-
-            // SmartDashboard.putNumber("lastRightEnc", lastRightEnc); 
-            // SmartDashboard.putNumber("lastLeftEnc", lastLeftEnc); 
+        if (XPosition != 0 && !isFirst) {
+            SmartDashboard.putNumber("isFirstCheck", 1111);
+            SmartDashboard.putNumber("lastRightEnc", lastRightEnc); 
+            SmartDashboard.putNumber("lastLeftEnc", lastLeftEnc); 
             
-            double currentRight = train.getRightEncoder() - lastRightEnc;
-            double currentLeft = train.getLeftEncoder() - lastLeftEnc;
+            double currentRight = train.getEncRightThread();
+            double currentLeft = train.getEncLeftThread();
 
-            // SmartDashboard.putNumber("currentRight", currentRight); 
-            // SmartDashboard.putNumber("currentLeft", currentLeft); 
+            SmartDashboard.putNumber("currentRight", currentRight); 
+            SmartDashboard.putNumber("currentLeft", currentLeft); 
     
             currentAxisX = -((currentRight + currentLeft) / 2) / 48;
     
@@ -196,35 +204,38 @@ public class DriveXAxis implements IState {
             finishZ = Function.BooleanInRange(outSpeedForZ, -0.2, 0.2); 
     
         } else {
-
+            SmartDashboard.putNumber("isFirstCheck", 2222);
             outSpeedForX = 0;
+            
             // SmartDashboard.putNumber("diffZ", ZPosition - gyro);
             outSpeedForZ = Function.TransitionFunction(ZPosition - gyro, speedZArrayJustTurn);
+            
             finishX = true;
             finishZ = Function.BooleanInRange(outSpeedForZ, -0.3, 0.3); 
-
         }
 
         train.setAxisSpeed(outSpeedForX * startKoef, outSpeedForZ);
 
         SmartDashboard.putNumber("posX", currentAxisX);
         SmartDashboard.putNumber("posZ", outSpeedForZ);
-        if(finishX && finishZ) {
-            // train.resetGyro();
+        if(finishX && finishZ && !isFirst) {
 
             train.resetGyroValue = 0;
             train.resetGyroThreadOnce = true;
-
+            currentAxisX = 0;
             return true;
         }
         return false;
     }
 
-    private void allReset() {
+
+
+    private boolean allReset() {
         train.resetEncRight();
         train.resetEncLeft();
         train.resetGyro();
         currentAxisX = 0;
+        return Timer.getFPGATimestamp() - StateMachine.iterationTime > 0.5; 
     }
 
 }

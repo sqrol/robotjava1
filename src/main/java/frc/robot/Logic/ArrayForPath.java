@@ -13,11 +13,11 @@ public class ArrayForPath { // Храним пути для автономки
     {
         {
             put("Start", 0);
-
+            put("MOV_IN_THIRD_LZ_TO_CH2", 16);
             // Указывем в след. формате "Название массива" и его индекс
             put("MOV_IN_START_TO_CH1", 1);
             put("MOV_IN_CH1_TO_THIRD_RZ", 2);
-            
+            put("MOV_IN_CON3_TO_CH1", 57);
             put("MOV_IN_THIRD_RZ_TO_CH1", 4);
             put("MOV_IN_CH1_TO_CON2", 5);
             put("MOV_IN_CON2_TO_CH1", 6);
@@ -26,9 +26,12 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_THIRD_LOZ_TO_CH1", 9);
             put("MOV_IN_CH2_TO_CON4", 10);
             put("MOV_IN_CON4_TO_CH2", 11);
+            put("MOV_IN_CH2_TO_SECOND_RZ", 20);
             put("MOVE_IN_CH2_TO_FINISH", 12);
-            
+            put("MOV_IN_CON3_TO_CH2", 64);
             put("MOV_IN_START_TO_CH3", 24);
+            put("MOV_IN_CH2_TO_SECOND_LZ", 22);
+            put("MOV_IN_CH2_TO_SECOND_TZ", 62);
             put("MOV_IN_CH3_TO_FRIST_LZ", 25);
             put("MOV_IN_FRIST_LZ_TO_CH3", 26);
             put("MOV_IN_CH3_TO_CON4", 27);
@@ -40,7 +43,7 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_CH3_TO_CON3", 33);
             put("MOV_IN_CON3_TO_CH3", 34);
             put("MOV_IN_CH3_TO_CON2", 35);
-            
+            put("MOV_IN_CON1_TO_CH2", 43);
             put("MOV_IN_FRIST_LOZ_TO_CH3", 37);
             put("MOV_IN_CH3_TO_CON1", 38);
             put("MOV_IN_CH3_TO_CON1", 40);
@@ -48,13 +51,14 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_CH2_TO_CON1", 42);
             put("MOV_IN_FRIST_LOZ_TO_CH3", 37);
             put("MOV_IN_CH3_TO_CON1", 38);
-            
+            put("MOV_IN_CH1_TO_CON4", 54);
             put("MOV_IN_CH3_TO_CON2", 35);
             put("MOV_IN_CON2_TO_CH3", 36);
             put("MOV_IN_FRIST_LOZ_TO_CH3", 37);
             put("MOV_IN_CH3_TO_CON1", 38);
             put("MOV_IN_CH3_TO_FRIST_TZ", 39);
             put("MOV_IN_FRIST_TZ_TO_CH3", 69);
+            put("MOV_IN_CON1_TO_CH1", 53);
             put("MOV_IN_CH3_TO_SECOND_LOZ", 83);
             put("MOV_IN_CH3_TO_SECOND_TZ", 84);
             put("MOV_IN_CH3_TO_SECOND_RZ", 85);
@@ -65,6 +69,7 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_CH3_TO_THIRD_RZ", 102);
             put("MOV_IN_FRIST_LZ_TO_CON4", 116);
             put("AUTO_GRAB_UPPER", 214);
+            put("MOV_IN_CON4_TO_CH1", 55);
             put("MOV_IN_FRIST_RZ_TO_FRIST_TZ", 215);
             put("MOV_IN_FRIST_TZ_TO_FRIST_LZ", 216);
             put("MOV_IN_THIRD_TZ_TO_THIRD_LZ", 213);
@@ -130,6 +135,7 @@ public class ArrayForPath { // Храним пути для автономки
             put("MOV_IN_CH2_TO_THIRD_LOZ", 107);
             put("MOV_IN_CH2_TO_THIRD_LZ", 105);
             put("RESET_FRUIT", 73);
+            put("MOV_IN_CON2_TO_CH2", 66);
         }
     };
 }

@@ -89,12 +89,16 @@ public class AutoGrab implements IState{
     
     public AutoGrab() {
         this.nowStep = 0;
+        this.localTimer = 0;
+        this.objectNotFound = false;
+
         // objectDetectionFlag = true; 
     }
 
     public AutoGrab(boolean oneObject) {
         this.oneObject = oneObject; 
         this.nowStep = 0; 
+        this.objectNotFound = false;
     }
 
     @Override
@@ -141,20 +145,19 @@ public class AutoGrab implements IState{
 
                     }
 
-                } else {
+                    } else {
 
-                    currentTargetDegree = Function.TransitionFunction(fruitPosX, arrForLift);
-                    SmartDashboard.putNumber("currentTargetDegree: ", currentTargetDegree);
-                    this.rotateStop = train.rotateToPos(currentTargetDegree); 
-
-                }
+                        currentTargetDegree = Function.TransitionFunction(fruitPosX, arrForLift);
+                        SmartDashboard.putNumber("currentTargetDegree: ", currentTargetDegree);
+                        this.rotateStop = train.rotateToPos(currentTargetDegree); 
+                    }
 
                 SmartDashboard.putBoolean("rotateStop", rotateStop);
-            if (rotateStop) {
+                if (rotateStop) {
 
-                train.rotateMotorSpeedThread = 0;
+                    train.rotateMotorSpeedThread = 0;
 
-                train.nowTask = 1;
+                    train.nowTask = 1;
 
                 if (this.rotateStop && Timer.getFPGATimestamp() - stopTimer > 2) {
                     
@@ -162,16 +165,16 @@ public class AutoGrab implements IState{
                     nowStep++;
                 }   
 
-            } else {
-                
-                stopTimer = Timer.getFPGATimestamp();
-            } 
+                } else {
+                    
+                    stopTimer = Timer.getFPGATimestamp();
+                } 
 
-            if (objectFind) {
-                objectNotFound = false; // Ничего не нашли выходим из данной команды
-            } else {
-                objectNotFound = Timer.getFPGATimestamp() - StateMachine.iterationTime > 5; // Ничего не нашли выходим из данной команды
-            }
+                if (objectFind) {
+                    objectNotFound = false; // Ничего не нашли выходим из данной команды
+                } else {
+                    objectNotFound = Timer.getFPGATimestamp() - StateMachine.iterationTime > 5; // Ничего не нашли выходим из данной команды
+                }
                 
                 break;
             case 1: 

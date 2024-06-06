@@ -8,12 +8,12 @@ public class States {
                                            // 0 
         { 
             new StartPos(),
-            new Transition(),
+            // new Transition(),
             // new SetGrabPos("SMALL APPLE", false), 
             // new End(),
-            // new AutoGrab(),
+            new AutoGrab(),
 
-            
+            // new ObjectFinder(),
             // new End(),
             
             // new SetGrabPos("OPEN", false),
@@ -336,14 +336,8 @@ public class States {
             // MOV_IN_FRIST_LZ_TO_CH3 // 26
         {
             new DriveXAxis(-13, 0),
-            new DriveXAxis(0, -90),
-            new DriveXAxis(49, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 14, 0, 0),
-            new DriveXAxis(0, -90),
-            new Align("sharp", 18, 0, 0),
-            new DriveXAxis(0, 90),
-            new Align("sharp", 15, 0, 0),
+            new DriveXAxis(-40, 0),
+            new Align("sonic", 70, 0, 0),
             new Transition()
         },
             // MOV_IN_CH3_TO_CON4 // 27
@@ -397,6 +391,8 @@ public class States {
             new DriveXAxis(0, -90), 
             new DriveXAxis(92, 0),
             new DriveXAxis(0, -90),
+            new Reset(),
+            
             new DriveXAxis(14, 0),
             new Transition()
         },
@@ -2662,8 +2658,10 @@ public class States {
         },
             // AUTOGRAB_UPPER // 214
         {
+            new SetGlidePosition(8),
             new AutoGrab(),
             new SetGripRotatePos("FLOOR"),
+            new SetGlidePosition(0),
             new Transition()
         },
             // MOV_IN_FRIST_RZ_TO_FRIST_TZ // 215

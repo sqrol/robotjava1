@@ -56,8 +56,8 @@ public class TreeTraverse {
         SmartDashboard.putString("FruitHuiName: ", findFruitName); 
 
         if (firstCall) {
-            outIndex = "MOV_IN_START_TO_CH1";
-            setLastCheckpoint("CH1");
+            outIndex = "MOV_IN_START_TO_CH3";
+            setLastCheckpoint("CH3");
             firstItter = true;
             firstCall = false;
         } else {
@@ -125,15 +125,15 @@ public class TreeTraverse {
                             outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getConForFruit(findFruitName);
                             setLastCheckpoint(getBestWayForCheckForZone(getLastTreeZone()));
 
-                            this.currentTreeZoneNumber =lastCurrentTreeZoneNumber;
+                            this.currentTreeZoneNumber = lastCurrentTreeZoneNumber;
                             this.currentTreeZoneSteps = -1;
                         }
 
                         if (deliverySteps == 1) {
                             outIndex = "RESET_FRUIT";
-
                             this.currentTreeZoneNumber = lastCurrentTreeZoneNumber;
                             this.currentTreeZoneSteps = -1;
+
                         }
 
                         if (deliverySteps == 2) {
@@ -147,14 +147,15 @@ public class TreeTraverse {
 
                         if (deliverySteps == 3) {
 
-                            fruitFind = false;
+                            train.fruitFind = false;
+                            train.detectionResult = "";
                             lastAutoGrab = false;
                         }
                     }
 
                 } else {
                     if (ChangeTreeNumber) {
-                        outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getLastCheckpoint();
+                        outIndex = "MOV_IN_" + getLastTreeZone() + "_TO_" + getBestWayForCheckForZone(getLastTreeZone());
                         lastStepChange = true;
                         this.currentTreeZoneSteps = -1;
                     } else {
@@ -171,10 +172,13 @@ public class TreeTraverse {
 
         if (currentTreeZoneSteps == 0) {
             if (lastStepChange) {
+                
+                
                 outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
                 lastStepChange = false;
             } else {
                 if (!lastAutoGrab) {
+                    SmartDashboard.putString("lastCheckpoint", getLastCheckpoint());
                     outIndex = "MOV_IN_" + getLastCheckpoint() + "_TO_" + TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber];
                     setLastTreeZone(TREE_NAMES[currentTreeNumber] + "_" + TREE_ZONE_NAMES[currentTreeZoneNumber]);
                     lastAutoGrab = false;
@@ -193,9 +197,7 @@ public class TreeTraverse {
             deliverySteps = 0;
             lastAutoGrab = true;
         }
-
         return outIndex;
-
     }
 
     /**
@@ -310,7 +312,7 @@ public class TreeTraverse {
         if (zoneName.equals("THIRD")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "RZ":
                     out = "CH1";

@@ -18,6 +18,7 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.functions.Function;
@@ -40,12 +41,12 @@ public class JavaCam implements Runnable
     @Override
     public void run() {
 
-        // SmartDashboard.putNumber("RED1 YP", 0.0);
-        // SmartDashboard.putNumber("RED2 YP", 0.0);
-        // SmartDashboard.putNumber("GREEN1 YP", 0.0);
-        // SmartDashboard.putNumber("GREEN2 YP", 0.0);
-        // SmartDashboard.putNumber("BLUE1 YP", 0.0);
-        // SmartDashboard.putNumber("BLUE2 YP", 0.0);
+        SmartDashboard.putNumber("RED1 YP", 0.0);
+        SmartDashboard.putNumber("RED2 YP", 0.0);
+        SmartDashboard.putNumber("GREEN1 YP", 0.0);
+        SmartDashboard.putNumber("GREEN2 YP", 0.0);
+        SmartDashboard.putNumber("BLUE1 YP", 0.0);
+        SmartDashboard.putNumber("BLUE2 YP", 0.0);
 
         SmartDashboard.putNumber("RED1 RA", 0.0);
         SmartDashboard.putNumber("RED2 RA", 0.0);
@@ -54,12 +55,12 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("BLUE1 RA", 0.0);
         SmartDashboard.putNumber("BLUE2 RA", 0.0);
 
-        // SmartDashboard.putNumber("RED1 GP", 0.0);
-        // SmartDashboard.putNumber("RED2 GP", 0.0);
-        // SmartDashboard.putNumber("GREEN1 GP", 0.0);
-        // SmartDashboard.putNumber("GREEN2 GP", 0.0);
-        // SmartDashboard.putNumber("BLUE1 GP", 0.0);
-        // SmartDashboard.putNumber("BLUE2 GP", 0.0);
+        SmartDashboard.putNumber("RED1 GP", 0.0);
+        SmartDashboard.putNumber("RED2 GP", 0.0);
+        SmartDashboard.putNumber("GREEN1 GP", 0.0);
+        SmartDashboard.putNumber("GREEN2 GP", 0.0);
+        SmartDashboard.putNumber("BLUE1 GP", 0.0);
+        SmartDashboard.putNumber("BLUE2 GP", 0.0);
         
         camera = CameraServer.getInstance().startAutomaticCapture(); // Находим доступные камеры и подсасывам его
         camera.setResolution(640, 480); // Разрешение
@@ -114,6 +115,7 @@ public class JavaCam implements Runnable
             } catch (final Exception e) {
                 DriverStation.reportError("An error occurred in JavaCam: " + e.getMessage(), false);
                 e.printStackTrace();
+                
             }
         }
     }
@@ -135,8 +137,12 @@ public class JavaCam implements Runnable
         Point greenPoint22 = new Point(122, 255);
         Point greenPoint23 = new Point(127, 255);
 
-        Mat inImg = new Mat();
+        Point redPoint1 = new Point(0, 45);   
+        Point redPoint2 = new Point(207, 255);
+        Point redPoint3 = new Point(254, 255);
 
+        Mat inImg = new Mat();
+        Mat outPA = new Mat();
         // Пока не успел доделать
         if (RobotContainer.train.resizeForGlide) {
             inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360));  // Обрезаем картинку по линии стрелы
@@ -144,20 +150,15 @@ public class JavaCam implements Runnable
             inImg = orig;
         }
 
-        Mat blurMat = Viscad2.Blur(inImg, 4);
-        Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
+        SmartDashboard.putBoolean("findNotEmptyMat()", findNotEmptyMat(orig).empty());
 
-        Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
-        
-        final Mat outPA = new Mat();
+        if(!(findNotEmptyMat(orig) == null)) {
+            currentCordinate = Viscad2.ParticleAnalysis(findNotEmptyMat(orig), outPA);
+        }
 
-        currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
-        
         resizeGlide1.putFrame(inImg);
-        mask2.putFrame(maskRedApple);
 
-        releaseMats(blurMat, hsvImage, maskRedApple, outPA, inImg, orig);
-        // return new ArrayList<>();
+        releaseMats(outPA, inImg, orig);
 
         if (currentCordinate.isEmpty()) {
 
@@ -170,7 +171,57 @@ public class JavaCam implements Runnable
             return processRectangles(inImg, currentCordinate);
 
         }   
+    }
+
+    public static Mat findNotEmptyMat(final Mat orig) {
+
+        ArrayList<Mat> mats = new ArrayList<>();
+
+        double startTimer = Timer.getFPGATimestamp();
+
+        // double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+        // double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+
+        // double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+        // double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+
+        // double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+        // double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+
+        Point greenPoint21 = new Point(0, 255);   
+        Point greenPoint22 = new Point(122, 255);
+        Point greenPoint23 = new Point(127, 255);
+
+        Point redPoint1 = new Point(0, 45);   
+        Point redPoint2 = new Point(207, 255);
+        Point redPoint3 = new Point(254, 255);
+
+        Mat blurMat = Viscad2.Blur(orig, 4);
+        Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
+
+        Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
+        Mat fillHolesRedApple = Viscad2.FillHolesCAD(maskRedApple);
+        Mat yellowPear = thresholdAndProcess(hsvImage, redPoint1, redPoint2, redPoint3, 1, 1);
+
+        final Mat outPA = new Mat();
+
+        mats.add(fillHolesRedApple);
+        mats.add(yellowPear);
+
+        releaseMats(blurMat, hsvImage, maskRedApple, outPA, fillHolesRedApple, yellowPear);
+
+        Mat empty = new Mat();
         
+        for (int i = 0; i < mats.size(); i++) {
+            double localTimer = Timer.getFPGATimestamp();
+            if(Viscad2.ImageTrueArea(mats.get(i)) > 100) {
+                if(localTimer - startTimer > 1) {
+                    localTimer = 0;
+                    return mats.get(i);
+                }
+            }
+        }
+        return empty;
     }
 
     public static List<Point> processRectangles(Mat image, List<Rect> currentCoordinate) {
@@ -260,25 +311,25 @@ public class JavaCam implements Runnable
         double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
         double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
 
-        Point yellowPoint1 = new Point(red1YP, red2YP);      //30, 36);  
-        Point yellowPoint2 = new Point(green1YP, green2YP);   // 100, 255);
-        Point yellowPoint3 = new Point(blue1YP, blue2YP);    //140, 255);
+        Point yellowPoint1 = new Point(37, 45);      //30, 36);  
+        Point yellowPoint2 = new Point(52, 222);   // 100, 255);
+        Point yellowPoint3 = new Point(245, 255);    //140, 255);
 
-        Point redPoint1 = new Point(0, 30);      // Point(34, 255);
-        Point redPoint2 = new Point(100, 230);    // Point(70, 255);
-        Point redPoint3 = new Point(170, 255);    // Point(200, 255);
+        Point redPoint1 = new Point(0, 45);      // Point(34, 255);
+        Point redPoint2 = new Point(207, 255);    // Point(70, 255);
+        Point redPoint3 = new Point(254, 255);    // Point(200, 255);
 
-        Point greenPoint1 = new Point(55, 255);    //  43, 70);
-        Point greenPoint2  = new Point(89, 255);    // 50, 220)
-        Point greenPoint3 = new Point(222, 255);  // 190, 255
+        Point greenPoint1 = new Point(45, 55);    //  43, 70);
+        Point greenPoint2  = new Point(199, 255);    // 50, 220)
+        Point greenPoint3 = new Point(199, 255);  // 190, 255
 
-        Point greenPointPear1 = new Point(4, 40);
-        Point greenPointPear2 = new Point(137, 251);
-        Point greenPointPear3 = new Point(123, 255);
+        Point greenPointPear1 = new Point(red1YP, red2YP);
+        Point greenPointPear2 = new Point(green1YP, green2YP);
+        Point greenPointPear3 = new Point(blue1YP, blue2YP);
 
-        Point greenPoint21 = new Point(41, 52);   //(38, 189);   44 48 
-        Point greenPoint22 = new Point(123, 251); //(201, 229); 34 255
-        Point greenPoint23 = new Point(201, 255); //(95, 247); 45 255
+        Point greenPoint21 = new Point(red1YP, red2YP); //(38, 189);   44 48 
+        Point greenPoint22 = new Point(green1YP, green2YP); //(201, 229); 34 255
+        Point greenPoint23 = new Point(blue1YP, blue2YP); //(95, 247); 45 255
 
         // Обрезаю изображение чтобы увеличить число кадров избавиться от лишнего шума
         Mat cut = Viscad2.ExtractImage(orig, new Rect(180, 150, 240, 200));
@@ -298,7 +349,7 @@ public class JavaCam implements Runnable
         Mat maskGreenPear = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 3, 2);
         Mat maskAllWithoutWheels = thresholdAndProcess(hsvImage, greenPointPear1, greenPointPear2, greenPointPear3, 1, 1);
         Mat fillHolesGreenPear = Viscad2.FillHolesCAD(maskGreenPear);
-
+        Mat filledRedApple = Viscad2.FillHolesCAD(maskRedApple);
         int imageAreaRedApple = Viscad2.ImageTrueArea(maskRedApple); 
         int imageAreaGreenApple = Viscad2.ImageTrueArea(maskGreenApple);
         int imageAreaYellowPear = Viscad2.ImageTrueArea(maskYellowPear);
@@ -309,8 +360,8 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("ImageAreaYellowPear", imageAreaYellowPear);
         SmartDashboard.putNumber("ImageAreaGreenPear", imageAreaGreenPear);
 
-        redOut.putFrame(maskRedApple);
-        greenOut.putFrame(maskGreenPear);
+        redOut.putFrame(filledRedApple);
+        greenOut.putFrame(maskGreenApple);
         yellowOut.putFrame(maskYellowPear);
         noWheels.putFrame(autoImage);
         mask3.putFrame(blurMat);
@@ -318,7 +369,7 @@ public class JavaCam implements Runnable
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
                         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
 
-        if(Function.BooleanInRange(imageAreaRedApple,       2000, 4000)) {  // SmallRed
+        if(Function.BooleanInRange(imageAreaRedApple,       0, 3000)) {  // SmallRed
             train.detectionResult = "AppleSmallRipe";
             train.fruitFind = true; 
             return 6;
@@ -328,7 +379,7 @@ public class JavaCam implements Runnable
             train.fruitFind = true; 
             return 7;
         }  
-        if(Function.BooleanInRange(imageAreaRedApple,       1000, 30000)) { // BigRed
+        if(imageAreaRedApple > 15000) { // BigRed
             train.detectionResult = "AppleBigRipe";
             train.fruitFind = true; 
             return 1;
@@ -343,7 +394,7 @@ public class JavaCam implements Runnable
             train.fruitFind = true; 
             return 2; 
         } 
-        if(imageAreaYellowPear > 10000) { // YellowPear
+        if(imageAreaYellowPear > 15000) { // YellowPear
             train.detectionResult = "PeerRipe";
             train.fruitFind = true; 
             return 3;

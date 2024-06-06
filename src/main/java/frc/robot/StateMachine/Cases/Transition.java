@@ -10,7 +10,7 @@ import frc.robot.subsystems.Training;
 
 public class Transition implements IState {
     private static int indexArray = 0; 
-    private Boolean autoMode = true; // 123123123123123
+    private Boolean autoMode = true; // true для автономки, false для полуавтономки
     private TreeTraverse auto = RobotContainer.traverse;
     private static int countStep = 0; 
 
@@ -28,7 +28,7 @@ public class Transition implements IState {
 
         String currentStrOut = auto.execute(); 
         Integer currentArray = ArrayForPath.getArrayForPath(currentStrOut);
-
+        
         SmartDashboard.putString("TreeTraverse: ", currentStrOut);
         SmartDashboard.putNumber("TreeArray: ", ArrayForPath.getArrayForPath(currentStrOut));
 
@@ -44,7 +44,10 @@ public class Transition implements IState {
         return true;
 
         } else {
-
+            StateMachine.currentArray = Training.indexList.get(Transition.indexArray);
+            Transition.indexArray++;
+            StateMachine.currentIndex = -1;
+            RobotContainer.train.setAxisSpeed(0, 0);
             return false;
         }
 

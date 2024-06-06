@@ -116,7 +116,7 @@ public class Align implements IState {
             diffZ = 0;
             train.resetEncLeft();
             train.resetEncRight();
-            // train.resetGyro();
+
             return true;
         }
         return finishX && finishZ;

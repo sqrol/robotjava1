@@ -17,10 +17,11 @@ public class StartPos implements IState{
 
     @Override
     public boolean execute() {
-
+        train.resetEncLeft();
+        train.resetEncRight();
         train.setIndication("WAITING");
         train.reset2Motors();
-
+        
         // train.OdometryReset(0, 0);
         train.setAxisSpeed(0, 0);
         
@@ -37,35 +38,13 @@ public class StartPos implements IState{
 
         SmartDashboard.putNumber("iter: ", Timer.getFPGATimestamp() - StateMachine.iterationTime);
         
-        // double speed = -35; 
-        // train.setAxisSpeed(50, 0);
-
-        // train.firstInitForLift = true; 
-        
-        // train.firstInitForGlide = true;
-        // train.rotateToPos(45);
-        // train.setGripRotateServoValue(200);
-        // train.glideMotorSpeedThread = -10; 
-            // train.setGripServoValue(15);
-        // if (train.firstInitForGlideDone) {
-        //     if (train.getLimitSwitchGlide() && speed > 0) {
-        //         train.glideMotorSpeedThread = 0;
-        //         train.resetGlideEncoder(); 
-        //     } else {
-        //         train.glideMotorSpeedThread = speed;
-        //     }
-        //     train.glideToMovePos(100); 
-        // }
-        // train.rotateMotorSpeedThread = 10;
-
-
         if(train.successInit) {
             train.resetLiftEncoder();
             train.resetEncRotate();
             
             train.setGripServoValue(15); 
             train.setGripRotateServoValue(93); 
-            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 1 && train.getStartButton()){
+            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 1){
                 train.setIndication("IN PROCESS");
                 return true;
             } else {
