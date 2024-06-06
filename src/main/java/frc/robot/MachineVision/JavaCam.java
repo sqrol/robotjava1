@@ -37,6 +37,10 @@ public class JavaCam implements Runnable
     
     public String colorCube, colorStand;
     public boolean alignCamera = false;
+    private double countTimer = Timer.getFPGATimestamp();
+    private int currentColor = 0;
+    private static int totalColors = 5; // Общее количество цветов
+    private static boolean foundFlag = false;
   
     @Override
     public void run() {
@@ -100,7 +104,8 @@ public class JavaCam implements Runnable
                 }
 
                 if (RobotContainer.train.nowTask == 2) {
-                    RobotContainer.train.centersForClass = getFruitPosition(source);
+                    RobotContainer.train.centersForClass = getFruitPosition(source, currentColor);
+                    SmartDashboard.putNumber("currentColor: ", currentColor); 
                     
                 }
                 if(RobotContainer.train.nowTask == 4) {
@@ -108,6 +113,13 @@ public class JavaCam implements Runnable
                 }
                 if(RobotContainer.train.nowTask == 3) {
                     RobotContainer.train.nowResult = detectFruitInGripper(source);
+                }
+
+                if (!foundFlag) {
+                    if (Timer.getFPGATimestamp() - countTimer > 5) {
+                        currentColor = (currentColor + 1) % totalColors; // Циклическое обновление цвета
+                        countTimer = Timer.getFPGATimestamp(); // Сбрасываем таймер после обновления цвета
+                    }
                 }
 
                 source.release();
@@ -120,9 +132,117 @@ public class JavaCam implements Runnable
         }
     }
 
-    public static List<Point> getFruitPosition(Mat orig) {
+    // public static List<Point> getFruitPosition(Mat orig) {
+
+    //     List<Rect> currentCordinate = new ArrayList<>();
+
+    //     double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+    //     double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+
+    //     double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+    //     double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+
+    //     double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+    //     double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+
+    //     Point greenPoint21 = new Point(0, 255);   
+    //     Point greenPoint22 = new Point(122, 255);
+    //     Point greenPoint23 = new Point(127, 255);
+
+    //     Point redPoint1 = new Point(0, 45);   
+    //     Point redPoint2 = new Point(207, 255);
+    //     Point redPoint3 = new Point(254, 255);
+
+    //     Mat inImg = new Mat();
+    //     Mat outPA = new Mat();
+
+    //     // Пока не успел доделать
+    //     if (RobotContainer.train.resizeForGlide) {
+    //         inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360));  // Обрезаем картинку по линии стрелы
+    //     } else {
+    //         inImg = orig;
+    //     }
+
+    //     SmartDashboard.putBoolean("findNotEmptyMat()", findNotEmptyMat(orig).empty());
+
+    //     if(!(findNotEmptyMat(orig) == null)) {
+    //         currentCordinate = Viscad2.ParticleAnalysis(findNotEmptyMat(orig), outPA);
+    //     }
+
+    //     resizeGlide1.putFrame(inImg);
+
+    //     releaseMats(outPA, inImg, orig);
+
+    //     if (currentCordinate.isEmpty()) {
+
+    //         SmartDashboard.putNumber("12121212212121", 1);
+    //         return new ArrayList<>();
+            
+    //     } else {
+
+    //         SmartDashboard.putNumber("12121212212121", 2);
+    //         return processRectangles(inImg, currentCordinate);
+
+    //     }   
+    // }
+
+    // public static Mat findNotEmptyMat(final Mat orig) {
+
+    //     ArrayList<Mat> mats = new ArrayList<>();
+
+    //     double startTimer = Timer.getFPGATimestamp();
+
+    //     // double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
+    //     // double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+
+    //     // double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
+    //     // double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+
+    //     // double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
+    //     // double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+
+    //     Point greenPoint21 = new Point(0, 255);   
+    //     Point greenPoint22 = new Point(122, 255);
+    //     Point greenPoint23 = new Point(127, 255);
+
+    //     Point redPoint1 = new Point(0, 45);   
+    //     Point redPoint2 = new Point(207, 255);
+    //     Point redPoint3 = new Point(254, 255);
+
+    //     Mat blurMat = Viscad2.Blur(orig, 4);
+    //     Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
+
+    //     Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
+    //     Mat fillHolesRedApple = Viscad2.FillHolesCAD(maskRedApple);
+    //     Mat yellowPear = thresholdAndProcess(hsvImage, redPoint1, redPoint2, redPoint3, 1, 1);
+
+    //     final Mat outPA = new Mat();
+
+    //     int outArea = Viscad2.ImageTrueArea(maskRedApple); 
+
+    //     mats.add(fillHolesRedApple);
+    //     mats.add(yellowPear);
+
+    //     releaseMats(blurMat, hsvImage, maskRedApple, outPA, fillHolesRedApple, yellowPear);
+
+    //     Mat empty = new Mat();
+        
+    //     for (int i = 0; i < mats.size(); i++) {
+    //         double localTimer = Timer.getFPGATimestamp();
+    //         if(Viscad2.ImageTrueArea(mats.get(i)) > 100) {
+    //             if(localTimer - startTimer > 1) {
+    //                 localTimer = 0;
+    //                 return mats.get(i);
+    //             }
+    //         }
+    //     }
+    //     return empty;
+    // }
+
+    public static List<Point> getFruitPosition(Mat orig, int currentColor) {
 
         List<Rect> currentCordinate = new ArrayList<>();
+        Point[] outPoints = new Point[3];
 
         double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
         double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
@@ -133,41 +253,64 @@ public class JavaCam implements Runnable
         double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
         double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
 
-        Point greenPoint21 = new Point(0, 255);   
-        Point greenPoint22 = new Point(122, 255);
-        Point greenPoint23 = new Point(127, 255);
+        Point greenPoint1 = new Point(0, 0);   
+        Point greenPoint2 = new Point(0, 0);
+        Point greenPoint3 = new Point(0, 0);
 
-        Point redPoint1 = new Point(0, 45);   
-        Point redPoint2 = new Point(207, 255);
-        Point redPoint3 = new Point(254, 255);
+        Point yellowPoint1 = new Point(20, 255);   
+        Point yellowPoint2 = new Point(200, 255);
+        Point yellowPoint3 = new Point(100, 255);
+
+        Point redPoint1 = new Point(0, 20);   
+        Point redPoint2 = new Point(0, 255);
+        Point redPoint3 = new Point(100, 255);
+
+        // Point[] redPoints = {redPoint1, redPoint2, redPoint3};
+        // Point[] yellowPoints = {yellowPoint1, yellowPoint2, yellowPoint3};
+
+        Point[][] pointsArray = {
+            {greenPoint1, greenPoint2, greenPoint3},
+            {redPoint1, redPoint2, redPoint3},
+            {yellowPoint1, yellowPoint2, yellowPoint3}
+        };
+
+        if (currentColor >= 0 && currentColor < pointsArray.length) {
+            outPoints = pointsArray[currentColor];
+            foundFlag = true;
+        } else {
+            outPoints = outPoints; 
+        }
 
         Mat inImg = new Mat();
         Mat outPA = new Mat();
+
         // Пока не успел доделать
-        if (RobotContainer.train.resizeForGlide) {
-            inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360));  // Обрезаем картинку по линии стрелы
-        } else {
-            inImg = orig;
-        }
+        if (RobotContainer.train.resizeForGlide) { inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360));  // Обрезаем картинку по линии стрелы
+        } else { inImg = orig; }
 
-        SmartDashboard.putBoolean("findNotEmptyMat()", findNotEmptyMat(orig).empty());
+        Mat blurMat = Viscad2.Blur(inImg, 4);
+        Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
-        if(!(findNotEmptyMat(orig) == null)) {
-            currentCordinate = Viscad2.ParticleAnalysis(findNotEmptyMat(orig), outPA);
-        }
+        Mat maskRedApple = thresholdAndProcess(hsvImage, outPoints[0], outPoints[1], outPoints[2], 1, 1);
 
-        resizeGlide1.putFrame(inImg);
+        oustream3.putFrame(maskRedApple);
+        
+        outPA = new Mat();
 
-        releaseMats(outPA, inImg, orig);
+        currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
+
+        currentCordinate.isEmpty();
+
+        currentColor++;
+
+        releaseMats(blurMat, hsvImage, maskRedApple, outPA, inImg, orig);
 
         if (currentCordinate.isEmpty()) {
-
-            SmartDashboard.putNumber("12121212212121", 1);
+            foundFlag = false;
+            currentColor = (currentColor + 1) % totalColors;
             return new ArrayList<>();
             
         } else {
-
-            SmartDashboard.putNumber("12121212212121", 2);
             return processRectangles(inImg, currentCordinate);
 
         }   
@@ -177,7 +320,9 @@ public class JavaCam implements Runnable
 
         ArrayList<Mat> mats = new ArrayList<>();
 
-        double startTimer = Timer.getFPGATimestamp();
+        Point[] outPoints = new Point[3]; 
+
+        int currentFruit = 0; 
 
         // double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
         // double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
@@ -196,31 +341,32 @@ public class JavaCam implements Runnable
         Point redPoint2 = new Point(207, 255);
         Point redPoint3 = new Point(254, 255);
 
+        Point[] greenPoints = {greenPoint21, greenPoint22, greenPoint23};
+        Point[] redPoints = {redPoint1, redPoint2, redPoint3};
+
+        if (currentFruit == 1) {
+            outPoints = greenPoints; 
+        }
+
+        if (currentFruit == 2) {
+            outPoints = redPoints; 
+        }
+
         Mat blurMat = Viscad2.Blur(orig, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
-        Mat maskRedApple = thresholdAndProcess(hsvImage, greenPoint21, greenPoint22, greenPoint23, 1, 1);
-        Mat fillHolesRedApple = Viscad2.FillHolesCAD(maskRedApple);
-        Mat yellowPear = thresholdAndProcess(hsvImage, redPoint1, redPoint2, redPoint3, 1, 1);
+        Mat mask = thresholdAndProcess(hsvImage, outPoints[0], outPoints[1], outPoints[2], 1, 1);
+        Mat fillHoles = Viscad2.FillHolesCAD(mask);
 
-        final Mat outPA = new Mat();
+        int outArea = Viscad2.ImageTrueArea(fillHoles); 
 
-        mats.add(fillHolesRedApple);
-        mats.add(yellowPear);
-
-        releaseMats(blurMat, hsvImage, maskRedApple, outPA, fillHolesRedApple, yellowPear);
-
+        releaseMats(blurMat, hsvImage, mask, fillHoles);
         Mat empty = new Mat();
-        
-        for (int i = 0; i < mats.size(); i++) {
-            double localTimer = Timer.getFPGATimestamp();
-            if(Viscad2.ImageTrueArea(mats.get(i)) > 100) {
-                if(localTimer - startTimer > 1) {
-                    localTimer = 0;
-                    return mats.get(i);
-                }
-            }
+
+        if (!fillHoles.empty()) {
+            empty = fillHoles; 
         }
+        
         return empty;
     }
 
@@ -273,7 +419,7 @@ public class JavaCam implements Runnable
             System.out.println("Center: (" + centerX + ", " + centerY + ")");
             
         }
-        // oustream3.putFrame(temp);
+        // oustream3.putFrame(image);
         // Сохраняем изображение с нарисованными прямоугольниками
         
         releaseMats(image);

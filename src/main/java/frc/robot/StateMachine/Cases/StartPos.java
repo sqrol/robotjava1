@@ -37,20 +37,24 @@ public class StartPos implements IState{
         }
 
         SmartDashboard.putNumber("iter: ", Timer.getFPGATimestamp() - StateMachine.iterationTime);
+
+        RobotContainer.train.nowTask = 2; 
+
+        train.setGripRotateServoValue(80);
         
-        if(train.successInit) {
-            train.resetLiftEncoder();
-            train.resetEncRotate();
+        // if(train.successInit) {
+        //     train.resetLiftEncoder();
+        //     train.resetEncRotate();
             
-            train.setGripServoValue(15); 
-            train.setGripRotateServoValue(93); 
-            if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 1){
-                train.setIndication("IN PROCESS");
-                return true;
-            } else {
-                return false;
-            }
-        }
+        //     train.setGripServoValue(15); 
+        //     train.setGripRotateServoValue(93); 
+        //     if(Timer.getFPGATimestamp() - StateMachine.iterationTime > 1){
+        //         train.setIndication("IN PROCESS");
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // }
         return false;
     }
 }
