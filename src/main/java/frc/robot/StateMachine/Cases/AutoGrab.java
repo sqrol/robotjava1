@@ -13,50 +13,50 @@ public class AutoGrab implements IState{
 
     private Training train = RobotContainer.train;
     public int nowStep = 0;
-        
-    // private static HashMap<String, Double> mapForLift = new HashMap<String, Double>() {
-    //     {
-    //         put("AppleBigRipe", 85.0);
-    //         put("BIG GREEN APPLE", 85.0);
-    //         put("PeerRipe", 85.0);
-    //         put("GREEN PEAR", 85.0);
-    //         put("AppleSmallRipe", 95.0);
-    //         put("SMALL GREEN APPLE", 95.0);
-    //     } 
-    // };
-
+    private final int MAX_GLIDE_POS = 11;
     private static HashMap<String, Double> mapForLift = new HashMap<String, Double>() {
         {
-            put("AppleBigRipe", 95.0);
-            put("BIG GREEN APPLE", 95.0);
-            put("PeerRipe", 95.0);
-            put("GREEN PEAR", 95.0);
+            put("AppleBigRipe", 85.0);
+            put("BIG GREEN APPLE", 85.0);
+            put("PeerRipe", 85.0);
+            put("GREEN PEAR", 85.0);
             put("AppleSmallRipe", 95.0);
             put("SMALL GREEN APPLE", 95.0);
         } 
     };
 
-    // private static HashMap<String, Double> mapForGrip = new HashMap<String, Double>() {
+    // private static HashMap<String, Double> mapForLift = new HashMap<String, Double>() {
     //     {
-    //         put("AppleBigRipe", 60.0);
-    //         put("BIG GREEN APPLE", 60.0);
-    //         put("PeerRipe", 54.0);
-    //         put("GREEN PEAR", 54.0);
-    //         put("AppleSmallRipe", 75.0);
-    //         put("SMALL GREEN APPLE", 65.0);
-    //     }
+    //         put("AppleBigRipe", 95.0);
+    //         put("BIG GREEN APPLE", 95.0);
+    //         put("PeerRipe", 95.0);
+    //         put("GREEN PEAR", 95.0);
+    //         put("AppleSmallRipe", 95.0);
+    //         put("SMALL GREEN APPLE", 95.0);
+    //     } 
     // };
 
     private static HashMap<String, Double> mapForGrip = new HashMap<String, Double>() {
         {
-            put("AppleBigRipe", 75.0);
-            put("BIG GREEN APPLE", 75.0);
-            put("PeerRipe", 75.0);
-            put("GREEN PEAR", 75.0);
+            put("AppleBigRipe", 60.0);
+            put("BIG GREEN APPLE", 60.0);
+            put("PeerRipe", 60.0);
+            put("GREEN PEAR", 60.0);
             put("AppleSmallRipe", 75.0);
             put("SMALL GREEN APPLE", 75.0);
         }
     };
+
+    // private static HashMap<String, Double> mapForGrip = new HashMap<String, Double>() {
+    //     {
+    //         put("AppleBigRipe", 75.0);
+    //         put("BIG GREEN APPLE", 75.0);
+    //         put("PeerRipe", 75.0);
+    //         put("GREEN PEAR", 75.0);
+    //         put("AppleSmallRipe", 75.0);
+    //         put("SMALL GREEN APPLE", 75.0);
+    //     }
+    // };
 
     // Переменные для вращающегося механизма
     private double startKoef, diffSpeed, fruitPosX = 0; 
@@ -66,7 +66,7 @@ public class AutoGrab implements IState{
 
     private double currentTargetDegree = 0; 
 
-    private static final double[][] speedForRotate =  { { 0, 50, 100, 150, 200 }, { 0, 12, 18, 25, 30} };
+    private static final double[][] speedForRotate =  { { 0, 50, 100, 150, 200 }, { 0, 8, 18, 35, 50} };
     private double[][] startKoefSpeedForX = { { 0, 0.33, 0.66, 1 }, { 0, 0.33, 0.66, 1 } };
     // private static final double[][] arrForLift = { { 0, 640} , { 0, 60 } };
 
@@ -91,7 +91,7 @@ public class AutoGrab implements IState{
         this.nowStep = 0;
         this.localTimer = 0;
         this.objectNotFound = false;
-
+        
         // objectDetectionFlag = true; 
     }
 
@@ -157,8 +157,6 @@ public class AutoGrab implements IState{
 
                     train.rotateMotorSpeedThread = 0;
 
-                    train.nowTask = 1;
-
                 if (this.rotateStop && Timer.getFPGATimestamp() - stopTimer > 2) {
                     
                     localTimer = Timer.getFPGATimestamp();
@@ -194,34 +192,40 @@ public class AutoGrab implements IState{
                 }
                 
                 double glideServoSpeed = Function.TransitionFunction(210 - fruitPosY, speedForGlideServo);
+                
                 glideStop = Function.BooleanInRange(210 - fruitPosY, -10, 10);
                 SmartDashboard.putNumber("270 - fruitPosY", 210 - fruitPosY);
-                if (objectFind) {
+                
+                // if(train.currentGlidePosition == MAX_GLIDE_POS && !glideStop) {
+                //     glideServoSpeed = 0;
+                //     train.servoGlidePosition(0);
+                //     objectFind = false;
+                // } 
+
+                if(objectFind) {
                     train.justMoveForGlide(glideServoSpeed);
-                } else {
-                    train.justMoveForGlide(0.5);
-                }
-                SmartDashboard.putBoolean("glideStop", glideStop);
-                if (glideStop) {
-                    train.justMoveForGlide(0);
-                    
-                    if (Timer.getFPGATimestamp() - stopTimer > 0.3) {
-                        train.resizeForGlide = false;
-                        localTimer = Timer.getFPGATimestamp();
-                        nowStep++;
+                    if (glideStop) {
+                        train.justMoveForGlide(0);
+
+                        if (Timer.getFPGATimestamp() - stopTimer > 0.4) {
+                            train.resizeForGlide = false;
+                            localTimer = Timer.getFPGATimestamp();
+                            nowStep++;
+                        } else {
+                            stopTimer = Timer.getFPGATimestamp();
+                        }
                     }
-                } else {
-                    stopTimer = Timer.getFPGATimestamp();
                 }
-            
                 break;
             case 2: // Опускаем лифт для захвата
+                train.nowTask = 0;
                 if (train.liftToMovePos(mapForLift.get(train.detectionResult)) && Timer.getFPGATimestamp() - localTimer > 1) {
                     localTimer = Timer.getFPGATimestamp();
                     nowStep++;
                 }
                 break;
             case 3: // Захват 
+            train.nowTask = 0;
                 if (smoothServoMovement(mapForGrip.get(train.detectionResult), 0.01) && Timer.getFPGATimestamp() - localTimer > 1) {
                     localTimer = Timer.getFPGATimestamp();
                     nowStep++;
@@ -229,8 +233,8 @@ public class AutoGrab implements IState{
                 break;
             case 4: // Возврат СМО в исходное сотояние
                 if(train.liftToMovePos(-1)) {
-                    train.servoGlidePosition(1);
-                    if (Timer.getFPGATimestamp() - localTimer > 1 && train.rotateToPos(0)) {
+                    train.servoGlidePosition(0);
+                    if (Timer.getFPGATimestamp() - localTimer > 1 && train.rotateToPos(0) && train.currentGlidePosition == 0) {
                         if(train.glideExit) {
                             // train.detectionResult = "";
                             localTimer = 0;

@@ -38,8 +38,8 @@ public class JavaCam implements Runnable
     public String colorCube, colorStand;
     public boolean alignCamera = false;
     private double countTimer = Timer.getFPGATimestamp();
-    private int currentColor = 0;
-    private static int totalColors = 5; // Общее количество цветов
+    private int currentColor, lastColor = 0;
+    private static int totalColors = 2; // Общее количество цветов
     private static boolean foundFlag = false;
   
     @Override
@@ -106,6 +106,24 @@ public class JavaCam implements Runnable
                 if (RobotContainer.train.nowTask == 2) {
                     RobotContainer.train.centersForClass = getFruitPosition(source, currentColor);
                     SmartDashboard.putNumber("currentColor: ", currentColor); 
+
+                    if (!foundFlag) {
+                        if (Timer.getFPGATimestamp() - countTimer > 1) {
+                            train.detectionResult = "";
+                            lastColor = (currentColor + 1) % totalColors; // Циклическое обновление цвета
+                            countTimer = Timer.getFPGATimestamp(); // Сбрасываем таймер после обновления цвета
+                        }
+                    } else {
+                        currentColor = lastColor;
+                        if(currentColor == 0) {
+                            train.detectionResult = "AppleBigRipe";
+                            foundFlag = false;
+                        }
+                        if(currentColor == 1) {
+                            train.detectionResult = "PeerRipe";
+                            foundFlag = false;
+                        }
+                    }
                     
                 }
                 if(RobotContainer.train.nowTask == 4) {
@@ -115,13 +133,7 @@ public class JavaCam implements Runnable
                     RobotContainer.train.nowResult = detectFruitInGripper(source);
                 }
 
-                if (!foundFlag) {
-                    if (Timer.getFPGATimestamp() - countTimer > 5) {
-                        currentColor = (currentColor + 1) % totalColors; // Циклическое обновление цвета
-                        countTimer = Timer.getFPGATimestamp(); // Сбрасываем таймер после обновления цвета
-                    }
-                }
-
+                
                 source.release();
                 
             } catch (final Exception e) {
@@ -244,32 +256,32 @@ public class JavaCam implements Runnable
         List<Rect> currentCordinate = new ArrayList<>();
         Point[] outPoints = new Point[3];
 
-        double red1RA = SmartDashboard.getNumber("RED1 RA", 0);
-        double red2RA = SmartDashboard.getNumber("RED2 RA", 0);
+        double red1RA = SmartDashboard.getNumber("RED1 YP", 0);
+        double red2RA = SmartDashboard.getNumber("RED2 YP", 0);
 
-        double green1RA = SmartDashboard.getNumber("GREEN1 RA", 0);
-        double green2RA = SmartDashboard.getNumber("GREEN2 RA", 0);
+        double green1RA = SmartDashboard.getNumber("GREEN1 YP", 0);
+        double green2RA = SmartDashboard.getNumber("GREEN2 YP", 0);
 
-        double blue1RA = SmartDashboard.getNumber("BLUE1 RA", 0);
-        double blue2RA = SmartDashboard.getNumber("BLUE2 RA", 0);
+        double blue1RA = SmartDashboard.getNumber("BLUE1 YP", 0);
+        double blue2RA = SmartDashboard.getNumber("BLUE2 YP", 0);
 
         Point greenPoint1 = new Point(0, 0);   
         Point greenPoint2 = new Point(0, 0);
         Point greenPoint3 = new Point(0, 0);
 
-        Point yellowPoint1 = new Point(20, 255);   
-        Point yellowPoint2 = new Point(200, 255);
-        Point yellowPoint3 = new Point(100, 255);
+        Point yellowPoint1 = new Point(25, 45);   
+        Point yellowPoint2 = new Point(78, 241);
+        Point yellowPoint3 = new Point(123, 222);
 
-        Point redPoint1 = new Point(0, 20);   
+        Point redPoint1 = new Point(0, 16);   
         Point redPoint2 = new Point(0, 255);
-        Point redPoint3 = new Point(100, 255);
+        Point redPoint3 = new Point(145, 255);
 
         // Point[] redPoints = {redPoint1, redPoint2, redPoint3};
         // Point[] yellowPoints = {yellowPoint1, yellowPoint2, yellowPoint3};
 
         Point[][] pointsArray = {
-            {greenPoint1, greenPoint2, greenPoint3},
+            // {greenPoint1, greenPoint2, greenPoint3},
             {redPoint1, redPoint2, redPoint3},
             {yellowPoint1, yellowPoint2, yellowPoint3}
         };
@@ -278,28 +290,27 @@ public class JavaCam implements Runnable
             outPoints = pointsArray[currentColor];
             foundFlag = true;
         } else {
-            outPoints = outPoints; 
+            // outPoints = outPoints; 
         }
+
+        
 
         Mat inImg = new Mat();
         Mat outPA = new Mat();
 
         // Пока не успел доделать
-        if (RobotContainer.train.resizeForGlide) { inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360));  // Обрезаем картинку по линии стрелы
-        } else { inImg = orig; }
+        if (RobotContainer.train.resizeForGlide) { inImg = Viscad2.ExtractImage(orig, new Rect(140, 80, 240, 360)); } // Обрезаем картинку по линии стрелы
+        else { inImg = orig; }
 
         Mat blurMat = Viscad2.Blur(inImg, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
 
         Mat maskRedApple = thresholdAndProcess(hsvImage, outPoints[0], outPoints[1], outPoints[2], 1, 1);
-
         oustream3.putFrame(maskRedApple);
         
         outPA = new Mat();
 
         currentCordinate = Viscad2.ParticleAnalysis(maskRedApple, outPA);
-
-        currentCordinate.isEmpty();
 
         currentColor++;
 
@@ -314,6 +325,7 @@ public class JavaCam implements Runnable
             return processRectangles(inImg, currentCordinate);
 
         }   
+        
     }
 
     public static Mat findNotEmptyMat(final Mat orig) {
@@ -465,9 +477,9 @@ public class JavaCam implements Runnable
         Point redPoint2 = new Point(207, 255);    // Point(70, 255);
         Point redPoint3 = new Point(254, 255);    // Point(200, 255);
 
-        Point greenPoint1 = new Point(45, 55);    //  43, 70);
-        Point greenPoint2  = new Point(199, 255);    // 50, 220)
-        Point greenPoint3 = new Point(199, 255);  // 190, 255
+        Point greenPoint1 = new Point(1, 255);    //  43, 70);
+        Point greenPoint2  = new Point(123, 255);    // 50, 220)
+        Point greenPoint3 = new Point(254, 255);  // 190, 255
 
         Point greenPointPear1 = new Point(red1YP, red2YP);
         Point greenPointPear2 = new Point(green1YP, green2YP);
@@ -515,27 +527,27 @@ public class JavaCam implements Runnable
         releaseMats(blurMat, hsvImage, orig, maskRedApple, maskGreenApple, maskYellowPear,
                         maskGreenPear, fillHolesGreenPear, cut, autoImage, imgTemplate, maskAllWithoutWheels);
 
-        if(Function.BooleanInRange(imageAreaRedApple,       0, 3000)) {  // SmallRed
+        if(Function.BooleanInRange(imageAreaRedApple,       100, 3000)) {  // SmallRed
             train.detectionResult = "AppleSmallRipe";
             train.fruitFind = true; 
             return 6;
         } 
-        if(Function.BooleanInRange(imageAreaGreenApple,     2000, 5000)) { // SmallGreen
+        if(Function.BooleanInRange(imageAreaGreenApple,     100, 10000)) { // SmallGreen
             train.detectionResult = "SMALL GREEN APPLE";
             train.fruitFind = true; 
             return 7;
         }  
-        if(imageAreaRedApple > 15000) { // BigRed
+        if(imageAreaRedApple > 10000) { // BigRed
             train.detectionResult = "AppleBigRipe";
             train.fruitFind = true; 
             return 1;
         } 
-        if(imageAreaGreenPear > 15000) { // GreenPear
+        if(imageAreaGreenPear > 8000) { // GreenPear
             train.detectionResult = "GREEN PEAR";
             train.fruitFind = true; 
             return 4;
         } 
-        if(imageAreaGreenApple > 20000) { // BigGreen
+        if(imageAreaGreenApple > 13000) { // BigGreen
             train.detectionResult = "BIG GREEN APPLE";
             train.fruitFind = true; 
             return 2; 
@@ -552,22 +564,22 @@ public class JavaCam implements Runnable
     public static int CheckRotten(final Mat orig) {
 
 
-        // double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
-        // double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
+        double red1GP = SmartDashboard.getNumber("RED1 GP", 0);
+        double red2GP = SmartDashboard.getNumber("RED2 GP", 0);
 
-        // double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
-        // double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
+        double green1GP = SmartDashboard.getNumber("GREEN1 GP", 0);
+        double green2GP = SmartDashboard.getNumber("GREEN2 GP", 0);
 
-        // double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
-        // double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
+        double blue1GP = SmartDashboard.getNumber("BLUE1 GP", 0);
+        double blue2GP = SmartDashboard.getNumber("BLUE2 GP", 0);
 
-        Point greenPointPear1 = new Point(145, 255);
-        Point greenPointPear2 = new Point(78, 255);
+        Point greenPointPear1 = new Point(123, 255);
+        Point greenPointPear2 = new Point(67, 255);
         Point greenPointPear3 = new Point(123, 255);
 
-        Mat cutRotten = Viscad2.ExtractImage(orig, new Rect(180, 150, 240, 200));
+        // Mat cutRotten = Viscad2.ExtractImage(orig, new Rect(180, 150, 240, 200));
         Mat extractedRotten = Viscad2.ExtractImage(orig, new Rect(0, 0, 200, 180));
-        Mat autoBrightMat = Viscad2.AutoBrightnessCAD(extractedRotten, cutRotten, 150, true);
+        Mat autoBrightMat = Viscad2.AutoBrightnessCAD(extractedRotten, orig, 150, true);
 
         Mat blurMat = Viscad2.Blur(autoBrightMat, 4);
         Mat hsvImage = Viscad2.ConvertBGR2HSV(blurMat);
@@ -577,8 +589,8 @@ public class JavaCam implements Runnable
         SmartDashboard.putNumber("ImageAreaRotten", imageAreaRottenFruit);
 
         outBlur.putFrame(rottenFruit);
-        releaseMats(cutRotten, extractedRotten, autoBrightMat, blurMat, hsvImage, rottenFruit);
-        if(Function.BooleanInRange(imageAreaRottenFruit,    1000, 5000)) { 
+        releaseMats(extractedRotten, autoBrightMat, blurMat, hsvImage, rottenFruit);
+        if(Function.BooleanInRange(imageAreaRottenFruit,    1000, 7000)) { 
             return 5; 
         }
         return 0;

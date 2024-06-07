@@ -18,8 +18,8 @@ public class ObjectFinder implements IState {
         train.setAxisSpeed(0, 0);
         train.nowTask = 1; 
         SmartDashboard.putNumber("nowResult", RobotContainer.train.nowResult);
-
-        train.setGripRotateServoValue(93);
+        // train.nowResult = 0;
+        train.setGripRotateServoValue(95);
         
         if(train.nowResult == 1) {
             train.setAxisSpeed(0, 0);

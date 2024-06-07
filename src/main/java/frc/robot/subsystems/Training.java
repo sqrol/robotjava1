@@ -172,8 +172,8 @@ public class Training extends SubsystemBase
         sonicRightFilter = new MedianFilter(6);
         sonicBackFilter = new MeanFilter(10);
 
-        redLED = new DigitalOutput(21);
-        greenLED = new DigitalOutput(20);
+        redLED = new DigitalOutput(20);
+        greenLED = new DigitalOutput(21);
 
         // Инициализация концевого выключателя 
         limitSwitchLift = new DigitalInput(0);
@@ -948,7 +948,7 @@ public class Training extends SubsystemBase
 
     /**
      * Устанавливает выдвижной механизм на указанную позицию.
-     * @param position - от 0 до 16
+     * @param position - от 0 до 25
      */
     public void servoGlidePosition(int targetPosition) { 
         boolean blackLineDetect = getCobraVoltage() > 2.0;
@@ -1043,5 +1043,6 @@ public class Training extends SubsystemBase
         SmartDashboard.putBoolean("END", finish);
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
         // checkGlide();
+        SmartDashboard.putString("detectionResult11", detectionResult);
     }
 }

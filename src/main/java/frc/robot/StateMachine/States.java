@@ -11,11 +11,12 @@ public class States {
             // new Transition(),
             // new SetGrabPos("SMALL APPLE", false), 
             // new End(),
-            new AutoGrab(),
+            // new AutoGrab(),
 
             // new ObjectFinder(),
             // new End(),
-            
+            // new AutoGrab(),
+            // new AutoGrab(),
             // new SetGrabPos("OPEN", false),
             // new End()
             // new Grab(70),
@@ -68,7 +69,7 @@ public class States {
             // new SetLiftPosition(85),
             // new SetGrabPos("BIG APPLE", false),
             
-            // new SetGlidePosition(1),
+            
             // new SetRotatePos(0),
    
     
@@ -77,12 +78,12 @@ public class States {
             // new StartPos(),
             
             
-            // new ObjectFinder(),
+            new ObjectFinder(),
             // new RottenDetection(),
             // new End(),
             // new StartPos(),
             // new SonicCheck(),
-            
+            // new AutoGrab(),
             // // new StartPos(),
             // new ObjectFinder(),
             // // new SharpCheck(),
@@ -962,7 +963,7 @@ public class States {
             // B1 // 80
         {
             // new StartPos(),
-            new DriveXAxis(104, 0), // метр вперед
+            // new DriveXAxis(104, 0), // метр вперед
             
             // // змейка
             new StartPos(),
@@ -975,15 +976,15 @@ public class States {
             new DriveXAxis(60, 0), // от красной к зеленой
             new DriveXAxis(0, 90),
 
-            new DriveXAxis(60, 0), // между красной и зеленой
+            new DriveXAxis(75, 0), // между красной и зеленой
             new DriveXAxis(0, -90),
 
-            new DriveXAxis(60, 0), // от предпоследней к последней
+            new DriveXAxis(65, 0), // от предпоследней к последней
             new DriveXAxis(0, -90),
             
             new DriveXAxis(71, 0), 
             new DriveXAxis(0, 90), // между предпоследней и последней
-            new DriveXAxis(50, 0),
+            new DriveXAxis(60, 0),
             
             new StartPos(),
             new SonicCheck(),
@@ -1056,7 +1057,7 @@ public class States {
         {
             new SetRotatePos(34),
             new SetGripRotatePos("BRANCH"),
-            new SetLiftPosition(5), // 5 для большого яблока 4 для груши
+            new SetLiftPosition(4), // 5 для большого яблока 4 для груши
             new SetGlidePosition(11),
             new SetGrabPos("PEAR", false),
             new SetLiftPosition(-1),
@@ -2073,9 +2074,9 @@ public class States {
         {
             new SetRotatePos(-4),
             new SetGrabPos("OPEN", false),
-            new SetGlidePosition(4),
-            new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE", false),
+            new SetGlidePosition(2),
+            new SetLiftPosition(88),
+            new SetGrabPos("PEAR", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(0),
             new SetRotatePos(0),
@@ -2444,8 +2445,8 @@ public class States {
             new SetGrabPos("OPEN", false),
             new DriveXAxis(-4, 0),
             new SetGlidePosition(11),
-            new SetLiftPosition(85),
-            new SetGrabPos("BIG APPLE", false),
+            new SetLiftPosition(100),
+            new SetGrabPos("SMALL APPLE", false),
             new SetLiftPosition(-1),
             new SetGlidePosition(1),
             new SetRotatePos(0),
@@ -2658,10 +2659,8 @@ public class States {
         },
             // AUTOGRAB_UPPER // 214
         {
-            new SetGlidePosition(8),
             new AutoGrab(),
             new SetGripRotatePos("FLOOR"),
-            new SetGlidePosition(0),
             new Transition()
         },
             // MOV_IN_FRIST_RZ_TO_FRIST_TZ // 215
