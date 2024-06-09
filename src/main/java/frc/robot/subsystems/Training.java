@@ -69,8 +69,8 @@ public class Training extends SubsystemBase
 
     private final PID rightPID = new PID(0.051, 0.43, 0.0, -100, 100); // Настройка ПИДа правого мотора 
     private final PID leftPID = new PID(0.051, 0.43, 0.0, -100, 100); // Настройка ПИДа левого мотора
-    private final PID liftPID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа лифта
-    private final PID rotatePID = new PID(0.215, 0.095, 0.0001, -100, 100); // Настройка ПИДа 
+    private final PID liftPID = new PID(0.051, 0.43, 0.0, -100, 100); // Настройка ПИДа лифта
+    private final PID rotatePID = new PID(0.051, 0.43, 0.0, -100, 100); // Настройка ПИДа 
 
                                          // 0.037, 0.3, 0.0004, -100, 100
                                          // 0.15, 0.095, 0.0001, -100, 100
@@ -132,7 +132,7 @@ public class Training extends SubsystemBase
     
     private static final double[][] arrOfPosForRotate = { { 0, 500, 1500 }, { 0, 45, 90 } };
 
-    private static final double[][] speedForRotate =  { { 0, 5, 18, 36, 54 }, { 0, 5, 10, 25, 35 } };
+    private static final double[][] speedForRotate =  { { 0, 8, 25, 32, 40, 54 }, { 0, 17, 35, 35, 48, 60 } };
 
     private static final double[][] arrForLift = { { 0, 8, 100, 200, 350 },
                                                     { 0, 8, 24, 48, 72 } };
@@ -158,10 +158,10 @@ public class Training extends SubsystemBase
         liftEnc.setReverseDirection();
 
         sharpRight = new AnalogInput(0);
-        sharpLeft = new AnalogInput(1);  
+        sharpLeft = new AnalogInput(2);  
 
         // Датчик черной линии для подсчета линий на Glide
-        cobraGlide = new AnalogInput(2);
+        cobraGlide = new AnalogInput(1);
 
         rightSonicBack = new Ultrasonic(9, 8);
         leftSonicBack = new Ultrasonic(7, 6);
@@ -192,8 +192,8 @@ public class Training extends SubsystemBase
         // 222 смотрит вперед и чуть ниже
         servoGlide = new ServoContinuous(1);
 
-        startButton = new DigitalInput(2);
-        EMS = new DigitalInput(3);
+        startButton = new DigitalInput(3);
+        EMS = new DigitalInput(2);
 
         gyro = new AHRS();
         
@@ -1007,7 +1007,16 @@ public class Training extends SubsystemBase
 
     }
 
+    private void checkRotate() {
 
+        double currentRotatePos = getEncRotateThread();
+       
+        double rotateDegree = Function.TransitionFunction(currentRotatePos, arrOfPosForRotate);
+
+        // SmartDashboard.putNumber("currentRotatePos", -getEncRotateThread());
+        SmartDashboard.putNumber("currentRotatePosition", rotateDegree);
+
+    }
     @Override
     public void periodic()
     {
@@ -1043,6 +1052,8 @@ public class Training extends SubsystemBase
         SmartDashboard.putBoolean("END", finish);
         SmartDashboard.putNumber("currentGlidePosition", currentGlidePosition);
         // checkGlide();
+        // checkRotate();
         SmartDashboard.putString("detectionResult11", detectionResult);
+        
     }
 }

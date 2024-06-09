@@ -29,8 +29,8 @@ public class LogicCore {
     private final boolean B2Flag = false;
 
     // Для сдачи модулей B отключает построение пути назад
-    private final boolean autonomousMode = false; // если true, то едет до финиша,
-    // если false, то до контейнера и прыгает в END
+    private final boolean autonomousMode = true; // если true, то едет до финиша,
+                                                  // если false, то до контейнера и прыгает в END
 
     // Зона 1
     private static final String[] firstTree = { "null", "null", "null"};
@@ -56,7 +56,7 @@ public class LogicCore {
                     //  12  |   13   |   14   |   15   |   16   |   17  |   18
                     { "12", "13", "14", "15", "16", "17", "18" },
                     //  19  |   20   |   21   |   22   |   23   |   24  |   25
-                    { "19", "20", "21", "22", "23", "24", "AppleSmallRipe" } };
+                    { "19", "20", "21", "22", "23", "24", "25" } };
 
     // Зона 3
     private static final String[] thirdTree = { "null", "null", "null"};
@@ -102,6 +102,10 @@ public class LogicCore {
                 arrayWithLogic.add("END");
             }
             firstCallForInit = false;
+
+        }
+        for (String command : arrayWithLogic) {
+            System.out.println(command);
         }
     }
 
@@ -143,6 +147,7 @@ public class LogicCore {
         if(B2Flag) {
             outArray.add("B2");
         }
+
         return outArray;
     }
 
@@ -150,7 +155,7 @@ public class LogicCore {
     // GRAB_POS_(GLIDEPOS, ROT-DEGREE, SUBGRABPOS)
     private String grabPosGenerate(String inGrabPos) {
         Map<String, String> grabPosMap = new HashMap<>();
-        // нормальные захваты
+        // нормальные захваты б
 
         grabPosMap.put("GRAB_POS_1", "-45_1ST_SIDE_LINE");
         grabPosMap.put("GRAB_POS_2", "-45_2NS_SIDE_LINE");
@@ -268,7 +273,7 @@ public class LogicCore {
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
 //                allFindFruits.add(grabPosGenerate("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
-                if (zoneNum == 1 || zoneNum == 3) {
+                if (zoneNum == 2 || zoneNum == 3) {
                     allFindFruits.add(grabPosGenerate("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
                 } else {
                     allFindFruits.add(grabPosGenerate2("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
@@ -291,7 +296,7 @@ public class LogicCore {
         for (int i = 0; i < indexes.length; i++) { // Собираем все фрукты в зоне если они есть
             String elemInArray = currentZone[indexes[i][0]][indexes[i][1]];
             if (weNeedThisFruit(elemInArray)) { // Смотрим фрукт в зоне тот который нам нужен
-                if(zoneNum == 2 || zoneNum == 3) {
+                if(zoneNum == 1) {
                     allFindFruits.add(grabPosGenerate("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
                 } else {
                     allFindFruits.add(grabPosGenerate2("GRAB_POS_" + zoneWithNumber[indexes[i][0]][indexes[i][1]]) + "/" + elemInArray);
@@ -371,25 +376,19 @@ public class LogicCore {
         if (zoneName.equals("FRIST")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH3";
+                    out = "CH1";
                     break;
                 case "RZ":
-                    out = "CH3";
+                    out = "CH1";
                     break;
                 case "LOZ":
-                    out = "CH3";
-                    break;
-                case "UZL":
-                    out = "CH3";
-                    break;
-                case "UZR":
-                    out = "CH3";
+                    out = "CH1";
                     break;
                 case "TZ":
-                    out = "CH3";
+                    out = "CH1";
                     break;
                 case "START":
-                    out = "CH3";
+                    out = "CH1";
                     break;
                 default:
                     out = "null";
@@ -407,12 +406,6 @@ public class LogicCore {
                 case "LOZ":
                     out = "CH2";
                     break;
-                case "UZL":
-                    out = "CH2";
-                    break;
-                case "UZR":
-                    out = "CH2";
-                    break;
                 case "TZ":
                     out = "CH2";
                     break;
@@ -427,25 +420,19 @@ public class LogicCore {
         if (zoneName.equals("THIRD")) {
             switch (currentZoneName) {
                 case "LZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "RZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "LOZ":
-                    out = "CH1";
-                    break;
-                case "UZL":
-                    out = "CH1";
-                    break;
-                case "UZR":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "TZ":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 case "START":
-                    out = "CH1";
+                    out = "CH2";
                     break;
                 default:
                     out = "null";
